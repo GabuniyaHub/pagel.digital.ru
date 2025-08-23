@@ -1,0 +1,718 @@
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.tinos-bold-italic {
+    font-family: "Tinos", serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+.account-circle {
+    margin-top:8px;
+    font-size: 29px; /* Размер иконки */
+    color: #7c7c7c; /* Цвет иконки */
+    transition: color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.account-circle:hover {
+    color: #535353; /* Цвет при наведении */
+}
+
+/* Base styles */
+body {
+    font-family: 'Tinos', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Header */
+header {
+    background: transparent;
+    color: #333;
+    z-index: 4;
+    position: sticky;
+    padding: 15px 0;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);  */
+}
+
+.nav-container {
+    max-width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff; /* Цвет текста */
+}
+
+.logo img {
+    width: 40px; /* Размер иконки */
+    height: 40px;
+    margin-right: 10px; /* Отступ между иконкой и текстом */
+}
+
+.logo span {
+    color: #333; /* Цвет текста */
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ff5722;
+    transition: width 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #ff5722;
+}
+
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+.nav-links button {
+    color: #333; /* Цвет текста по умолчанию */
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease; /* Плавный переход для всех свойств */
+    position: relative;
+    background-color: transparent; /* Прозрачный фон по умолчанию */
+    border: 1px solid #333; /* Синяя рамка */
+    padding: 5px 10px; /* Отступы внутри кнопки */
+    border-radius: 5px; /* Закругленные углы */
+    font-size: 14px;
+    cursor: pointer; /* Курсор в виде указателя */
+}
+
+.nav-links button:hover {
+    background-color: #5f5f5f; /* Синий фон при наведении */
+    color: #fff; /* Белый текст при наведении */
+    box-shadow: 0 4px 8px rgba(8, 8, 8, 0.3); /* Тень при наведении */
+}
+
+.nav-links button:active {
+    transform: translateY(0); /* Возврат кнопки в исходное положение при нажатии */
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3); /* Уменьшение тени при нажатии */
+}
+
+.nav-links button:focus {
+    outline: none; /* Убираем стандартный outline */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Синяя обводка при фокусе */
+}
+
+/* Стили для контейнера выпадающего меню */
+.account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Стили для выпадающего контента */
+.dropdown-content {
+    display: none; /* Скрыто по умолчанию */
+    position: absolute;
+    right: 0; /* Выравнивание по правому краю */
+    background-color: #fff;
+    min-width: 170px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Стили для ссылок в выпадающем меню */
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+/* Эффект при наведении на ссылки */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Показ выпадающего меню при добавлении класса .show */
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-content.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .dropdown-content {
+        right: -50px; /* Сдвигаем меню для мобильных */
+    }
+    .account-circle {
+        margin-top: 0;
+    }
+}
+
+/* Бургер-меню */
+.menu-icon {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-icon span {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    margin: 4px 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 1;
+}
+
+/* Анимация бургер-меню */
+.menu-icon.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 10px);
+}
+
+.menu-icon.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-icon.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -10px);
+}
+
+
+
+/* Banner */
+.banner {
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+    max-width: 90%;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Фоновое изображение с размытием */
+.banner-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../images/Баннер.png') no-repeat center center/cover;
+    filter: blur(5px); /* Размытие фона */
+    z-index: 1;
+}
+
+/* Затемнение фона */
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Затемнение */
+    z-index: 2;
+}
+
+/* Контент баннера */
+.banner-content {
+    position: relative;
+    z-index: 3;
+    
+}
+
+.banner h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    /* font-family: 'Sofia Sans Extra Condensed', cursive !important; Прописной шрифт для заголовка */
+    font-weight: 700;
+}
+
+.banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.banner button {
+    background: #28a745;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: opacity 0.3s;
+}
+
+.banner button a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.banner button:hover {
+    opacity: 0.8;
+}
+
+
+/* Services Section */
+.services {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f4f4f4;
+}
+
+.services h2 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #333;
+}
+
+.services .card {
+    background: white;
+    margin: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    width: 260px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.services .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.services .card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.services .card h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.services .card p {
+    margin: 0 0 15px;
+    font-size: 1rem;
+    color: #666;
+}
+
+.services .card button {
+    background: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+    text-transform: uppercase; /* Прописные буквы */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.services .card button:hover {
+    background: #0056b3;
+}
+/* Стили для заголовка с кнопкой */
+.services-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.services-header button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+/* Анимация при закрытии */
+.services-header button.rotated {
+    transform: rotate(180deg);
+}
+
+/* Контейнер с карточками */
+.services-content {
+    transition: max-height 0.4s ease-in-out, opacity 0.3s;
+    overflow: hidden;
+    opacity: 1;
+}
+
+/* Скрытый контейнер */
+.services-content.hidden {
+    max-height: 0;
+    opacity: 0;
+}
+
+
+/* Секция "Все платформы" */
+.all-platforms {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f4f4f4;
+    position: relative;
+    overflow: hidden;
+}
+
+.all-platforms h2 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #333;
+    position: relative;
+    animation: fadeInDown 0.8s ease forwards;
+}
+
+.all-platforms .card {
+    background: white;
+    margin: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    width: 260px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.all-platforms .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.all-platforms .card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.all-platforms .card h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.all-platforms .card button {
+    background: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+    text-transform: uppercase; /* Прописные буквы */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.all-platforms .card button:hover {
+    background: #0056b3;
+}
+
+/* Стили для заголовка с кнопкой */
+.all-platforms-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.all-platforms-header button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+/* Анимация при закрытии */
+.all-platforms-header button.rotated {
+    transform: rotate(180deg);
+}
+
+/* Контейнер с карточками */
+.all-platforms-content {
+    transition: max-height 0.4s ease-in-out, opacity 0.3s;
+    overflow: hidden;
+    opacity: 1;
+}
+
+/* Скрытый контейнер */
+.all-platforms-content.hidden {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Анимация для заголовка */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Технический раздел */
+.technical-section {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f4f4f4;
+    position: relative;
+    overflow: hidden;
+}
+
+.technical-section h2 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #333;
+    letter-spacing: 2px; /* Расстояние между буквами */
+}
+
+.technical-section .card {
+    background: white;
+    margin: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    width: 260px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.technical-section .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.technical-section .card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.technical-section .card h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+    text-transform: uppercase; /* Прописные буквы */
+    letter-spacing: 1px; /* Расстояние между буквами */
+}
+
+.technical-section .card button {
+    background: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+    text-transform: uppercase; /* Прописные буквы */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.technical-section .card button:hover {
+    background: #0056b3;
+}
+
+/* Стили для заголовка с кнопкой */
+.technical-section-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.technical-section-header button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+/* Анимация при закрытии */
+.technical-section-header button.rotated {
+    transform: rotate(180deg);
+}
+
+/* Контейнер с карточками */
+.technical-section-content {
+    transition: max-height 0.4s ease-in-out, opacity 0.3s;
+    overflow: hidden;
+    opacity: 1;
+}
+
+/* Скрытый контейнер */
+.technical-section-content.hidden {
+    max-height: 0;
+    opacity: 0;
+}
+
+
+
+
+/* Footer */
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: 40px;
+}
+
+footer nav ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+footer nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+footer nav ul li a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+footer nav ul li a:hover {
+    opacity: 0.7;
+}
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+
+    .nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .services .card {
+        width: 90%;
+        margin: 15px auto;
+        display: block;
+    }
+    .banner h1 {
+        font-size: 2.5rem;
+    }
+    .banner p {
+        font-size: 1rem;
+    }
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+    .menu-icon {
+        display: flex;
+    }
+
+    header {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        top: 0;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 250px;
+        background: white;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.25);
+        transition: right 0.3s;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+    }
+
+    .nav-links li a {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner h1 {
+        font-size: 2rem;
+    }
+    .banner p {
+        font-size: 0.9rem;
+    }
+    .banner button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Media Queries для секции "Все платформы" */
+@media (max-width: 768px) {
+    .all-platforms .card {
+        width: 90%;
+        margin: 15px auto;
+        display: block;
+    }
+}

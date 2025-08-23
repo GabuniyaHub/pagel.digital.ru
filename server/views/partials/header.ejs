@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/market/static/styles.css">
+  <link rel="stylesheet" href="/market/static/header.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png" type="image/png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="/market/assets/searchViews/searchViews.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+<header>
+    <nav>
+        <div class="nav-container">
+            <a href="/pages/index.html" style="text-decoration: none; color: inherit;">
+              <div class="logo">
+                <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
+                <span>PL-GL</span>
+            </div>
+          </a>
+            <div class="menu-icon" id="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <ul class="nav-links" id="nav-links">
+                <li><a href="/pages/index.html">Главная</a></li>
+                <li><a href="#">Услуги</a></li>
+                <li><a href="#">Справка</a></li>
+                <li id="search" class="search-dropdown">
+                    <a href="#" id="search-toggle">Поиск</a>
+                    <div id="search-menu" class="search-panel">
+                      <input type="text" id="search-input" placeholder="Найти платформу...">
+                      <ul id="search-results"></ul>
+                    </div>
+                </li>  
+                <li><a href="#">Отзывы</a></li>
+                <li><a href="#">О нас</a></li>
+                <li><a href="#">Контакты</a></li>
+                <!-- Кнопки для неавторизованных пользователей -->
+                <li id="login-item"><a href="/pages/user-auth/login.html">Вход</a></li>
+                <li id="register-item"><a href="../../../client/pages/user-auth/register.html">Регистрация</a></li>
+                <!-- Кнопки для авторизованных пользователей (изначально скрыты) -->
+                <li id="account-item" style="display: none;">
+                    <div class="account-dropdown">
+                        <a href="/account" class="account-circle">
+                            <i class="material-icons account-circle">account_circle</i>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="/account"><i class="fas fa-user"></i> Личный кабинет</a>
+                            <a class="settings-link"><i class="fas fa-cog"></i> Настройки</a>
+                            <a class="select-favorites"><i class="fas fa-heart"></i> Избранное</a>
+                            <!-- <a href="/balance"><i class="fas fa-wallet"></i> Баланс</a> -->
+                            <a href="/logout" id="logout-button"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                        </div>
+                    </div>
+                </li>
+                <a href="/pages/market/sell.html" class="btn-link" style="text-decoration: none;">
+                    <li id="sell-item" style="display: none;">
+                        <button>Продать</button>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </nav>
+    <!-- <script src="../market/scripts/utils/dropdownMenu.js"></script> -->
+    
+  </header>
+  <script src="/market/scripts/header.js" defer ></script>
+  <script src="/market/scripts/utils/serchViews.js" defer></script>
+  <script type="module" src="/market/scripts/settingsModal/main.js"></script> <!-- подключаем JS файл для модального окна настроек -->
+  <script type="module" src="/market/scripts/favorites/favoritesMain.js"></script>
+</body>
+</html>

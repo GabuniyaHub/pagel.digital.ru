@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/user-auth/register.css">
+    <link rel="stylesheet" href="../../assets/styles/header/navbar.css">
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>Регистрация</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
+                    <span><a href="../index.html">PL-GL</a></span>
+                </div>
+                <div class="menu-icon" id="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="../index.html">Главная</a></li>
+                    <li><a href="#">Услуги</a></li>
+                    <li><a href="#">Справка</a></li>
+                    <!-- <li><a href="#">Поиск</a></li> -->
+                    <li><a href="#">Отзывы</a></li>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <!-- Кнопки для неавторизованных пользователей -->
+                    <li id="register-item"><a href="login.html">Вход</a></li>
+                    <!-- Кнопки для авторизованных пользователей (изначально скрыты) -->
+                    <li id="account-item" style="display: none;">
+                        <a href="/account">
+                          <img id="account-avatar" src="" alt="Аватар" class="account-circle">
+                        </a>
+                      </li>
+                    <li id="sell-item" style="display: none;"><a href="/sell">Продать</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section>
+        <div class="wrapper">
+            <form id="registerForm">
+                <h1>Создать аккаунт</h1>
+        
+                <div class="input-box">
+                    <input type="text" placeholder="Никнейм" required id="nicknameInput"> 
+                    <i class='bx bxs-user'></i>
+                </div>
+        
+                <div class="input-box">
+                    <input type="text" placeholder="Email" required id="emailInput"> 
+                    <i class='bx bxs-envelope'></i>
+                </div>
+        
+                <div class="input-box">
+                    <input type="password" placeholder="Пароль" required id="newPasswordInput">
+                    <i class='bx bxs-lock-alt' id="toggleNewPassword" style="cursor: pointer;"></i>
+                </div>
+        
+                <div class="input-box">
+                    <input type="password" placeholder="Повторите пароль" required id="confirmPasswordInput">
+                    <i class='bx bxs-lock-alt' id="toggleConfirmPassword" style="cursor: pointer;"></i>
+                </div>
+        
+                <div class="remeber-forgot">
+                    <label><input type="checkbox" id="termsCheckbox"><a href="">Я принимаю  условия использования </a></label>
+                </div>
+        
+                <button type="submit" class="btn btn-light" id="registerButton" >Зарегистрироваться</button>
+
+                <!-- <div class="input-box">
+                    <input type="text" placeholder="Код подтверждения" required id="confirmationCodeInput">
+                    <i class='bx bxs-key'></i>
+                </div> -->
+
+                 <!-- Кнопки для OAuth -->
+                <div class="oauth-buttons">
+                    <button type="button" class="btn-google" id="googleSignInButton">
+                        <i class='bx bxl-google'></i> Зарегистрироваться через Google
+                    </button>
+                </div>
+
+                <div id="loadingSpinner" style="display: none;">
+                    <i class="fa fa-spinner fa-spin"></i> Отправка кода...
+                </div>
+
+        
+                <div class="register-link">
+                    <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script src="../../scripts/user-auth/register.js"></script>
+    <script src="../../scripts/burger.js"></script>
+    <script src="../../scripts/user-auth/components/GoogleIdentityServices.js"></script>
+</body>
+</html>

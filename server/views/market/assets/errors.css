@@ -1,0 +1,61 @@
+/* This CSS file styles the error page for the market module of the application. It includes styles for the error message, a dinosaur image, and a back link. */
+  .error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+  }
+
+  .error-container {
+    max-width: 600px;
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .error-page h1 {
+    font-size: 100px;
+    color: #ff6b6b;
+    margin: 0;
+  }
+
+  .error-page p {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0 20px;
+  }
+
+  .dino {
+    width: 150px;
+    margin: 20px 0;
+    animation: bounce 2s infinite;
+  }
+
+  .back-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-link:hover {
+    background-color: #0056b3;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }

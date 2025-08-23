@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- подключаем Font Awesome для иконок -->
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png" type="image/png"> <!-- иконка сайта -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- подключаем Material Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- подключаем SweetAlert2 для всплывающих уведомлений -->
+    <link rel="stylesheet" href="../assets/styles/index.css"> <!-- подключаем CSS файл для главной страницы -->
+    <link rel="stylesheet" href="../assets/styles/header/search/search.css">  <!-- подключаем CSS файл для поиска -->
+</head>
+<body>
+    <div id="react-root">
+
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
+                    <span>PL-GL</span>
+                </div>
+                <div class="menu-icon" id="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="#">Услуги</a></li>
+                    <li><a href="#">Справка</a></li>
+                    <li id="search" class="search-dropdown">
+                        <a href="#" id="search-toggle">Поиск</a>
+                        <div id="search-menu" class="search-panel">
+                          <input type="text" id="search-input" placeholder="Найти платформу...">
+                          <ul id="search-results"></ul>
+                        </div>
+                    </li>                      
+                    <li><a href="#">Отзывы</a></li>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <!-- Кнопки для неавторизованных пользователей -->
+                    <li id="login-item"><a href="../pages/user-auth/login.html">Вход</a></li>
+                    <li id="register-item"><a href="../pages/user-auth/register.html">Регистрация</a></li>
+                    <!-- Кнопки для авторизованных пользователей (изначально скрыты) -->
+                    <li id="account-item" style="display: none;">
+                        <div class="account-dropdown">
+                            <a href="/account" class="account-circle">
+                                <i class="material-icons account-circle">account_circle</i>
+                            </a>
+                            <div class="dropdown-content">
+                                <a href="/account"><i class="fas fa-user"></i> Личный кабинет</a>
+                                <a class="settings-link"><i class="fas fa-cog"></i> Настройки</a>
+                                <a class="select-favorites"><i class="fas fa-heart"></i> Избранное</a>
+                                <!-- <a href="/balance"><i class="fas fa-wallet"></i> Баланс</a> -->
+                                <a href="/logout" id="logout-button"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                            </div>
+                        </div>
+                    </li>
+                    <a href="../pages/market/sell.html" style="text-decoration: none;">
+                        <li id="sell-item" style="display: none;">
+                            <button>Продать</button>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <section class="banner">
+        <div class="banner-background"></div>
+        <div class="banner-overlay"></div>
+        <div class="banner-content">
+            <h1>Покупка и продажа аккаунтов</h1>
+            <p>Надежная платформа для покупки и продажи социальных аккаунтов</p>
+            <a href="../pages/user-auth/register.html"><button id="register-button">Регистрация</button></a>
+        </div>
+    </section>
+    
+    <section class="services">
+        <div class="services-header">
+            <h2>Популярные платформы</h2>
+            <button id="toggle-services">
+                &#9660; <!-- Галочка вниз -->
+            </button>
+        </div>
+        <!-- <h2>Популярные платформы <span id="toggleIcon"><i class="fas fa-check"></i></span></h2> -->
+        <div class="services-content">
+            <a href="/market/facebook" style="text-decoration: none; ">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook Icon">
+                    <h3>Facebook</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/instagram" style="text-decoration: none; ">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram Icon">
+                    <h3>Instagram</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/telegram" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram Icon">
+                    <h3>Telegram</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/discord" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/906/906361.png" alt="Discord Icon">
+                    <h3>Discord</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/youtube" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174883.png" alt="YouTube Icon">
+                    <h3>YouTube</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/twitter" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124021.png" alt="Twitter Icon">
+                    <h3>Twitter</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/snapchat" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111899.png" alt="Snapchat Icon">
+                    <h3>Snapchat</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/reddit" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111624.png" alt="Reddit Icon">
+                    <h3>Reddit</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/tiktok" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" alt="TikTok Icon">
+                    <h3>TikTok</h3>
+                    <button>Перейти</button>
+                </div>
+            </a> 
+        </div>
+    </section>
+
+    <section class="all-platforms">
+        <div class="all-platforms-header">
+            <h2>Все платформы</h2>
+            <button id="toggle-all-platforms">
+                &#9660; <!-- Галочка вниз -->
+            </button>
+        </div>
+        <div class="all-platforms-content">
+            <div class="card">
+                <a href="/market/facebook" style="text-decoration: none; ">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook Icon">
+                    <h3>Facebook</h3>
+                    <button>Перейти</button>
+                </a>
+            </div>  
+            <a href="/market/instagram" style="text-decoration: none; ">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram Icon">
+                    <h3>Instagram</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/telegram" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram Icon">
+                    <h3>Telegram</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/discord" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/906/906361.png" alt="Discord Icon">
+                    <h3>Discord</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/youtube" style="text-decoration: none;"> 
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174883.png" alt="YouTube Icon">
+                    <h3>YouTube</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/twitter" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124021.png" alt="Twitter Icon">
+                    <h3>Twitter</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/snapchat" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111899.png" alt="Snapchat Icon">
+                    <h3>Snapchat</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/reddit" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111624.png" alt="Reddit Icon">
+                    <h3>Reddit</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/tiktok" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" alt="TikTok Icon">
+                    <h3>TikTok</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/linkedin" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn Icon">
+                    <h3>LinkedIn</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/pinterest" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2175/2175205.png" alt="Pinterest Icon">
+                    <h3>Pinterest</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/whatsapp" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/220/220236.png" alt="WhatsApp Icon">
+                    <h3>WhatsApp</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/wechat" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/220/220236.png" alt="WeChat Icon">
+                    <h3>WeChat</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/viber" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111678.png" alt="Viber Icon">
+                    <h3>Viber</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/tumblr" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111678.png" alt="Tumblr Icon">
+                    <h3>Tumblr</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/vkontakte" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK Icon">
+                    <h3>VK</h3>
+                    <button>Перейти</button>
+                </div>        
+            </a>
+            <a href="/market/medium" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111678.png" alt="Medium Icon">
+                    <h3>Medium</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/quora" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111772.png" alt="Quora Icon">
+                    <h3>Quora</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/periscope" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111682.png" alt="Periscope Icon">
+                    <h3>Periscope</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/clubhouse" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111849.png" alt="Clubhouse Icon">
+                    <h3>Clubhouse</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/mix" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111681.png" alt="Mix Icon">
+                    <h3>Mix</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/gab" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111683.png" alt="Gab Icon">
+                    <h3>Gab</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/parler" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111704.png" alt="Parler Icon">
+                    <h3>Parler</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/mewe" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111703.png" alt="MeWe Icon">
+                    <h3>MeWe</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/ello" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111714.png" alt="Ello Icon">
+                    <h3>Ello</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/mastodon" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111725.png" alt="Mastodon Icon">
+                    <h3>Mastodon</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/minds" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111712.png" alt="Minds Icon">
+                    <h3>Minds</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/rumble" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111706.png" alt="Rumble Icon">
+                    <h3>Rumble</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/badoo" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111773.png" alt="Badoo Icon">
+                    <h3>Badoo</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/foursquare" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111676.png" alt="Foursquare Icon">
+                    <h3>Foursquare</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/yelp" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111757.png" alt="Yelp Icon">
+                    <h3>Yelp</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/meetup" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111780.png" alt="Meetup Icon">
+                    <h3>Meetup</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/nextdoor" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111783.png" alt="Nextdoor Icon">
+                    <h3>Nextdoor</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/signal" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111793.png" alt="Signal Icon">
+                    <h3>Signal</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/line" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111790.png" alt="LINE Icon">
+                    <h3>LINE</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/kakaotalk" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111786.png" alt="KakaoTalk Icon">
+                    <h3>KakaoTalk</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/sinaweibo" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111768.png" alt="Sina Weibo Icon">
+                    <h3>Sina Weibo</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/douyin" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111796.png" alt="Douyin Icon">
+                    <h3>Douyin</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/bytedance" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111765.png" alt="ByteDance Icon">
+                    <h3>ByteDance</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+            <a href="/market/zhihu" style="text-decoration: none;">
+                <div class="card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111777.png" alt="Zhihu Icon">
+                    <h3>Zhihu</h3>
+                    <button>Перейти</button>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="technical-section">
+        <div class="technical-section-header">
+            <h2>Технический раздел</h2>
+            <button id="toggle-technical-section">
+                &#9660; <!-- Галочка вниз -->
+            </button>
+        </div>
+        <div class="technical-section-content">        
+            <div class="card">
+                <img src="https://img.icons8.com/color/96/000000/positive-dynamic.png" alt="Отзывы Icon">
+                <h3>Отзывы</h3>
+                <button>Перейти</button>
+            </div>
+            <div class="card">
+                <img src="https://img.icons8.com/color/96/000000/chat.png" alt="Чат Icon">
+                <h3>Чат</h3>
+                <button>Перейти</button>
+            </div>
+            <div class="card">
+                <img src="https://img.icons8.com/color/96/000000/guarantee.png" alt="Гарант Icon">
+                <h3>Гарант</h3>
+                <button>Перейти</button>
+            </div>
+            <div class="card">
+                <img src="https://img.icons8.com/color/96/000000/technical-support.png" alt="Тех поддержка Icon">
+                <h3>Тех поддержка</h3>
+                <button>Перейти</button>
+            </div>
+            <div class="card">
+                <img src="https://img.icons8.com/color/96/000000/telegram-app.png" alt="TG Bot Icon">
+                <h3>TG Bot</h3>
+                <button>Перейти</button>
+            </div>
+    </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2025 Покупка и продажа аккаунтов. Все права защищены.</p>
+        <nav>
+            <ul>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Условия использования</a></li>
+                <li><a href="#">Контакты</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    </div>
+    
+    <script src="../scripts/index.js"></script> <!-- подключаем JS файл для главной страницы -->
+    <!-- <script src="../react-app/build/static/js/main.38bab668.js"></script> подключаем React приложение -->
+    <script src="../scripts/header/search/search.js"></script> <!-- подключаем JS файл для поиска -->
+    <script type="module" src="../scripts/settingsModal/main.js"></script> <!-- подключаем JS файл для модального окна настроек -->
+    <script type="module" src="../scripts/favoritesModal/favoritesMain.js"></script> <!-- подключаем JS файл для избранного -->
+</body>
+</html>

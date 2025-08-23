@@ -1,0 +1,316 @@
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.tinos-bold-italic {
+    font-family: "Tinos", serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+.account-circle {
+    margin-top:8px;
+    font-size: 29px; /* Размер иконки */
+    color: #7c7c7c; /* Цвет иконки */
+    transition: color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.account-circle:hover {
+    color: #535353; /* Цвет при наведении */
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Tinos', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Стили для секции формы */
+.create-listing {
+    display: none;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.03);
+    max-width: 420px;
+    margin: 38px auto 0 auto;
+    padding: 32px 22px 22px 22px;
+    border: 1.5px solid #e0e7ef;
+    font-family: 'Tinos', serif;
+    transition: box-shadow 0.2s, border 0.2s;
+}
+
+.create-listing h2 {
+    font-family: 'Tinos', serif;
+    font-size: 1.35rem;
+    margin-bottom: 18px;
+    text-align: center;
+    color: #007bff;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.create-listing label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: #222;
+    font-size: 1rem;
+}
+
+.create-listing input,
+.create-listing textarea,
+.create-listing select {
+    width: 100%;
+    padding: 9px 11px;
+    margin-bottom: 13px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 7px;
+    background: #f8fafc;
+    font-family: 'Tinos', serif;
+    font-size: 1rem;
+    transition: border 0.18s;
+    box-sizing: border-box;
+}
+
+.create-listing input:focus,
+.create-listing textarea:focus,
+.create-listing select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.create-listing input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    accent-color: #007bff;
+}
+
+.create-listing button {
+    background: linear-gradient(90deg, #007bff 60%, #0056b3 100%);
+    color: #fff;
+    border: none;
+    padding: 11px 0;
+    border-radius: 7px;
+    font-size: 1.08rem;
+    font-family: 'Tinos', serif;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+}
+
+.create-listing button:hover {
+    background: linear-gradient(90deg, #0056b3 60%, #007bff 100%);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.13);
+}
+
+@media (max-width: 600px) {
+    .create-listing {
+        max-width: 98vw;
+        padding: 14px 2vw;
+    }
+    .create-listing h2 {
+        font-size: 1.08rem;
+    }
+}
+
+/* Секция выбора продукта */
+.choose-product {
+    margin: 36px auto 0 auto;
+    padding: 28px 22px 22px 22px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.03);
+    max-width: 520px;
+    border: 1.5px solid #e0e7ef;
+    font-family: 'Tinos', serif;
+    transition: box-shadow 0.2s, border 0.2s;
+}
+
+.product-header {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.product-header h2 {
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: #007bff;
+    margin: 0 0 8px 0;
+    letter-spacing: 0.01em;
+}
+
+.product-body {
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 10px;
+    padding: 6px 2px;
+    background: #f8fafc;
+    border: none;
+}
+
+.product-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+.product-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1.5px 6px rgba(0,0,0,0.04);
+    border: 2px solid transparent;
+    padding: 12px 16px;
+    min-width: 120px;
+    cursor: pointer;
+    transition: border 0.18s, box-shadow 0.18s, background 0.18s, transform 0.18s;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.product-item:hover {
+    border-color: #007bff;
+    background: #eaf4ff;
+    box-shadow: 0 4px 16px rgba(0,123,255,0.10);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.product-item.selected {
+    border-color: #007bff;
+    background: #d6eaff;
+    box-shadow: 0 4px 16px rgba(0,123,255,0.13);
+}
+
+.product-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #f8fafc;
+    object-fit: contain;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.product-item span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0056b3;
+}
+
+@media (max-width: 600px) {
+    .choose-product {
+        padding: 12px 2vw;
+        max-width: 98vw;
+    }
+    .product-list {
+        gap: 6px;
+    }
+    .product-item {
+        min-width: 80px;
+        padding: 7px 8px;
+        font-size: 0.92rem;
+    }
+    .product-icon {
+        width: 22px;
+        height: 22px;
+        margin-right: 6px;
+    }
+}
+
+
+/* Стили для второй формы create-listing-simple */
+
+.create-listing-simple {
+    display: none;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Tinos', serif;
+}
+
+.create-listing-simple h2 {
+    font-family: 'Tinos', serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.create-listing-simple label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.create-listing-simple input,
+.create-listing-simple textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Tinos', serif;
+    font-size: 14px;
+}
+
+.create-listing-simple button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-listing-simple button:hover {
+    background-color: #45a049;
+}
+
+/* Footer */
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: auto; /* Отодвигает футер вниз */
+    font-family: 'Tinos', serif; /* Общий стиль шрифта */
+}
+
+footer nav ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+footer nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+footer nav ul li a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+footer nav ul li a:hover {
+    opacity: 0.7;
+}

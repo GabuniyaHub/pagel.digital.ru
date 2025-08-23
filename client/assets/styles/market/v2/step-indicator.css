@@ -1,0 +1,19 @@
+.step-indicator {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+    max-width: 600px;
+    font-family: 'Tinos', serif;
+}
+.step {
+    padding: 10px;
+    border-bottom: 3px solid #ccc;
+    flex: 1;
+    text-align: center;
+    color: #777;
+}
+.step.active {
+    border-color: #4CAF50;
+    color: #000;
+    font-weight: bold;
+}

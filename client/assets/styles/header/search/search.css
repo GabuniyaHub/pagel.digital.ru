@@ -1,0 +1,66 @@
+.search-dropdown {
+    position: relative;
+  }
+  
+  .search-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 350px;
+    z-index: 1;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .search-panel input {
+    width: 95%;
+    padding: 6px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  .search-panel input:focus {
+    outline: none;
+  }
+  
+  .search-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  
+  .search-panel ul li {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 4px 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* выравнивание иконки и текста по вертикали */
+    font-size: 16px;
+    transition: background-color 0.2s;
+  }
+  
+  .search-panel ul li img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0; /* чтобы не сжимался */
+  }
+  
+  .search-panel ul li:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .search-dropdown.open .search-panel {
+    display: block;
+  }
+  

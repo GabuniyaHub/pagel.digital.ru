@@ -1,0 +1,595 @@
+/* Общий стиль страницы */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;    
+}
+.item-page {
+    /* flex: 1; */
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/*  */
+
+/* Заголовок страницы */
+.item-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.item-header h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.item-header p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* ФИЛЬТР ПОИСКА */
+
+.filter-search {
+    margin: 0 auto 32px auto;
+    padding: 28px 32px 22px 32px;
+    background: #f7f8fac4;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+    max-width: 1000px;
+}
+
+/* .filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+} */
+
+.filter-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+/* .filter-row-top {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+} */
+
+/* .filter-title {
+    flex: 0 1 50%;
+    min-width: 120px;
+    padding: 10px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    font-weight: 500;
+}
+
+.filter-selects {
+    display: flex;
+    gap: 10px;
+    flex: 0 1 50%;
+}
+
+.filter-select {
+    flex: 1 1 0;
+    min-width: 80px;
+    padding: 10px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    font-weight: 500;
+}
+
+.filter-title:focus,
+.filter-select:focus {
+    border-color: #7b8cff;
+    outline: none;
+} */
+
+/* .filter-large {
+    flex: 2 1 220px;
+    padding: 14px 18px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    font-weight: 500;
+}
+
+.filter-large:focus {
+    border-color: #7b8cff;
+    outline: none;
+} */
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1 1 20px;
+    gap: 4px;
+}
+
+.filter-group label {
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.filter-pair {
+    display: flex;
+    gap: 8px;
+}
+
+/* .filter-small {
+    flex: 1 1 40px;
+    padding: 6px 8px;
+    font-size: 13px;
+    border-radius: 7px;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+} */
+
+/* .filter-small:focus {
+    border-color: #7b8cff;
+    outline: none;
+} */
+
+.filter-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 16px;
+}
+
+/* .filter-row-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 0;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filter-pair {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-medium {
+    flex: 1 1 80px;
+    padding: 10px 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+} */
+
+#listing-search-btn, #listing-search-reset {
+    padding: 9px 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    background: #7b8cff;
+    color: #fff;
+    transition: background 0.2s;
+}
+
+#listing-search-btn:hover {
+    background: #4e5ed3;
+}
+
+#listing-search-reset {
+    background: #e0e0e0;
+    color: #222;
+}
+
+#listing-search-reset:hover {
+    background: #bdbdbd;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fafafa;
+    transition: border 0.2s;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #888;
+    outline: none;
+}
+
+.line {
+    width: 2px;
+    height: 22px;
+    background: #d1d5db;
+    align-self: center;
+    border-radius: 1px;
+    margin: 0 6px;
+    display: inline-block;
+}
+
+/* ...existing code... */
+/* 
+.filter-search {
+    margin: 0 auto 25px auto;
+    padding: 18px 20px 10px 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 1200px;
+}
+
+.filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1 1 150px;
+    gap: 4px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 2px;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #fafafa;
+    transition: border 0.2s;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #888;
+    outline: none;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+#listing-search-btn, #listing-search-reset {
+    padding: 8px 22px;
+    border-radius: 6px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #f0f0f0;
+    color: #222;
+    transition: background 0.2s;
+}
+
+#listing-search-btn:hover {
+    background: #bdbdbd;
+}
+
+#listing-search-reset:hover {
+    background: #e0e0e0;
+} */
+
+
+/* Список листингов */
+.listings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 30px;
+    margin: 30px 0;
+}
+
+/* 2 колонки на планшетах */
+@media (max-width: 1100px) {
+    .listings {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 1 колонка на мобильных */
+@media (max-width: 700px) {
+    .listings {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 4 колонки на очень больших экранах */
+@media (min-width: 1500px) {
+    .listings {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Карточка листинга */
+.listing-card {
+    width: 330px;
+    min-height: 380px; /* или нужная высота */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Заголовок карточки */
+.listing-header {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+    background-color: #f4f4f4;
+}
+
+.listing-header img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* .card-header h3 {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+} */
+
+
+/* Тело карточки */
+.listing-body {
+    flex: 1 1 auto;
+    /* height: 150px; */
+    padding: 18px 16px 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* max-height: 25vh ; */
+}
+
+.listing-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #222;
+}
+
+.listing-info {
+    display: flex;
+    flex-wrap: wrap;     
+    justify-content: flex-start;
+    font-size: 15px;
+    color: #444;
+    margin-bottom: 6px;
+    gap: 6px;
+}
+
+.listing-info span {
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 2px 8px;
+    margin-right: 4px;
+    word-break: break-all; 
+    white-space: normal;   
+    display: inline-block; 
+    max-width: 100%;       
+    box-sizing: border-box;
+}
+
+.listing-description {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+    word-break: break-word;
+}
+
+.listing-description span {
+    color: #000;
+    font-size: weight;
+    font-weight: 600;
+}
+
+.listing-body p {
+    margin: 5px 0;
+}
+
+/* Нижняя часть карточки */
+.listing-footer {
+    margin-top: auto;
+    padding: 10px 15px;
+    background-color: #5c5454;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* max-height: 20vh; */
+}
+
+.listing-buy-btn {
+    background: #f7f7f7;
+    color: #222;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.listing-buy-btn:hover,
+.listing-buy-btn:focus {
+    background: #bdbdbd;
+    color: #111;
+}
+
+
+
+/* Стили для ЗАКРЕПЛЕННЫХ листингов 📌 */
+.listing-card.is-pinned {
+    border: 1.5px dashed #007bff; /* Пунктирная рамка синего цвета */
+    /* background-color: #f2f6f9; Более светлый фон */
+    background-color: #fdfeff;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Тень с синим оттенком */
+    position: relative;
+}
+
+/* Добавляем метку "Закреплено" */
+.listing-card.is-pinned::after {
+    content: '📌';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #007bffa8;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 5px;
+    border-radius: 5px;
+}
+
+
+
+/* Стили для ПРЕМИУМ-листингов 👑 */
+.listing-card.is-premium {
+    border: 1.5px solid gold; /* Золотая рамка для выделения */
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4); /* Эффект свечения */
+    background: linear-gradient(135deg, #fefefe, #fff8e1); /* Легкий градиент */
+    position: relative;
+}
+
+/* Добавляем иконку или метку для премиум-статуса */
+.listing-card.is-premium::after {
+    content: '⭐ Premium';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: gold;
+    color: #333;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Стили для ВЕРИФИЦИРОВАННЫХ листингов ✅ */
+.listing-card.is-verified .listing-title {
+    position: relative;
+    padding-right: 25px; /* Освобождаем место для иконки */
+}
+
+.listing-card.is-verified .listing-title::after {
+    content: ' ✔ verified'; /* или любой другой символ, например, '✔️' */
+    /* background-color: #313131;  */
+    /* color: #fffb00;  */
+    background-color: rgba(4, 192, 4, 0.733);
+    color: #ece7e7;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);   
+}
+
+/* Если листинг является и премиум, и закреплённым */
+.listing-card.is-premium.is-pinned {
+    border-color: #ffc107 #007bff;
+}
+
+
+/* Контейнер для кнопки или сообщения */
+.load-more {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 50px;
+    background-color: #f9f9f9;
+}
+
+/* Стили самой кнопки */
+#load-more {
+    background-color: #007bff; /* Яркий синий цвет */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+}
+
+#load-more:hover {
+    background-color: #0056b3; /* Чуть темнее при наведении */
+    transform: translateY(-2px); /* Небольшой "подъем" кнопки */
+}
+
+#load-more:active {
+    background-color: #004085; /* Ещё темнее при нажатии */
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.4);
+}
+
+/* Стили для сообщения об отсутствии товаров */
+.load-more p {
+    font-size: 16px;
+    color: #6c757d; /* Нейтральный серый цвет */
+    margin: 0;
+    padding: 10px;
+    font-style: italic;
+}
+

@@ -1,0 +1,217 @@
+<%- include('../partials/header') %>
+<link rel="stylesheet" href="/market/assets/item/item.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= product.name %></title>
+
+<section class="item-header">
+    <h1><%= product.name %></h1>
+    <p><%= product.description %></p>
+</section>
+
+<section class="filter-search">
+    <form id="listing-search-form" autocomplete="off" class="filter-form">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="filter-title">Название</label>
+                <input type="text" id="filter-search-name" name="q" placeholder="Поиск по названию">
+            </div>
+            <div class="filter-group">
+                <label>Цена ($)</label>
+                <input type="number" min="0" name="price_min" placeholder="от">
+                <div class="line"></div>
+                <input type="number" min="0" name="price_max" placeholder="до">
+            </div>
+            <div class="filter-group">
+                <label>Подписчики</label>
+                <input type="number" min="0" name="subs_min" placeholder="от">
+                <div class="line"></div>
+                <input type="number" min="0" name="subs_max" placeholder="до">
+            </div>
+            <div class="filter-group">
+                <label>Монетизация</label>
+                <select name="monetized">
+                    <option value="">Любая</option>
+                    <option value="true">Включена</option>
+                    <option value="false">Отключена</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Доход ($/мес)</label>
+                <input type="number" min="0" name="income_min" placeholder="от">
+                <div class="line"></div>
+                <input type="number" min="0" name="income_max" placeholder="до">
+            </div>
+            <div class="filter-group">
+                <label for="filter-theme">Тема</label>
+                <select name="theme" class="filter-select">
+                    <option value="" disabled selected hidden>Выберите тему</option>
+                    <option value="1">Авто</option>
+                    <option value="2">Бизнес</option>
+                    <option value="3">Дизайн</option>
+                    <option value="4">Животные</option>
+                    <option value="5">ЖЦА 30+</option>
+                    <option value="6">Здоровье</option>
+                    <option value="7">Знакомство и общение</option>
+                    <option value="8">Игры</option>
+                    <option value="9">IT</option>
+                    <option value="10">Культура</option>
+                    <option value="11">Кино</option>
+                    <option value="12">Кулинария</option>
+                    <option value="13">Литература</option>
+                    <option value="14">Мода и красота</option>
+                    <option value="15">Молодежные до 18</option>
+                    <option value="16">МЦА 30+</option>
+                    <option value="17">Наука и факты</option>
+                    <option value="18">Недвижимость</option>
+                    <option value="19">Новости и сми</option>
+                    <option value="20">Образование</option>
+                    <option value="21">Объявления</option>
+                    <option value="22">Политика</option>
+                    <option value="23">Природа</option>
+                    <option value="24">Психология</option>
+                    <option value="25">Развлечения</option>
+                    <option value="26">Регион. порталы</option>
+                    <option value="27">Религия</option>
+                    <option value="28">Ремонт</option>
+                    <option value="29">Работа</option>
+                    <option value="30">Семья</option>
+                    <option value="31">Спорт</option>
+                    <option value="32">Товары и услуги</option>
+                    <option value="33">Туризм</option>
+                    <option value="34">Фото</option>
+                    <option value="35">Хобби</option>
+                    <option value="36">Эзотерика</option>
+                    <option value="37">Эротика</option>
+                    <option value="38">Юмор</option>
+                    <option value="39">Другое</option>
+                    <option value="40">Фан группы</option>
+                    <option value="41">Крипта/NFT</option>
+                </select>
+                <!-- <input type="text" id="filter-theme" name="theme" placeholder="Например: авто, бьюти"> -->
+            </div>
+        </div>
+        <div class="filter-actions">
+            <button type="submit" id="listing-search-btn">Применить</button>
+            <button type="reset" id="listing-search-reset">Сбросить</button>
+        </div>
+    </form>
+</section>
+
+<section class="item-page">
+    <div class="listings">
+        <% if (product.listings && product.listings.length > 0) { %>
+            <% product.listings
+            .filter(listing => listing.is_blocked === false)
+            .forEach(listing => { %>
+                <div id="listing-card" class="listing-card
+                    <% if (listing.is_premium) { %>is-premium<% } %>
+                    <% if (listing.is_pinned_active) { %>is-pinned<% } %>
+                    <% if (listing.verified) { %>is-verified<% } %>"
+                    data-link="<%= listing.link || 'Ссылка отсутствует' %>"
+                    data-product="<%= product.name || 'Название продукта отсутствует' %>"
+                    data-platform="<%= listing.platform_slug || 'Платформа отсутствует' %>"
+                    data-id="<%= listing.id || 'ID отсутствует' %>"
+                    data-price="<%= listing.price || 'Цена отсутствует' %>"
+                    data-subs="<%= listing.subscribers || 'Подписчики отсутствуют' %>"
+                    data-income="<%= listing.income || 'Доход отсутствует' %>"
+                    data-monetized="<%= listing.monetization  %>"
+                    data-theme="<%= listing.theme || 'Тема отсутствует' %>">
+                    <div class="listing-header">
+                        <img id="avatar-<%= listing.id %>"
+                        src="/market/assets/item/default2.png"
+                        alt="Аватар"
+                        data-cover="<%= listing.cover ? '/market/uploads/' + listing.cover : '' %>">
+                        <!-- <h3><%= listing.theme %></h3> -->
+                    </div>
+                    <div class="listing-body">
+                        <h2 class="listing-title" id="title-<%= listing.id %>">
+                            <%= listing.name || 'Название' %>
+                        </h2>
+                        <div class="listing-info">
+                            <span class="listing-price">Цена: <b>$<%= listing.price || '—' %></b></span>
+                            <!-- <span class="listing-subscribers" id="subs-<%= listing.id %>">Подписчики: </b></span> -->
+                            <span 
+                            class="listing-subscribers" 
+                            id="subs-<%= listing.id %>" 
+                            style="display: <%= listing.subscribers && listing.subscribers > 0 ? 'block' : 'none' %>;">
+                            Подписчики: <b><%= listing.subscribers && listing.subscribers > 0 ? listing.subscribers : '' %></b>
+                            </span>
+                        </div>
+                        <p class="listing-description">
+                            <span>Описание:</span> 
+                            <%= listing.description.length > 125 
+                                ? listing.description.slice(0, 122) + '...' 
+                                : listing.description %>
+                        </p>
+
+                    </div>
+                    <div class="listing-footer">
+                        <!-- <% if (listing.show_link) { %>
+                            <a href="<%= listing.link %>" target="_blank">Перейти по ссылке</a>
+                        <% } %> -->
+                        <button class="listing-buy-btn">Подробнее</button>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>Нет доступных товаров.</p>
+        <% } %>
+    </div>
+</section>
+
+<% if (hasMore) { %>
+  <div class="load-more">
+    <button id="load-more">Показать еще</button>
+  </div>
+<% } else { %>
+  <!-- <div class="load-more"> -->
+    <!-- <p>Больше нет товаров.</p> -->
+  <!-- </div> -->
+<% } %>
+
+
+<!-- Загружить еще больше объявлений -->
+<script src="/market/scripts/item/loadMore.js"></script>
+<!-- Фильтры -->
+<script src="/market/scripts/item/filter.js"></script>
+<!-- Зарпос на получение avatar -->
+ <script src="/market/scripts/item/parserAvatar.js"></script>
+ <!-- Переход в пост.айди -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.listing-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Получаем нужные данные из data-атрибутов
+                const platform = card.dataset.platform;
+                const product = card.dataset.product;
+                const catalog = card.closest('.listings').dataset.catalog || '';
+                const id = card.dataset.id;
+
+                // Собираем url
+                const url = `/market/${platform}/${product}/items/${id}`;
+                async function prepareTokenAndNavigate(url) {
+                    const token = sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
+
+                    if (!token) {
+                        // пользователь не авторизован
+                        window.location.href = url;
+                        return;
+                    }
+
+                    const hasCookie = document.cookie.includes(`jwt=${token}`);
+
+                    if (!hasCookie) {
+                        document.cookie = `jwt=${token}; path=/; SameSite=Lax`;
+                        // Подождём, пока кука точно установится, особенно на медленных браузерах
+                        await new Promise(resolve => setTimeout(resolve, 100)); 
+                    }
+
+                    window.location.href = url;
+                }
+                prepareTokenAndNavigate(url);
+            });
+        });
+    });
+  </script>
+
+<%- include('../partials/footer') %>

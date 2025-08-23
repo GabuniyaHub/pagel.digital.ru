@@ -1,0 +1,180 @@
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.tinos-bold-italic {
+    font-family: "Tinos", serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Tinos', serif;
+    background-color: #f2f2f2;
+}
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+header {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.wrapper {
+    width: 420px;
+    background: transparent;
+    /* border: 2px solid rgba(150, 149, 149, 0.2); */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); 
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0,0,0,.2); ;
+    color: rgb(0, 0, 0) ;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 40px;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: rgb(0, 0, 0);   
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.wrapper .remeber-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remeber-forgot label input {
+    accent-color: #ffffff;
+    margin-right: 3px;
+}
+
+.remeber-forgot a {
+    color: hsl(241, 100%, 73%);
+    text-decoration: none;
+}
+
+.remeber-forgot a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #28a745;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.wrapper .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    color: hsl(241, 100%, 73%);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для контейнера кнопок OAuth */
+.oauth-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.btn-google {
+    border: none;
+}
+
+.spinner-border {
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+#vkid-button-container {
+    margin-top: 20px; /* Отступ сверху для кнопки VK */
+    display: flex; /* Используем flexbox для центрирования */
+    justify-content: center; /* Центрируем по горизонтали */
+    align-items: center; /* Центрируем по вертикали (если контейнер имеет высоту) */
+    width: 100%; /* Убедитесь, что контейнер занимает всю доступную ширину */
+    margin-bottom: 10px; /* Добавьте отступ снизу, если нужно */
+  }
+
+  /* Для кнопок Google и VK, а также других кнопок OAuth,
+     которые вы хотите центрировать, можно создать общий класс */
+  .social-login-button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px; /* Отступ между кнопками */
+  }
+
+/* @media (max-width: 768px) {
+    header {
+        box-shadow: none !important;
+    }
+
+    section {
+        margin: 10px;
+    }
+} */

@@ -1,0 +1,9 @@
+src/
+├── App.jsx
+├── pages/
+│   ├── Login.jsx         // Ввод email и кода
+│   ├── Dashboard.jsx     // Панель администратора
+├── components/
+│   └── ProtectedRoute.jsx  // Защищённый маршрут
+├── api/
+│   └── auth.js           // Взаимодействие с backend

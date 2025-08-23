@@ -1,0 +1,264 @@
+<!DOCTYPE html> <!-- Not working derictory -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/market/sell.css"> <!-- подключаем стили для страницы создания объявления -->
+    <link rel="stylesheet" href="../../assets/styles/header/search/search.css"> <!-- подключаем стили для поиска -->
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png" type="image/png"> <!-- иконка сайта -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- подключаем Material Icons -->
+    <link rel="stylesheet" href="../../assets/styles/header/navbar.css"> <!-- подключаем стили для навигационной панели -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- подключаем Font Awesome для иконок -->
+    <link rel="stylesheet" href="../../assets/styles/market/sellChoosePlatform.css"> <!-- подключаем стили для выбора платформы -->
+    <link rel="stylesheet" href="../../assets/styles/market/step-indicator.css"> <!-- подключаем стили для индикатора шагов -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- подключаем SweetAlert2 для всплывающих уведомлений -->
+    <title>Создание объявления</title>
+</head>
+<body>
+
+    <header>
+    <nav>
+        <div class="nav-container">
+            <a href="/pages/index.html" style="text-decoration: none; color: inherit;">
+              <div class="logo">
+                <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
+                <span>PL-GL</span>
+            </div>
+          </a>
+            <div class="menu-icon" id="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <ul class="nav-links" id="nav-links">
+                <li><a href="/pages/index.html">Главная</a></li>
+                <li><a href="#">Услуги</a></li>
+                <li><a href="#">Справка</a></li>
+                <li id="search" class="search-dropdown">
+                    <a href="#" id="search-toggle">Поиск</a>
+                    <div id="search-menu" class="search-panel">
+                      <input type="text" id="search-input" placeholder="Найти платформу...">
+                      <ul id="search-results"></ul>
+                    </div>
+                </li>  
+                <li><a href="#">Отзывы</a></li>
+                <li><a href="#">О нас</a></li>
+                <li><a href="#">Контакты</a></li>
+                <!-- Кнопки для неавторизованных пользователей -->
+                <li id="login-item"><a href="/pages/user-auth/login.html">Вход</a></li>
+                <li id="register-item"><a href="../../../client/pages/user-auth/register.html">Регистрация</a></li>
+                <!-- Кнопки для авторизованных пользователей (изначально скрыты) -->
+                <li id="account-item" style="display: none;">
+                    <div class="account-dropdown">
+                        <a href="/account" class="account-circle">
+                            <i class="material-icons account-circle">account_circle</i>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="/account"><i class="fas fa-user"></i> Личный кабинет</a>
+                            <a href="/settings"><i class="fas fa-cog"></i> Настройки</a>
+                            <a href="/balance"><i class="fas fa-wallet"></i> Баланс</a>
+                            <a href="/logout" id="logout-button"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                        </div>
+                    </div>
+                </li>
+                <a href="" class="btn-link" style="text-decoration: none;">
+                    <li id="sell-item" style="display: none;">
+                        <button>Продать</button>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </nav>
+    <!-- <script src="../market/scripts/utils/dropdownMenu.js"></script> -->
+    
+    </header>
+
+    <!-- <div class="step-indicator">
+        <span class="step active">1. Платформа</span>
+        <span class="step">2. Категория</span>
+        <span class="step">3. Объявление</span>
+    </div> -->
+
+
+    <section class="choose-platform">
+        <div class="platform-header">
+            <h1>Выберите платформу</h1>
+            <input type="text" id="platform-search-input" placeholder="Найти платформу...">
+        </div>
+        <div class="platform-body">
+            <ul class="platform-list" id="platform-list">
+                <!-- <li class="platform-item">
+                    <img src="https://via.placeholder.com/32" alt="Platform Icon" class="platform-icon">
+                    <span>Платформа 1</span>
+                </li>
+                <li class="platform-item">
+                    <img src="https://via.placeholder.com/32" alt="Platform Icon" class="platform-icon">
+                    <span>Платформа 2</span>
+                </li> -->
+            </ul>
+        </div>
+        <div class="platform-footer">
+            <p>Если вы не нашли нужную платформу, напишите нам в <a href="#">поддержку</a>.</p>
+            <p>Мы постоянно обновляем список платформ.</p>
+        </div>
+    </section>
+
+    <section class="choose-product" style="display: none;">
+        <div class="product-header">
+            <h2>Выберите тип объявления</h2>
+        </div>
+        <div class="product-body">
+            <ul class="product-list" id="product-list">
+                <!-- Продукты будут добавлены динамически -->
+            </ul>
+        </div>
+    </section>
+
+    <section class="create-listing">
+        <h2>Создание объявления</h2>
+        <form id="listing-form" enctype="multipart/form-data" method="POST">
+            <!-- Ссылка -->
+            <label for="link">Ссылка:</label>
+            <input type="url" id="link" name="link" placeholder="Введите ссылку" required pattern="https?://.+" title="Введите корректную ссылку, начинающуюся с http:// или https://">
+
+            <!-- Тема -->
+            <label for="theme">Выберите тематику группы</label>
+            <select id="theme" name="groupTheme" required>
+                <option value="" disabled selected hidden>Выберите тематику...</option>
+                <option value="1">Авто</option>
+                <option value="2">Бизнес</option>
+                <option value="3">Дизайн</option>
+                <option value="4">Животные</option>
+                <option value="5">ЖЦА 30+</option>
+                <option value="6">Здоровье</option>
+                <option value="7">Знакомство и общение</option>
+                <option value="8">Игры</option>
+                <option value="9">IT</option>
+                <option value="10">Культура</option>
+                <option value="11">Кино</option>
+                <option value="12">Кулинария</option>
+                <option value="13">Литература</option>
+                <option value="14">Мода и красота</option>
+                <option value="15">Молодежные до 18</option>
+                <option value="16">МЦА 30+</option>
+                <option value="17">Наука и факты</option>
+                <option value="18">Недвижимость</option>
+                <option value="19">Новости и сми</option>
+                <option value="20">Образование</option>
+                <option value="21">Объявления</option>
+                <option value="22">Политика</option>
+                <option value="23">Природа</option>
+                <option value="24">Психология</option>
+                <option value="25">Развлечения</option>
+                <option value="26">Регион. порталы</option>
+                <option value="27">Религия</option>
+                <option value="28">Ремонт</option>
+                <option value="29">Работа</option>
+                <option value="30">Семья</option>
+                <option value="31">Спорт</option>
+                <option value="32">Товары и услуги</option>
+                <option value="33">Туризм</option>
+                <option value="34">Фото</option>
+                <option value="35">Хобби</option>
+                <option value="36">Эзотерика</option>
+                <option value="37">Эротика</option>
+                <option value="38">Юмор</option>
+                <option value="39">Другое</option>
+                <option value="40">Фан группы</option>
+                <option value="41">Крипта/NFT</option>
+            </select>
+            
+            <!-- Цена -->
+            <label for="price">Цена:</label>
+            <input type="number" id="price" name="price" placeholder="Введите цену ($)" min="0" step="0.01"  required title="Введите только число, например: 100 или 99.99">
+
+            <!-- Доход -->
+            <label for="income">Доход:</label>
+            <input type="number" id="income" name="income" placeholder="Введите доход" min="0" step="0.01">
+
+            <!-- Расход -->
+            <label for="expense">Расход:</label>
+            <input type="number" id="expense" name="expense" placeholder="Введите расход" min="0" step="0.01">
+
+            <!-- Описание -->
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" placeholder="Введите описание" required pattern=".{10,1000}" title="Описание должно содержать от 10 до 1000 символов"></textarea>
+
+            <!-- Источники дохода -->
+            <label for="income_sources">Источники дохода:</label>
+            <textarea id="income_sources" name="income_sources" placeholder="Опишите источники дохода" required pattern=".{5,500}" title="Минимум 5 символов"></textarea>
+
+            <!-- Источники расхода -->
+            <label for="expense_sources">Источники расхода:</label>
+            <textarea id="expense_sources" name="expense_sources" placeholder="Опишите источники расхода" required pattern=".{5,500}" title="Минимум 5 символов"></textarea>
+
+            <!-- Продвижение -->
+            <label for="promotion">Продвижение:</label>
+            <textarea id="promotion" name="promotion" placeholder="Опишите продвижение" required pattern=".{5,500}" title="Минимум 5 символов"></textarea>
+
+            <!-- Потребности в поддержке -->
+            <label for="support_needs">Потребности в поддержке:</label>
+            <textarea id="support_needs" name="support_needs" placeholder="Что необходимо для поддержания?" required pattern=".{5,500}" title="Минимум 5 символов"></textarea>
+
+            <!-- Разрешить комментарии
+            <label for="allow_comments">Разрешить комментарии:</label>
+            <input type="checkbox" id="allow_comments" name="allow_comments"> -->
+
+            <!-- Показать ссылку -->
+            <label for="show_link">Показать ссылку:</label>
+            <input type="checkbox" id="show_link" name="show_link" checked>
+
+            <!-- Гибкий переключатель
+            <label for="flex_switch">Соглашаюсь убрать контакты/закрыть ЛС в этом сообществе, чтобы получить на 50% больше рейтинга</label>
+            <input type="checkbox" id="flex_switch" name="flex_switch"> -->
+
+            <!-- Скриншоты -->
+            <label for="screenshots">Прикрепить скриншоты (подтверждения доходов и тд):</label>
+            <input type="file" id="screenshots" name="screenshots" multiple accept="image/*">
+
+            <!-- Кнопка отправки -->
+            <button type="submit" id="submit-button">
+                <i class="fas fa-paper-plane"></i> Создать объявление
+            </button>
+        </form>
+    </section>
+
+    <section class="create-listing-simple" style="display: none;">
+        <h2>Заполните форму</h2>
+        <form id="simple-listing-form">
+            <!-- Название -->
+            <label for="simple-title">Название:</label>
+            <input type="text" id="simple-title" name="title" placeholder="Введите название" required pattern=".{5,100}" title="Название должно содержать от 5 до 100 символов">
+
+            <!-- Описание -->
+            <label for="simple-description">Описание:</label>
+            <textarea id="simple-description" name="description" placeholder="Введите описание" required pattern=".{10,1000}" title="Описание должно содержать от 10 до 1000 символов"></textarea>
+
+            <!-- Цена -->
+            <label for="simple-price">Цена:</label>
+            <input type="number" id="simple-price" name="price" placeholder="Введите цену" min="0" step="0.01" required>
+
+            <!-- Кнопка отправки -->
+            <button type="submit" id="simple-submit-button">
+                 <i class="fas fa-paper-plane"></i> Создать объявление
+            </button>
+        </form> 
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Покупка и продажа аккаунтов. Все права защищены.</p>
+        <nav>
+            <ul>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Условия использования</a></li>
+                <li><a href="#">Контакты</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+<script src="../../scripts/market/sell.js"></script> <!-- подключаем скрипт для страницы создания объявления -->
+<script src="../../scripts/header/search/search.js"></script> <!-- подключаем скрипт для поиска -->
+<script src="../../scripts/market/sellChoosePlatform.js"></script> <!-- подключаем скрипт для выбора платформы -->
+</body>
+</html>

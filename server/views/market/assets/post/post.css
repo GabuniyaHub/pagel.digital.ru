@@ -1,0 +1,728 @@
+/* общее */
+
+* {
+    margin: 0%;
+    padding: 0%;
+}
+
+.post {
+    background: #f4f4f4;
+    min-height: 100vh;
+    padding-bottom: 40px;
+}
+
+
+/* оглавление + user + краткая инфа */
+
+.post-header {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 10px;
+    margin: 30px auto 18px auto;
+    padding: 18px 28px 10px 28px;
+    max-width: 1110px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    font-size: 15px;
+}
+
+.post-header-back-link-container { /* верхний контейнер шапки */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-bottom: 1px solid rgba(0,0,0,0.06);;
+}
+
+.post-header-info-container { /* нижний контейнер шапки */
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.post-header-back-link-container a { /* отступ между линей и кнопкной */
+    margin-bottom: 15px;
+}
+
+.header-left-container p,
+.header-right-container a { /* отсуп между тегами */
+    margin: 14px 0;
+    color: #555;
+    text-decoration: none;
+}
+
+.header-right-container { /* правая колонка находится справа строки */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+}
+
+.body-header-buy-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.body-header-buy-button:hover {
+    background-color: #1558b0;
+}
+
+.back-link {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #ffffff;
+    color: #000000;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(30,60,120,0.06);
+    border: 1px solid #000000;
+    transition: background 0.18s, color 0.18s;
+}
+
+.back-link:hover {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+/* тело поста */
+
+.post-body {
+    background: #fff;
+    border-radius: 10px;
+    max-width: 1100px;
+    margin: 0 auto 24px auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 28px 32px 32px 32px;
+}
+
+/* голова-тела поста */
+.body-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.body-header-user {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0,0,0,0.06)
+    
+    /* box-shadow: 0 1px 4px rgba(0,0,0,0.04); */
+}
+
+.body-header-user-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    /* margin-bottom: 10px; */
+    /* background: #e0e0e0; */
+}
+
+.body-header-user-name {
+    display: flex;
+    /* flex-direction: row; */
+    /* align-items: center; */
+    gap: 12px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    /* margin-bottom: 10px; */
+}
+
+.body-header-user-name-container {
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* align-items: center; */
+    /* text-align: center; */
+    /* margin-right: 16px; */
+}
+
+.body-header-user-name h1 {
+    font-size: 1.1em;
+    margin: 0 0 4px 0;
+}
+
+.body-header-user-name-container p {
+    font-size: 0.95em;
+    color: #888;
+    /* margin: 0 0 8px 30px; */
+}
+
+.body-header-user-reviews p {
+    font-size: 0.93em;
+    margin: 2px 0;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 3px;
+}
+
+.dot-container {
+    display: inline-block;
+    margin-right: 10px; /* Расстояние между группами точек */
+}
+
+.dot-green { background: #43a047; }
+.dot-grey { background: #a0a0a0; }
+.dot-red { background: #e53935; }
+
+.body-header-user-contact-seller-button {
+    padding: 17px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #000000;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 20px;
+}
+
+.body-header-user-contact-seller-button:hover {
+    background: #ffffff;
+    color: black;
+    border: 1px solid #000000;
+}
+
+.body-header-briefly-post {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 18px;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px;
+    /* border: 1px solid #e0e0e0; */
+    border-radius: 12px;
+    background: #fff;
+}
+
+.body-header-briefly-post-left {
+    display: flex;
+    gap: 12px;
+    flex-grow: 1;
+    border-right: 1px solid #e0e0e0;
+}
+
+.body-header-briefly-post-image {
+    width: 210px;
+    height: 210px;
+    border-radius: 15px;
+    object-fit: cover;
+    background: #e0e0e0;
+    margin-right: 12px;
+}
+
+.body-header-briefly-post-NTL {
+    max-width: 300px;
+    flex-wrap: wrap;
+}
+
+.listing-actions {
+  display: flex;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.listing-actions .btn {
+  display: inline-block;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 50px;
+  border: 0.5px solid;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  /* margin-right: 10px; */
+}
+
+/* Кнопка Edit */
+.btn-edit {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+.btn-edit:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+/* Кнопка UP */
+.btn-up {
+  color: #fd7e14;
+  border-color: #fd7e14;
+}
+.btn-up:hover {
+  background-color: #fd7e14;
+  color: #fff;
+}
+
+/* Кнопка Delete */
+.btn-delete {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+.btn-delete:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+
+.body-header-briefly-post-SIE {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 400px;
+}
+
+
+.body-header-briefly-post-NTL h1 {
+    font-size: 1.2em;
+    margin: 0 0 6px 0;
+    color: #222;
+}
+.body-header-briefly-post-NTL p,
+.body-header-briefly-post-SIE p {
+    margin: 5px 0;
+    font-size: 1em;
+    word-break: break-word;
+    /* white-space: pre-wrap; */
+}
+
+.body-header-briefly-post-price p {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #000;
+    margin: 6px 0 12px;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+
+/* .body-header-briefly-post-NTL a {
+    max-width: 300px;
+    flex-wrap: wrap;
+} */
+
+/* .body-header-briefly-post-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+} */
+.body-header-briefly-post-buttons button {
+    padding: 17px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #000000;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 20px;
+    border: 1px solid #000000;
+}
+.body-header-briefly-post-buttons button:hover {
+    background: #ffffff;
+    color: black;
+    border: 1px solid #000000;
+}
+
+/* Осн описание */
+
+.body-content {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.body-content-info {
+    flex: 2 1 320px;
+}
+
+.body-content-info p {
+    margin: 7px 0;
+    font-size: 1em;
+    word-break: break-word;
+    /* white-space: pre-wrap; */
+}
+
+.body-content-screenshots {
+    flex: 180px;
+}
+
+
+/* .body-content-screenshots img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+} */
+
+.screenshot-placeholder {
+    display: inline-block;
+    width: 190px;
+    height: 170px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-right: 10px;
+    /* margin-bottom: 8px; */
+    border: 1px solid #e0e0e0;
+    background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" fill="%23e0e0e0"/><path d="M5 35l10-15 10 10 10-15" stroke="%23bdbdbd" stroke-width="2" fill="none"/><circle cx="13" cy="13" r="3" fill="%23bdbdbd"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40px 40px;
+}
+
+.body-content-screenshots-custom img {
+margin: 30px 10px 10px 10px;
+border: 1px solid #ccc;
+border-radius: 16px;
+/* Скругление углов */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* Тень вокруг */
+/* max-width: 150px; */
+/* max-height: 100px; */
+/* width: auto; */
+/* height: auto; */
+width: 137px;
+height: 68px;
+object-fit: contain;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Эффект при наведении */
+.body-content-screenshots-custom img:hover {
+transform: scale(1.05);
+/* Увеличивает изображение на 5% */
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+/* Делает тень более выраженной */
+cursor: pointer;
+/* Меняет курсор на "указующий палец", чтобы показать интерактивность */
+}
+
+/* Комментарии */
+
+.post-footer {
+    background: #fff;
+    border-radius: 10px;
+    max-width: 1100px;
+    margin: 0 auto 24px auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 22px 32px 28px 32px;
+}
+.post-footer-head {
+    margin-bottom: 15px;
+}
+
+.post-footer-head h3 {
+    margin-bottom: 10px ;
+}
+
+.post-footer-write-block textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    font-family: inherit;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.post-footer-write-block textarea:focus {
+    outline: none;
+    border-color: #b1b5cc; /* Мягкий синий цвет при фокусе */
+    box-shadow: 0 0 0 2px rgba(57, 73, 171, 0.2); /* Тень вместо рамки */
+}
+
+.comment {
+display: flex;
+align-items: center;
+/* ← ключевая строка */
+gap: 10px;
+padding: 10px;
+border-radius: 6px;
+background: #f1f1f1;
+margin-top: 10px;
+}
+
+.comment img.avatar {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+object-fit: cover;
+flex-shrink: 0;
+/* ← чтобы аватар не сжимался */
+}
+
+.comment-content {
+flex: 1;
+display: flex;
+flex-direction: column;
+word-break: break-word;
+text-align: left;
+/* ← вот это ключевое */
+}
+
+.comment-time {
+font-size: 12px;
+color: #888;
+margin-top: 4px;
+align-self: flex-start;
+/* ← чтобы время было справа */
+}
+
+.comment.my-comment {
+background: #dff0d8;
+border-left: 4px solid #3c763d;
+}
+
+.post-footer-buttons button {
+        padding: 17px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #000000;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 20px;
+    border: 1px solid #000000;
+}
+.post-footer-buttons button:hover {
+    background: #ffffff;
+    color: black;
+    border: 1px solid #000000;
+}
+.post-footer-comments-block {
+    margin-top: 18px;
+    color: #444;
+    font-size: 1em;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    gap: 8px;
+}
+
+.post-user-avatar {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+object-fit: cover;
+border: 1px solid #ddd;
+}
+
+
+
+/* --- Адаптивность --- */
+
+/* Планшеты и небольшие ноутбуки */
+@media (max-width: 1100px) {
+    .post-header, .post-body, .post-footer {
+        max-width: 98vw;
+        padding: 12px 2vw;
+    }
+    .body-header, .body-content {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .body-header-briefly-post {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 10px;
+    }
+    .body-header-briefly-post-left {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+    .body-header-briefly-post-image {
+        width: 140px;
+        height: 140px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .body-header-user {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: none;
+        margin-bottom: 10px;
+    }
+}
+
+/* Мобильные устройства */
+@media (max-width: 700px) {
+    .post-header, .post-body, .post-footer {
+        max-width: 100vw;
+        padding: 8px 2vw;
+        margin: 10px 0;
+        border-radius: 0;
+    }
+    .post-header {
+        font-size: 13px;
+        margin: 0 0 10px 0;
+    }
+    .body-header-briefly-post-image {
+        width: 90px;
+        height: 90px;
+    }
+    .body-header-briefly-post-NTL {
+        max-width: 100%;
+    }
+    .body-header-briefly-post-SIE {
+        min-width: 0;
+    }
+    .body-content {
+        gap: 12px;
+    }
+    .body-content-info, .body-content-screenshots {
+        flex: 1 1 100%;
+    }
+    .screenshot-placeholder {
+        width: 90px;
+        height: 70px;
+        margin-right: 6px;
+        margin-top: 6px;
+    }
+    .body-content-screenshots-custom img {
+        width: 90px !important;
+        height: 70px !important;
+        object-fit: cover;
+        margin-right: 6px;
+        margin-top: 6px;
+    }
+    .back-link {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+    .body-header-user-avatar {
+        width: 38px;
+        height: 38px;
+    }
+    .body-header-user-contact-seller-button,
+    .body-header-briefly-post-buttons button,
+    .post-footer-buttons button {
+        padding: 10px 12px;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    .body-header-briefly-post-price p {
+        font-size: 1.1em;
+        margin: 4px 0 8px;
+    }
+    .post-footer-write-block textarea {
+        min-height: 60px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 700px) {
+    .body-header-briefly-post {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 0;
+    }
+    .body-header-briefly-post-left {
+        flex-direction: column;
+        align-items: stretch;
+        border-right: none;
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        gap: 8px;
+    }
+    .body-header-briefly-post-image {
+        width: 100%;
+        max-width: 220px;
+        height: auto;
+        margin: 0 auto 8px auto;
+        display: block;
+    }
+    .body-header-briefly-post-NTL {
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    .body-header-briefly-post-NTL h1 {
+        font-size: 1.1em;
+        margin: 0 0 4px 0;
+        word-break: break-word;
+        text-align: left;
+    }
+    .body-header-briefly-post-NTL p {
+        font-size: 0.98em;
+        margin: 2px 0;
+        word-break: break-word;
+        text-align: left;
+    }
+    .body-header-briefly-post-SIE {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 8px;
+    }
+    .body-header-briefly-post-SIE p {
+        font-size: 0.98em;
+        margin: 2px 0;
+        text-align: left;
+    }
+    .body-header-briefly-post-price {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    .body-header-briefly-post-price p {
+        font-size: 1.15em;
+        margin: 4px 0 8px 0;
+        text-align: left;
+    }
+    .body-header-briefly-post-buttons {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Очень большие экраны */
+@media (min-width: 1600px) {
+    .post-header, .post-body, .post-footer {
+        max-width: 1300px;
+    }
+    .body-header-briefly-post-image {
+        width: 260px;
+        height: 260px;
+    }
+}

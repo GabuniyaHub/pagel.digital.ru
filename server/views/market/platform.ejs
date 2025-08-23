@@ -1,0 +1,68 @@
+<!-- filepath: c:\Users\Гурам\Desktop\Money\проекты\Pl_Gl_new-market\server\views\market\platform.ejs -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../market/assets/styles.css">
+<title><%= platform.name %></title>
+<%- include('../partials/header') %>
+
+
+<section class="platform">
+  <div class="platform-header">
+    <img src="<%= platform.icon %>" alt="<%= platform.name %>">
+    <div class="platform-info">
+      <h1><%= platform.name %></h1>
+      <p><%= platform.description %></p>
+    </div>
+  </div>
+</section>
+
+<section class="products">
+  <h2>Услуги</h2>
+  <div class="products-list">
+    <% if (platform.products && platform.products.length > 0) { %>
+      <% platform.products.forEach(product => { %>
+        <a href="/market/<%= platform.id %>/<%= product.name %>/items" style="color: inherit; text-decoration: none;">
+          <div class="product-card">
+            <div class="card-header">
+              <img src="<%= platform.icon %>" alt="<%= product.name %>">
+              <h3><%= product.name %></h3>
+            </div>
+            <p><%= product.description %></p>
+            <!-- <p>Цена: $<%= product.price %></p> -->
+            <!-- <button>Перейти</button> -->
+          </div>
+        </a>
+
+      <% }) %>
+    <% } else { %>
+      <p>Услуги отсутствуют.</p>
+    <% } %>
+  </div>
+</section>
+
+<!-- <section>
+  <h1>Услуги</h1>
+  <div class="cards">
+    <% if (platform.products && platform.products.length > 0) { %>
+      <% platform.products.forEach(product => { %>
+        <div class="card-buy">
+          <div class="card-header">
+            <img src="<%= product.image %>" alt="<%= product.name %>">
+            <h3><%= product.name %></h3>
+          </div>
+          <div class="card-body">
+            <p>Раздел покупки
+            Здесь вы можете купить аккаунт <%- product.name %>.
+            </p>
+          </div>
+          <div class="card-footer">
+            <p>Количество товаров: X</p>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>Услуги отсутствуют.</p>
+    <% } %>
+  </div>
+</section> -->
+
+<%- include('../partials/footer') %>

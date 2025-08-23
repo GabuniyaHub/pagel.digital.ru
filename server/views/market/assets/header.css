@@ -1,0 +1,253 @@
+/* Header */
+header {
+    background: transparent;
+    color: #333;
+    z-index: 4;
+    position: sticky;
+    padding: 15px 0;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);  */
+}
+
+.nav-container {
+    max-width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000000; /* Цвет текста */
+}
+
+.logo img {
+    width: 40px; /* Размер иконки */
+    height: 40px;
+    margin-right: 10px; /* Отступ между иконкой и текстом */
+}
+
+.logo span a{
+    color: #333; /* Цвет текста */
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ff5722;
+    transition: width 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #ff5722;
+}
+
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+/* Бургер-меню */
+.menu-icon {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-icon span {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    margin: 4px 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 1;
+}
+
+/* Анимация бургер-меню */
+.menu-icon.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 10px);
+}
+
+.menu-icon.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-icon.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -10px);
+}
+
+
+/* все что ниже если пользовтель зашел */
+.account-circle {
+    margin-top:8px;
+    font-size: 29px; /* Размер иконки */
+    color: #7c7c7c; /* Цвет иконки */
+    transition: color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.account-circle:hover {
+    color: #535353; /* Цвет при наведении */
+}
+
+/* Стили для ссылки с кнопкой */
+/* Убираем подчеркивание для ссылки с кнопкой */
+
+
+/* Стили для кнопки внутри ссылки */
+.btn-link button {
+    text-decoration: none;
+    color: #333; /* Цвет текста */
+    background-color: transparent; /* Прозрачный фон */
+    border: 1px solid #333; /* Рамка */
+    padding: 5px 10px; /* Отступы */
+    border-radius: 5px; /* Закругленные углы */
+    font-size: 14px;
+    cursor: pointer; /* Указатель */
+    transition: all 0.3s ease; /* Плавный переход */
+}
+
+.btn-link button:hover {
+    background-color: #5f5f5f; /* Фон при наведении */
+    color: #fff; /* Цвет текста при наведении */
+    box-shadow: 0 4px 8px rgba(8, 8, 8, 0.3); /* Тень при наведении */
+}
+
+.btn-link button:active {
+    transform: translateY(1px); /* Легкий эффект нажатия */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Уменьшение тени */
+}
+
+.btn-link button:focus {
+    outline: none; /* Убираем стандартный outline */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Обводка при фокусе */
+}
+
+/* Стили для контейнера выпадающего меню */
+.account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Стили для выпадающего контента */
+.dropdown-content {
+    display: none; /* Скрыто по умолчанию */
+    position: absolute;
+    right: 0; /* Выравнивание по правому краю */
+    background-color: #fff;
+    min-width: 170px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Стили для ссылок в выпадающем меню */
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+/* Эффект при наведении на ссылки */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Показ выпадающего меню при добавлении класса .show */
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-content.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+@media (max-width: 768px) {
+    .dropdown-content {
+        right: -50px; /* Сдвигаем меню для мобильных */
+    }
+    .account-circle {
+        margin-top: 0;
+    }
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+    .menu-icon {
+        display: flex;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    header {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        top: 0;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%; 
+        height: 100vh;
+        width: 250px;
+        background: white;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.25);
+        transition: right 0.3s;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+    }
+
+    .nav-links li a {
+        font-size: 1.2rem;
+    }
+}

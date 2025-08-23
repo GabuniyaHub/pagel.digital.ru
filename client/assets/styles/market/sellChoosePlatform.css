@@ -1,0 +1,110 @@
+/* Секция выбора платформы */
+.choose-platform {
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff; /* Белый фон для контраста */
+    border: 1px solid #ddd; /* Легкая граница */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для объема */
+    max-width: 600px; /* Ограничиваем ширину */
+    font-family: 'Tinos', serif; /* Общий стиль шрифта */
+}
+
+/* Заголовок секции */
+.platform-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.platform-header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333; /* Темный текст */
+    margin-bottom: 10px;
+}
+
+.platform-header input {
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Tinos', serif;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Внутренняя тень */
+    transition: border-color 0.3s ease;
+}
+
+.platform-header input:focus {
+    border-color: #4CAF50; /* Зеленая рамка при фокусе */
+    outline: none;
+}
+
+/* Контейнер для списка платформ */
+.platform-body {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9; /* Легкий серый фон */
+}
+
+/* Список платформ */
+.platform-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Элемент списка платформ */
+.platform-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.platform-item:hover {
+    transform: translateY(-2px); /* Легкий подъем при наведении */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень при наведении */
+    background-color: #f4f4f4; /* Легкий серый фон при наведении */
+}
+
+/* Иконка платформы */
+.platform-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    border-radius: 50%; /* Закругленные иконки */
+    border: 1px solid #ddd; /* Легкая граница */
+}
+
+/* Название платформы */
+.platform-item span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Футер секции */
+.platform-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.platform-footer a {
+    color: #4CAF50; /* Зеленый цвет ссылок */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.platform-footer a:hover {
+    text-decoration: underline;
+}

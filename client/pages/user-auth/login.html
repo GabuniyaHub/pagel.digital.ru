@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="stylesheet" href="../../assets/styles/user-auth/login.css">
+    <link rel="stylesheet" href="../../assets/styles/header/navbar.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png">
+    <title>Вход</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
+                    <span><a href="../index.html">PL-GL</a></span>
+                </div>
+                <div class="menu-icon" id="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="../index.html">Главная</a></li>
+                    <li><a href="#">Услуги</a></li>
+                    <li><a href="#">Справка</a></li>
+                    <!-- <li><a href="#">Поиск</a></li> -->
+                    <li><a href="#">Отзывы</a></li>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <li id="register-item"><a href="register.html">Регистрация</a></li>
+                    <li id="account-item" style="display: none;">
+                        <a href="/account">
+                          <img id="account-avatar" src="" alt="Аватар" class="account-circle">
+                        </a>
+                      </li>
+                    <li id="sell-item" style="display: none;"><a href="/sell">Продать</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section>
+        <div class="wrapper">
+            <form id="loginForm">
+                <h1>Войти в аккаунт</h1>
+        
+                <div class="input-box">
+                    <input type="text" placeholder="Email" required id="usernameInput"> 
+                    <i class='bx bxs-user'></i>
+                </div>
+        
+                <div class="input-box">
+                    <input type="password" placeholder="Пароль" required id="passwordInput">
+                    <i class='bx bxs-lock-alt' id="togglePassword" style="cursor: pointer;"></i>
+                </div>
+        
+                <div class="remeber-forgot">
+                    <label><input type="checkbox" id="rememberMe" checked> Запомнить меня</label>
+                    <a href="#" id="forgotPasswordLink">
+                        <span id="forgotPasswordText">Забыли пароль?</span>
+                        <span id="forgotPasswordSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                    </a>
+                </div>
+        
+                <button type="submit" class="btn btn-light" id="loginButton">
+                    <span id="loginButtonText">Войти</span>
+                    <span id="loginSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                </button>
+        
+                <div class="oauth-buttons">
+                    <button type="button" class="btn-google" id="googleSignInButton">
+                        <i class='bx bxl-google'></i> Войти через Google
+                    </button>
+                </div>
+
+                <!-- Добавляем контейнер для VK -->
+                 <!-- <div id="vkid-button-container"></div> -->
+
+                <div class="register-link">
+                    <p>Еще нет аккаунта? <a href="register.html">Регистрация</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="../../scripts/user-auth/login.js"></script>   
+    <script src="../../scripts/user-auth/loginFogotPass.js"></script>
+    <script src="../../scripts/user-auth/components/googleidentifyforLogin.js"></script> 
+    <!-- <script src="../../scripts/user-auth/components/vkIdentifyForLogin.js"></script> -->
+</body>
+</html>

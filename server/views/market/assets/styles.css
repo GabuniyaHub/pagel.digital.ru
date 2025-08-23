@@ -1,0 +1,146 @@
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:ital,wght@0,1..1000;1,1..1000&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.tinos-bold-italic {
+    font-family: "Tinos", serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+.account-circle {
+    margin-bottom: 6px;
+    font-size: 29px; /* Размер иконки */
+    color: #7c7c7c; /* Цвет иконки */
+    transition: color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.account-circle:hover {
+    color: #535353; /* Цвет при наведении */
+}
+
+/* Base styles */
+body {
+  font-family: 'Tinos', serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+
+  /* Общий стиль для секции платформы */
+.platform {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  padding: 20px;
+  background-color: #f4f4f4; /* Общий стиль фона */
+  font-family: 'Tinos', serif; /* Общий стиль шрифта */
+  color: #333; /* Цвет текста */
+}
+
+.platform h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #444; /* Чуть темнее для заголовка */
+}
+
+.platform img {
+  max-width: 100px;
+  margin: 20px auto;
+  display: block;
+  border-radius: 50%; /* Круглая иконка */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+}
+
+.platform p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-top: 10px;
+  color: #555; /* Цвет для описания */
+}
+
+/* Секция товаров */
+.products {
+  padding: 20px;
+  background-color: #fff; /* Белый фон для контраста */
+  padding-bottom: 80px;
+  height: 100vh;
+}
+
+.products h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 0px;
+  color: #444;
+}
+
+.products-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Карточка товара */
+.product-card {
+  background-color: #f9f9f9; /* Светлый фон карточки */
+  border: 1px solid #ddd; /* Лёгкая граница */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для объёма */
+  max-width: 300px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.product-card:hover {
+  transform: translateY(-5px); /* Лёгкий подъём при наведении */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Увеличение тени */
+}
+
+.card-header img {
+  max-width: 50px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 17.5px;
+  margin-top: 17.5px;
+  margin-right: 5px;
+}
+
+.product-card h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.product-card p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.product-card button {
+  background-color: #007bff; /* Акцентный цвет кнопки */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-card button:hover {
+  background-color: #0056b3; /* Более тёмный оттенок при наведении */
+}

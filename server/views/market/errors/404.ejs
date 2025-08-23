@@ -1,0 +1,78 @@
+<!-- filepath: c:\Users\Гурам\Desktop\Money\проекты\Pl_Gl_new-market\server\views\market\errors\404.ejs -->
+
+<link rel="stylesheet" href="../assets/errors.css">
+<%- include('../../partials/header.ejs') %>
+
+<style>
+  .error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+  .error-container {
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 10%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .error-page h1 {
+    font-size: 100px;
+    color: #000000;
+    margin: 0;
+  }
+
+  .error-page p {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0 20px;
+  }
+
+  /* .dino {
+    width: 150px;
+    margin: 20px 0;
+    animation: bounce 2s infinite;
+  } */
+
+  .back-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-link:hover {
+    background-color: #0056b3;
+  }
+
+  /* @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  } */
+</style>
+
+<section class="error-page">
+  <div class="error-container">
+    <h1>404</h1>
+    <p><%= message || 'Страница не найдена' %></p>
+    <!-- <img src="/market/static/images/dino.png" alt="Динозаврик" class="dino"> -->
+    <a href="/pages/index.html" class="back-link">Вернуться к списку платформ</a>
+  </div>
+</section>
+
+
+
+<!-- <%- include('../../partials/footer.ejs') %> -->
+

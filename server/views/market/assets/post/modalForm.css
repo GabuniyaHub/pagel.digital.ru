@@ -1,0 +1,714 @@
+/* Контейнер модального окна */
+.modal {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none; /* будет display: block при открытии */
+  align-items: center;
+  z-index: 10;
+}
+
+/* Внутреннее содержимое модального окна */
+.modal-content {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    position: relative;
+    font-family: sans-serif;
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);  
+}
+
+/* Кнопка закрытия */
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* Заголовок */
+.modal h2 {
+  margin-top: 0;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Форма */
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Поля ввода */
+.modal input[type="text"],
+.modal input[type="number"],
+.modal textarea,
+.modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/* Подписи */
+.modal label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+/* Кнопка отправки */
+.modal button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.modal button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Скрытые формы по умолчанию */
+#form-type-1,
+#form-type-2 {
+  display: none;
+}
+
+.monetization-block {
+    margin: 8px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.monetization-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 4px;
+}
+
+.monetization-options {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+}
+
+.monetization-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3f6fa;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    border: 1.2px solid #e0e7ef;
+    transition: border 0.18s, background 0.18s;
+}
+
+.monetization-options input[type="checkbox"] {
+    accent-color: #007bff;
+    width: 16px;
+    height: 16px;
+}
+
+.file-upload-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+    transition: color 0.18s;
+}
+
+.file-upload-label i {
+    color: #007bff;
+    font-size: 1.15em;
+}
+
+.file-upload-input {
+    padding: 10px 0;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    color: #333;
+}
+
+.file-upload-input::-webkit-file-upload-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+
+.file-upload-input::file-selector-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+
+.file-upload-input::-webkit-file-upload-button:hover,
+.file-upload-input::file-selector-button:hover {
+    background: #0056b3;
+}
+
+.file-upload-info {
+    display: none;
+    font-size: 0.97rem;
+    color: #5a6b7b;
+    margin-left: 2px;
+}
+
+.drop-area {
+    border: 2px dashed #2196f3;
+    border-radius: 10px;
+    min-height: 120px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+    position: relative;
+    padding: 12px 0;
+}
+
+.drop-area.dragover {
+    border-color: #007bff;
+    background: #f0f7ff;
+}
+
+#drop-area-text {
+    color: #888;
+    font-size: 1.08rem;
+    pointer-events: none;
+}
+.preview-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 10px;
+    gap: 18px;
+    margin-top: 10px;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.preview-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1.5px solid #e0e7ef;
+    margin-bottom: 4px;
+    background: #f8fafc;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #2196f3;
+    font-size: 0.97rem;
+    cursor: pointer;
+    margin-top: 2px;
+    text-decoration: underline;
+    transition: color 0.18s;
+    padding: 0;
+}
+
+.remove-btn:hover {
+    color: #d32f2f;
+}
+
+.content-type-block {
+    margin-bottom: 8px;
+}
+
+.content-type-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 10px 0 0 0;
+}
+
+.content-type-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3f6fa;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    border: 1.2px solid #e0e7ef;
+    transition: border 0.18s, background 0.18s;
+}
+
+.content-type-options input[type="radio"] {
+    accent-color: #007bff;
+    width: 16px;
+    height: 16px;
+}
+
+.income-expense-row {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+}
+
+.income-expense-row input[type="number"] {
+    flex: 1 1 0;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border 0.18s;
+}
+
+.income-expense-row input[type="number"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.form-row input[type="url"],
+.form-row input[type="number"],
+.form-row select {
+    flex: 1 1 0;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border 0.18s;
+}
+
+.form-row input[type="url"]:focus,
+.form-row input[type="number"]:focus,
+.form-row select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3f6fa;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    border: 1.2px solid #e0e7ef;
+    transition: border 0.18s, background 0.18s;
+    min-width: unset;
+    justify-content: flex-start;
+    user-select: none;
+}
+
+.form-checkbox input[type="checkbox"] {
+    accent-color: #007bff;
+    width: 16px;
+    height: 16px;
+}
+
+.body-form-listing {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 28px;
+}
+
+.body-form-listing label,
+.body-form-listing .content-type-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 6px;
+    margin-top: 8px;
+}
+
+.body-form-listing textarea {
+    width: 97.5%;
+    min-height: 60px;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: border 0.18s;
+    margin-bottom: 4px;
+}
+
+.body-form-listing textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+}
+
+.header-form-listing {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* Отображаемая форма */
+.form-visible {
+  display: block !important;
+}
+
+/* стили для контактов */
+.contacts-section {
+    margin-bottom: 20px;
+}
+
+.contacts-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #1e293b;
+}
+
+.contact-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 12px;
+    transition: border 0.18s;
+    box-sizing: border-box;
+}
+
+.contact-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Адаптив */
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 20px;
+    width: 90%;
+  }
+}
+
+
+/* Модалка для формы 2 */
+#formType2Modal {
+    position: absolute;
+    top: 0; left: 0;
+    width: 80vw;
+    height: 100vh;
+    /* background: rgba(0,0,0,0.6); */
+    display: none;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* вертикальная прокрутка */
+}
+
+#formType2Modal .modal-contenT {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+    padding: 0;
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    overflow-y: auto; /* вертикальная прокрутка */
+    max-height: 90vh; /* ограничение по высоте */
+}
+
+#formType2Modal .close-button {
+    position: absolute;
+    top: 18px;
+    right: 28px;
+    font-size: 2rem;
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    transition: color 0.18s;
+}
+#formType2Modal .close-button:hover {
+    color: #d32f2f;
+}
+
+#formType2Modal .create-listing-simple {
+    min-width: 940px;
+    margin: 0;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: none;
+    padding: 32px 32px 28px 32px;
+    border: none;
+    font-family: 'Tinos', serif;
+}
+
+@media (max-width: 1000px) {
+    #formType2Modal .create-listing-simple {
+        min-width: unset;
+        width: 98vw;
+        padding: 18px 4vw 18px 4vw;
+    }
+    #formType2Modal .modal-contenT {
+        max-width: 99vw;
+        padding: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    #formType2Modal .create-listing-simple {
+        padding: 12px 2vw 12px 2vw;
+    }
+    #formType2Modal .modal-contenT {
+        padding: 0;
+    }
+}
+
+/* Стили для формы, инпутов, кнопок — наследуются из .create-listing-simple */
+
+
+.create-listing-simple {
+    min-width: 940px;
+    margin: 60px auto 20px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.04);
+    padding: 32px 32px 28px 32px;
+    border: 0.5px solid #e0e7ef71;
+    font-family: 'Tinos', serif;
+}
+
+.create-listing-simple h2 {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #222;
+}
+
+.create-listing-simple label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 6px;
+    margin-top: 12px;
+    display: block;
+}
+
+.create-listing-simple input[type="text"],
+.create-listing-simple input[type="number"],
+.create-listing-simple textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 12px;
+    transition: border 0.18s;
+    box-sizing: border-box;
+}
+
+.create-listing-simple input[type="text"]:focus,
+.create-listing-simple input[type="number"]:focus,
+.create-listing-simple textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+
+.create-listing-simple textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+
+#simple-submit-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 32px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+}
+
+#simple-submit-button:hover, #simple-submit-button:focus {
+    background: #0056b3;
+    box-shadow: 0 4px 16px rgba(0,123,255,0.13);
+    outline: none;
+}
+
+@media (max-width: 700px) {
+    .create-listing-simple {
+        padding: 18px 4vw 18px 4vw;
+    }
+}
+
+.cover-upload-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+    margin-top: 8px;
+}
+
+.cover-upload-label {
+    background: #f4f4f4;
+    color: #007bff;
+    border: 2px dashed #b0c4de;
+    border-radius: 12px;
+    padding: 18px 36px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.18s, border 0.18s, color 0.18s;
+    min-width: 220px;
+    justify-content: center;
+}
+
+.cover-upload-label:hover {
+    background: #e3f2fd;
+    border-color: #007bff;
+    color: #0056b3;
+}
+
+.cover-upload-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cover-filename {
+    font-size: 0.97rem;
+    color: #666;
+    min-width: 90px;
+}
+
+.cover-preview {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1.5px solid #e0e7ef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cover-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+#submit-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 32px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 24px auto 0 auto;
+}
+
+#submit-button:hover, #submit-button:focus {
+    background: #0056b3;
+    box-shadow: 0 4px 16px rgba(0,123,255,0.13);
+    outline: none;
+}
