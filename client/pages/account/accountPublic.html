@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- подключаем Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- подключаем Font Awesome для иконок -->
     <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png" type="image/png"> <!-- иконка сайта -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- подключаем Material Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- подключаем SweetAlert2 для всплывающих уведомлений -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- подключаем Material Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- подключаем SweetAlert2 для всплывающих уведомлений -->
     <link rel="stylesheet" href="../../assets/styles/header/navbar.css">
     <link rel="stylesheet" href="../../assets/styles/header/search/search.css">
-    <link rel="stylesheet" href="../../assets/styles/account/account.css"> <!-- подключаем CSS файл для страницы аккаунта -->
+    <link rel="stylesheet" href="../../assets/styles/account/account.css">
+    <!-- подключаем CSS файл для страницы аккаунта -->
     <title id="title-page"></title>
 
     <!-- Подключаем шрифты -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:wght@400;700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Sofia+Sans+Extra+Condensed:wght@400;700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <nav>
@@ -35,10 +43,10 @@
                     <li id="search" class="search-dropdown">
                         <a href="#" id="search-toggle">Поиск</a>
                         <div id="search-menu" class="search-panel">
-                          <input type="text" id="search-input" placeholder="Найти платформу...">
-                          <ul id="search-results"></ul>
+                            <input type="text" id="search-input" placeholder="Найти платформу...">
+                            <ul id="search-results"></ul>
                         </div>
-                    </li>                      
+                    </li>
                     <li><a href="#">Отзывы</a></li>
                     <li><a href="#">О нас</a></li>
                     <li><a href="#">Контакты</a></li>
@@ -134,9 +142,9 @@
                 </div>
 
                 <div id="contacts" class="tab-content">
-                    
+
                 </div>
-               
+
             </div>
         </div>
 
@@ -157,8 +165,13 @@
 <script src="../../scripts/header/search/search.js"></script> <!-- подключаем JS файл для поиска -->
 <script src="../../scripts/account/public/technicalaccount.js"></script> <!-- подключаем JS файл для тех задач -->
 <script src="../../scripts/account/public/openTab.js"></script> <!-- подключаем JS файл для вкладок -->
-<script type="module" src="../../scripts/account/public/getDataPublic.js"></script> <!-- подключаем JS файл и получаем все данные для профиля из бд -->
-<script type="module" src="../../scripts/account/public/insertDataPublic.js"></script> <!-- подключаем JS файл для вставки данных в профиль -->
-<script type="module" src="../../scripts/settingsModal/main.js"></script> <!-- подключаем JS файл для модального окна настроек -->
-<script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script> <!-- подключаем JS файл для избранного -->
+<script type="module" src="../../scripts/account/public/getDataPublic.js"></script>
+<!-- подключаем JS файл и получаем все данные для профиля из бд -->
+<script type="module" src="../../scripts/account/public/insertDataPublic.js"></script>
+<!-- подключаем JS файл для вставки данных в профиль -->
+<script type="module" src="../../scripts/settingsModal/main.js"></script>
+<!-- подключаем JS файл для модального окна настроек -->
+<script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script>
+<!-- подключаем JS файл для избранного -->
+
 </html>

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/styles/user-auth/register.css">
     <link rel="stylesheet" href="../../assets/styles/header/navbar.css">
     <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <title>Регистрация</title>
 </head>
+
 <body>
     <header>
         <nav>
@@ -39,9 +42,9 @@
                     <!-- Кнопки для авторизованных пользователей (изначально скрыты) -->
                     <li id="account-item" style="display: none;">
                         <a href="/account">
-                          <img id="account-avatar" src="" alt="Аватар" class="account-circle">
+                            <img id="account-avatar" src="" alt="Аватар" class="account-circle">
                         </a>
-                      </li>
+                    </li>
                     <li id="sell-item" style="display: none;"><a href="/sell">Продать</a></li>
                 </ul>
             </div>
@@ -52,39 +55,40 @@
         <div class="wrapper">
             <form id="registerForm">
                 <h1>Создать аккаунт</h1>
-        
+
                 <div class="input-box">
-                    <input type="text" placeholder="Никнейм" required id="nicknameInput"> 
+                    <input type="text" placeholder="Никнейм" required id="nicknameInput">
                     <i class='bx bxs-user'></i>
                 </div>
-        
+
                 <div class="input-box">
-                    <input type="text" placeholder="Email" required id="emailInput"> 
+                    <input type="text" placeholder="Email" required id="emailInput">
                     <i class='bx bxs-envelope'></i>
                 </div>
-        
+
                 <div class="input-box">
                     <input type="password" placeholder="Пароль" required id="newPasswordInput">
                     <i class='bx bxs-lock-alt' id="toggleNewPassword" style="cursor: pointer;"></i>
                 </div>
-        
+
                 <div class="input-box">
                     <input type="password" placeholder="Повторите пароль" required id="confirmPasswordInput">
                     <i class='bx bxs-lock-alt' id="toggleConfirmPassword" style="cursor: pointer;"></i>
                 </div>
-        
+
                 <div class="remeber-forgot">
-                    <label><input type="checkbox" id="termsCheckbox"><a href="">Я принимаю  условия использования </a></label>
+                    <label><input type="checkbox" id="termsCheckbox"><a href="">Я принимаю условия использования
+                        </a></label>
                 </div>
-        
-                <button type="submit" class="btn btn-light" id="registerButton" >Зарегистрироваться</button>
+
+                <button type="submit" class="btn btn-light" id="registerButton">Зарегистрироваться</button>
 
                 <!-- <div class="input-box">
                     <input type="text" placeholder="Код подтверждения" required id="confirmationCodeInput">
                     <i class='bx bxs-key'></i>
                 </div> -->
 
-                 <!-- Кнопки для OAuth -->
+                <!-- Кнопки для OAuth -->
                 <div class="oauth-buttons">
                     <button type="button" class="btn-google" id="googleSignInButton">
                         <i class='bx bxl-google'></i> Зарегистрироваться через Google
@@ -95,7 +99,7 @@
                     <i class="fa fa-spinner fa-spin"></i> Отправка кода...
                 </div>
 
-        
+
                 <div class="register-link">
                     <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
                 </div>
@@ -106,4 +110,5 @@
     <script src="../../scripts/burger.js"></script>
     <script src="../../scripts/user-auth/components/GoogleIdentityServices.js"></script>
 </body>
+
 </html>
