@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: plgl_db
+      POSTGRES_USER: plgl_user
+      POSTGRES_PASSWORD: plgl_pass
+    volumes:
+      - ./database/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: plgl_user
+      DB_PASSWORD: plgl_pass
+      DB_NAME: plgl_db
+      NODE_ENV: production
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/usr/src/app/server
+      - ./client:/usr/src/app/client
+
+  admin:
+    build:
+      context: ./client/react-app
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      REACT_APP_API_URL: http://server:3000
+    ports:
+      - "3001:80"
+    depends_on:
+      - server
