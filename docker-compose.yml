@@ -20,7 +20,7 @@ services:
       retries: 3
 
   server:
-    build: ./server
+    build: .
     ports:
       - "3000:3000"
     environment:
@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
 
   client:
-    build: ./client
+    build: .
     ports:
       - "3001:80"
     depends_on:
