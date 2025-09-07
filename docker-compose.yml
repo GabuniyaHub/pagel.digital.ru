@@ -2,43 +2,48 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:16
+    image: postgres:15-alpine
     environment:
-      POSTGRES_DB: plgl_db
-      POSTGRES_USER: plgl_user
-      POSTGRES_PASSWORD: plgl_pass
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
-      - ./database/postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   server:
-    build:
-      context: .
-      dockerfile: ./server/Dockerfile
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: plgl_user
-      DB_PASSWORD: plgl_pass
-      DB_NAME: plgl_db
-      NODE_ENV: production
-    depends_on:
-      - db
+    build: ./server
     ports:
       - "3000:3000"
-    volumes:
-      - ./server:/usr/src/app/server
-      - ./client:/usr/src/app/client
-
-  admin:
-    build:
-      context: ./client/react-app
-      dockerfile: Dockerfile
     environment:
-      NODE_ENV: production
-      REACT_APP_API_URL: http://server:3000
+      - DB_HOST=db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=5432
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./server/uploads:/app/uploads
+    restart: unless-stopped
+
+  client:
+    build: ./client
     ports:
       - "3001:80"
     depends_on:
       - server
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
