@@ -21,6 +21,28 @@ async function createTables() {
             );
         `);
 
+        // Создание таблицы медиа сетей
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS platforms (
+            id SERIAL PRIMARY KEY,            
+            name VARCHAR(255) NOT NULL,
+            slug VARCHAR(255) NOT NULL UNIQUE,
+            icon VARCHAR(255),
+            description TEXT
+        );    
+        `);
+
+        // Создание категорий таблиц медиа сетей
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS categories (
+            id SERIAL PRIMARY KEY,
+            platform_id INT NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            description TEXT,
+            FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
+        );    
+        `);
+
         // Создание таблицы listings
         await client.query(`
             CREATE TABLE IF NOT EXISTS listings (
@@ -62,27 +84,6 @@ async function createTables() {
             id SERIAL PRIMARY KEY,
             email TEXT UNIQUE NOT NULL
             );
-        `);
-        // Создание таблицы медиа сетей
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS platforms (
-            id SERIAL PRIMARY KEY,            
-            name VARCHAR(255) NOT NULL,
-            slug VARCHAR(255) NOT NULL UNIQUE,
-            icon VARCHAR(255),
-            description TEXT
-        );    
-        `);
-
-        // Создание категорий таблиц медиа сетей
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS categories (
-            id SERIAL PRIMARY KEY,
-            platform_id INT NOT NULL,
-            name VARCHAR(255) NOT NULL,
-            description TEXT,
-            FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
-        );    
         `);
 
         // Создание таблицы отзывов (reviews)
