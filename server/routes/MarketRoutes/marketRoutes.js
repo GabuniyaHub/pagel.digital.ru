@@ -104,7 +104,7 @@ router.get('/platforms', (req, res) => {
 });
 
 // API-роут для создания объявления (JSON)
-router.post('/create-listings', verifyToken, checkBlockStatusWithoutToken, upload.fields([
+router.post('/create-listings', verifyToken, upload.fields([
   { name: 'avatar', maxCount: 2 },
   { name: 'screenshots', maxCount: 12 }
 ]), async (req, res) => {
@@ -133,7 +133,8 @@ router.post('/create-listings', verifyToken, checkBlockStatusWithoutToken, uploa
       contacts
     } = req.body;
 
-    const userId = req.headers['x-user-id'];
+    // const userId = req.headers['x-user-id'];
+    const userId = req.user.id;
 
     // console.log('showLinkBool:', show_link);
     // console.log('allow_comments:', allow_comments);

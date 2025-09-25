@@ -34,7 +34,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         setLoadingState(true);
 
         // Отправка данных на сервер
-        const response = await fetch('http://localhost:3000/api/log', {
+        const response = await fetch('/api/log', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                     setLoadingState(true);
 
                     // Отправка кода подтверждения на сервер
-                    const confirmationResponse = await fetch('http://localhost:3000/api/verify-code-login', {
+                    const confirmationResponse = await fetch('/api/verify-code-login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -89,7 +89,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                         // console.log(token);
 
                         // Если код подтвержден, повторяем запрос на вход
-                        const loginResponse = await fetch('http://localhost:3000/api/log', {
+                        const loginResponse = await fetch('/api/log', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'

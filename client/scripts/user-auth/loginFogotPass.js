@@ -23,7 +23,7 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
             setForgotPasswordLoadingState(true, 'Отправка...');
 
             // Отправка email на сервер для получения кода
-            const response = await fetch('http://localhost:3000/api/forgot-password', {
+            const response = await fetch('/api/forgot-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
                     setForgotPasswordLoadingState(true, 'Проверка кода...');
 
                     // Проверка кода на сервере
-                    const verifyResponse = await fetch('http://localhost:3000/api/verify-reset-code', {
+                    const verifyResponse = await fetch('/api/verify-reset-code', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -83,7 +83,7 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
 
                         if (newPassword) {
                             // Отправка нового пароля на сервер
-                            const resetResponse = await fetch('http://localhost:3000/api/reset-password', {
+                            const resetResponse = await fetch('/api/reset-password', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'

@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 localStorage.setItem('user', result.userId);
                 localStorage.setItem('jwt', result.token);
-                document.cookie = `jwt=${token}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
+                document.cookie = `jwt=${result.token}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
 
                 Swal.fire({
                     title: "Успешная регистрация!",
