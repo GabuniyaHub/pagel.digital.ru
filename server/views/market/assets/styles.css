@@ -67,7 +67,7 @@ body {
   padding: 20px;
   background-color: #fff; /* Белый фон для контраста */
   padding-bottom: 80px;
-  height: 100vh;
+  height: auto;
 }
 
 .products h2 {

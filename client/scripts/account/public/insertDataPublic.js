@@ -106,8 +106,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // verified badge
     const buttonVerify = document.querySelector('.badge-verified');
     if (buttonVerify) {
-      buttonVerify.style.display = user.is_verified ? 'flex' : 'none';
-    }
+      buttonVerify.style.display = user.verified ? 'flex' : 'none';
+}
 
     // premium badge
     const buttonPremium = document.querySelector('.badge-premium');
