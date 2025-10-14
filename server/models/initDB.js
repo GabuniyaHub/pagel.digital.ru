@@ -47,6 +47,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS listings (
                 id SERIAL PRIMARY KEY,
+		name TEXT,
                 link TEXT NOT NULL UNIQUE,
                 theme TEXT NOT NULL,
                 price NUMERIC CHECK (price > 0),
@@ -65,6 +66,7 @@ async function createTables() {
                 user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
                 category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
                 monetization BOOLEAN DEFAULT FALSE,
+		form_type INTEGER NOT NULL, 
                 content_type TEXT DEFAULT 'copy' CHECK (content_type IN ('unique', 'rewrite', 'copy', 'mixed')),
                 cover TEXT,
                 views INTEGER DEFAULT 0,

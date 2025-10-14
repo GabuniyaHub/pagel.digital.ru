@@ -149,6 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch('/market/simple-listing', {
                 method: 'POST',
+		headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 body: formData
             });
             const result = await res.json();

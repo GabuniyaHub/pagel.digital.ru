@@ -44,6 +44,7 @@ app.use(cookieParser());
 // app.use(express.json());
 app.use(express.json({ limit: '5mb', type: 'application/json' }));
 app.use(express.static(path.join(__dirname, "../client")));
+app.use('/pages', express.static(path.join(__dirname, 'client', 'pages')));
 
 //multer
 // Раздача загруженных файлов

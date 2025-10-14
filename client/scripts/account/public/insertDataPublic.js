@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Профиль
     const profileImg = document.querySelector('.profile-img');
-    if (profileImg) profileImg.src = user.avatar || '/uploads/default-avatar.png'; 
+    if (profileImg) profileImg.src = user.avatar || 'market/uploads/avatars/default/orangeDefA.png'; 
 
     const profileName = document.querySelector('.profile-name');
     if (profileName) profileName.textContent = user.nickname;
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // verified badge
     const buttonVerify = document.querySelector('.badge-verified');
     if (buttonVerify) {
-      buttonVerify.style.display = user.is_verified ? 'flex' : 'none';
+      buttonVerify.style.display = user.verified ? 'flex' : 'none';
     }
 
     // premium badge

@@ -9,7 +9,7 @@ const { OAuth2Client } = require('google-auth-library');
 const googleAuthClient = new OAuth2Client({
     clientId: '293649929067-v7prhbomfisdih5868evj6e66p6r42em.apps.googleusercontent.com',
     clientSecret: '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',
-    redirectUri: 'http://localhost:3000/auth/callback',
+    redirectUri: 'http://www.pagel-digital.ru/auth/callback',
 });
 // const { OAuth2Client } = require('google-auth-library');
 const { parse } = require("url");
@@ -130,11 +130,11 @@ function userRouters(req, res) {
             // Отправка кода через nodemailer
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
-                auth: { user: 'bebrikivan199@gmail.com', pass: 'nqcq zhhj irek paiy' }
+                auth: { user: 'pageldigitaleu@gmail.com', pass: 'ldsb scmr bris joja' }
             });
 
             const mailOptions = {
-                from: 'bebrikivan199@gmail.com',
+                from: 'pageldigitaleu@gmail.com',
                 to: email,
                 subject: 'Код подтверждения',
                 text: `Ваш код подтверждения: ${confirmationCode}`
@@ -281,11 +281,11 @@ function userRouters(req, res) {
                 // Отправка кода через nodemailer
                 const transporter = nodemailer.createTransport({
                     service: 'gmail',
-                    auth: { user: 'bebrikivan199@gmail.com', pass: 'nqcq zhhj irek paiy' }
+                    auth: { user: 'pageldigitaleu@gmail.com', pass: 'ldsb scmr bris joja' }
                 });
 
                 const mailOptions = {
-                    from: 'bebrikivan199@gmail.com',
+                    from: 'pageldigitaleu@gmail.com',
                     to: email,
                     subject: 'Код подтверждения',
                     text: `Ваш код подтверждения: ${confirmationCode}`
@@ -351,11 +351,11 @@ function userRouters(req, res) {
                 // Отправка кода через nodemailer
                 const transporter = nodemailer.createTransport({
                     service: 'gmail',
-                    auth: { user: 'bebrikivan199@gmail.com', pass: 'nqcq zhhj irek paiy' }
+                    auth: { user: 'pageldigitaleu@gmail.com', pass: 'ldsb scmr bris joja' }
                 });
 
                 const mailOptions = {
-                    from: 'bebrikivan199@gmail.com',
+                    from: 'pageldigitaleu@gmail.com',
                     to: email,
                     subject: 'Код для сброса пароля',
                     text: `Ваш код для сброса пароля: ${resetCode}`

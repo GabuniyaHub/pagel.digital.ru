@@ -11,7 +11,7 @@ async function handleCredentialResponse(response) {
 
   try {
       // Отправляем токен на сервер
-      const serverResponse = await fetch('http://localhost:3000/auth/google', {
+      const serverResponse = await fetch('https://www.pagel-digital.ru/auth/google', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
