@@ -23,7 +23,11 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
             setForgotPasswordLoadingState(true, 'Отправка...');
 
             // Отправка email на сервер для получения кода
+<<<<<<< HEAD
             const response = await fetch('https://www.pagel-digital.ru/api/forgot-password', {
+=======
+            const response = await fetch('/api/forgot-password', {
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,7 +57,11 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
                     setForgotPasswordLoadingState(true, 'Проверка кода...');
 
                     // Проверка кода на сервере
+<<<<<<< HEAD
                     const verifyResponse = await fetch('https://www.pagel-digital.ru/api/verify-reset-code', {
+=======
+                    const verifyResponse = await fetch('/api/verify-reset-code', {
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -83,7 +91,11 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
 
                         if (newPassword) {
                             // Отправка нового пароля на сервер
+<<<<<<< HEAD
                             const resetResponse = await fetch('https://www.pagel-digital.ru/api/reset-password', {
+=======
+                            const resetResponse = await fetch('/api/reset-password', {
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'

@@ -1,4 +1,5 @@
 FROM nginx:alpine
+<<<<<<< HEAD
 
 # Удаляем дефолтные файлы nginx
 RUN rm -rf /usr/share/nginx/html/*
@@ -17,5 +18,10 @@ COPY client/nginx.conf /etc/nginx/conf.d/default.conf
 RUN chown -R nginx:nginx /usr/share/nginx/html/ && \
     chmod -R 755 /usr/share/nginx/html/
 
+=======
+RUN rm -rf /usr/share/nginx/html/*
+COPY client/ /usr/share/nginx/html/
+COPY client/nginx.conf /etc/nginx/conf.d/default.conf
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

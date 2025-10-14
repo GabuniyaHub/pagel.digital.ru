@@ -47,17 +47,23 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS listings (
                 id SERIAL PRIMARY KEY,
+<<<<<<< HEAD
 		name TEXT,
                 link TEXT NOT NULL UNIQUE,
                 theme TEXT NOT NULL,
+=======
+                name TEXT,
+                link TEXT UNIQUE,
+                theme TEXT ,
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                 price NUMERIC CHECK (price > 0),
                 income NUMERIC,
                 expense NUMERIC,
                 description TEXT NOT NULL,
-                income_sources TEXT NOT NULL,
-                expense_sources TEXT NOT NULL,
-                promotion TEXT NOT NULL,
-                support_needs TEXT NOT NULL,
+                income_sources TEXT,
+                expense_sources TEXT,
+                promotion TEXT,
+                support_needs TEXT,
                 allow_comments BOOLEAN DEFAULT FALSE,
                 show_link BOOLEAN DEFAULT FALSE,
                 flex_switch BOOLEAN DEFAULT FALSE,

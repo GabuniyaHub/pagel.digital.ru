@@ -149,7 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch('/market/simple-listing', {
                 method: 'POST',
+<<<<<<< HEAD
 		headers: {
+=======
+                headers: {
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                     'Authorization': `Bearer ${token}`,
                 },
                 body: formData

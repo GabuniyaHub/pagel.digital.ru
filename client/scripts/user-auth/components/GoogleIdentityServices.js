@@ -9,7 +9,11 @@ async function handleCredentialResponse(response) {
   
     try {
         // Отправляем токен на сервер
+<<<<<<< HEAD
         const serverResponse = await fetch('https://www.pagel-digital.ru/auth/google', {
+=======
+        const serverResponse = await fetch('/auth/google', {
+>>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
