@@ -1,6 +1,9 @@
 Вход на хост:
-ssh root@195.133.77.120
+ssh root@195.133.77.120 
 xt_AJdyZ6LbNnL
+Вход на хост отца:
+ssh root@193.168.3.217
+rU-M9d-Ue26XSQ
 ======================================================
 Вход в БД:
 docker exec -it pagel-digital-db-1 sh
@@ -39,6 +42,21 @@ docker start pagel-digital_cleint-1 (запуск)
 б) :q - выход 
 в) :q! - принудительный выход без сохранений
 ======================================================
+Обновление из гита:
+git pull origin <название_ветки>
+И пересобрать докер:
+docker-compose build
+docker-compose up -d
+
+если есть локальные изменения:
+git config --global user.name "guram"
+git config --global user.email "fox78907864@gmail.com"
+
+git add .
+git commit -m "Мои локальные изменения"
+git pull origin guram
+git checkout --theirs .
+
 
 ======================================================
 
