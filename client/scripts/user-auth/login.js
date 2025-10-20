@@ -97,11 +97,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                         // console.log(token);
 
                         // Если код подтвержден, повторяем запрос на вход
-<<<<<<< HEAD
-                        const loginResponse = await fetch('https://www.pagel-digital.ru/api/log', {
-=======
                         const loginResponse = await fetch('/api/log', {
->>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
