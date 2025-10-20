@@ -34,9 +34,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         setLoadingState(true);
 
         // Отправка данных на сервер
-<<<<<<< HEAD
-        const response = await fetch('https://www.pagel-digital.ru/api/log', {
-=======
         const response = await fetch('/api/log', {
 >>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
             method: 'POST',
