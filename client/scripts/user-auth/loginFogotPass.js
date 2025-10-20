@@ -83,11 +83,7 @@ document.getElementById('forgotPasswordLink').addEventListener('click', async fu
 
                         if (newPassword) {
                             // Отправка нового пароля на сервер
-<<<<<<< HEAD
                             const resetResponse = await fetch('https://www.pagel-digital.ru/api/reset-password', {
-=======
-                            const resetResponse = await fetch('/api/reset-password', {
->>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'

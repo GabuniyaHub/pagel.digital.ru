@@ -35,7 +35,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
         // Отправка данных на сервер
         const response = await fetch('/api/log', {
->>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -67,11 +66,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                     setLoadingState(true);
 
                     // Отправка кода подтверждения на сервер
-<<<<<<< HEAD
-                    const confirmationResponse = await fetch('https://www.pagel-digital.ru/api/verify-code-login', {
-=======
                     const confirmationResponse = await fetch('/api/verify-code-login', {
->>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

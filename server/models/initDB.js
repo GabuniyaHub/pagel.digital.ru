@@ -47,15 +47,12 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS listings (
                 id SERIAL PRIMARY KEY,
-<<<<<<< HEAD
-		name TEXT,
+        		name TEXT,
                 link TEXT NOT NULL UNIQUE,
                 theme TEXT NOT NULL,
-=======
                 name TEXT,
                 link TEXT UNIQUE,
                 theme TEXT ,
->>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                 price NUMERIC CHECK (price > 0),
                 income NUMERIC,
                 expense NUMERIC,
