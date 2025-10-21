@@ -15,7 +15,7 @@ const Login = ({ onLogin }) => {
       return;
     }
 
-    await axios.post("/api/send-admin", { email });
+    await axios.post("/admin/send-admin", { email });
     setStep("code");
   };
 

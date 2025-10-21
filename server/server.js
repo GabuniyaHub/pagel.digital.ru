@@ -68,7 +68,7 @@ app.use((req, res, next) => {
 });
 
 // Подключение маршрутов
-app.use("/api", adminRoutes); // Маршруты для админ-панели
+app.use("/admin", adminRoutes); // Маршруты для админ-панели
 app.use("/market", marketRoutes); // Маршруты для медиа-сетей
 app.use("/account", accountRoutes); // Маршруты для аккаунта
 app.use("/settings", settingsRoutes); // Маршруты для настроек
