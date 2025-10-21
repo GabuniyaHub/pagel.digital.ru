@@ -37,3 +37,4 @@
 
 ## Запуск проекта (локально)
 
+git clone -b guram git@github.com:Amantay747/Pagel-Digital.git
