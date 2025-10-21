@@ -1,0 +1,30 @@
+
+/* Footer */
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: 40px;
+}
+
+footer nav ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+footer nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+footer nav ul li a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+footer nav ul li a:hover {
+    opacity: 0.7;
+}
