@@ -15,12 +15,12 @@ const Login = ({ onLogin }) => {
       return;
     }
 
-    await axios.post("http://localhost:3000/api/send-admin", { email });
+    await axios.post("/api/send-admin", { email });
     setStep("code");
   };
 
   const handleVerifyCode = async () => {
-    const res = await axios.post("http://localhost:3000/api/verify-admin", { email, code });
+    const res = await axios.post("/api/verify-admin", { email, code });
     const { token } = res.data;
 
     sessionStorage.setItem("jwt", token);

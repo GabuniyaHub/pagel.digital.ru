@@ -13,7 +13,7 @@ const Dashboard = () => {
     // Загружаем пользователей
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/admin/users", {
+        const res = await axios.get("/api/admin/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(res.data);
@@ -25,7 +25,7 @@ const Dashboard = () => {
     // Загружаем объявления
     const fetchListings = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/admin/listings", {
+        const res = await axios.get("/api/admin/listings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setListings(res.data);
@@ -44,7 +44,7 @@ const Dashboard = () => {
     if (!window.confirm("Ты уверен, что хочешь удалить пользователя?")) return;
     const token = sessionStorage.getItem("jwt");
     try {
-      await axios.delete(`http://localhost:3000/api/admin/users/${userId}`, {
+      await axios.delete(`/api/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(prev => prev.filter(u => u.id !== userId));
@@ -57,7 +57,7 @@ const Dashboard = () => {
     const token = sessionStorage.getItem("jwt");
     try {
       await axios.patch(
-        `http://localhost:3000/api/admin/users/${userId}/block`,
+        `/api/admin/users/${userId}/block`,
         { isBlocked: !isBlocked },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -75,7 +75,7 @@ const Dashboard = () => {
     if (!window.confirm("Удалить это объявление?")) return;
     const token = sessionStorage.getItem("jwt");
     try {
-      await axios.delete(`http://localhost:3000/api/admin/listings/${listingId}`, {
+      await axios.delete(`/api/admin/listings/${listingId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setListings(prev => prev.filter(l => l.id !== listingId));
@@ -88,7 +88,7 @@ const Dashboard = () => {
     const token = sessionStorage.getItem("jwt");
     try {
       await axios.patch(
-        `http://localhost:3000/api/admin/listings/${listingId}/block`,
+        `/api/admin/listings/${listingId}/block`,
         { isBlocked: !isBlocked },
         { headers: { Authorization: `Bearer ${token}` } }
       );
