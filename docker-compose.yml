@@ -40,10 +40,10 @@ services:
   
   admin:
     build:
-      context: ./admin        # путь к твоей админ-панели React
-      dockerfile: Dockerfile  # Dockerfile админки
+      context: ./react-app
+      dockerfile: Dockerfile
     ports:
-      - "3001:80"           # Внутри контейнера React обычно стартует на 3000, но снаружи пробрасываем на 3001
+      - "3001:80"
     restart: unless-stopped
 
   certbot:
