@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/chat/chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png" type="image/png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Мессенджер | PL-GL</title>
+</head>
+<body>
+    <!-- Компактная навигация встроенная в чат -->
+    <nav class="chat-nav">
+        <div class="chat-nav-container">
+            <a href="/" class="chat-nav-logo">
+                <img src="https://img.icons8.com/color/96/000000/planet.png" alt="PL-GL">
+                <span>PL-GL</span>
+            </a>
+            
+            <div class="chat-nav-controls">
+                <div class="chat-nav-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Поиск чатов..." id="navSearch">
+                </div>
+                
+                <div class="chat-nav-actions">
+                    <a href="../pages/market/sell.html" class="chat-nav-btn primary">
+                        <i class="fas fa-plus"></i> Продать
+                    </a>
+                    
+                    <div class="chat-nav-user">
+                        <div class="chat-avatar">ИИ</div>
+                        <div class="chat-nav-user-info">
+                            <div class="chat-nav-user-name">Иван Иванов</div>
+                            <div class="chat-nav-user-status">online</div>
+                        </div>
+                        <div class="user-dropdown">
+                            <a href="/account">
+                                <i class="fas fa-user"></i> Личный кабинет
+                            </a>
+                            <a href="#" class="settings-link">
+                                <i class="fas fa-cog"></i> Настройки
+                            </a>
+                            <a href="#" class="select-favorites">
+                                <i class="fas fa-heart"></i> Избранное
+                            </a>
+                            <a href="/logout">
+                                <i class="fas fa-sign-out-alt"></i> Выход
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной чат -->
+    <main>
+        <!-- Левая панель со списком чатов -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span>💬 Мои чаты</span>
+                <div class="sidebar-actions">
+                    <button class="sidebar-btn" title="Новый чат">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="sidebar-btn" title="Настройки">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="chats" id="chatList">
+                <div class="chat-item pinned active" data-name="Гарант">
+                    <div class="chat-avatar">Г</div>
+                    <div class="chat-item-content">
+                        <div class="chat-item-header">
+                            <div class="chat-name">Гарант</div>
+                            <div class="chat-time">12:33</div>
+                        </div>
+                        <div class="chat-last-message">
+                            Отлично! У нас есть несколько проверенных предложений
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-item" data-name="Алексей">
+                    <div class="chat-avatar">А</div>
+                    <div class="chat-item-content">
+                        <div class="chat-item-header">
+                            <div class="chat-name">Алексей</div>
+                            <div class="chat-time">10:25</div>
+                        </div>
+                        <div class="chat-last-message">Окей, жду ответ</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-name="Мария">
+                    <div class="chat-avatar">М</div>
+                    <div class="chat-item-content">
+                        <div class="chat-item-header">
+                            <div class="chat-name">Мария</div>
+                            <div class="chat-time">09:47</div>
+                        </div>
+                        <div class="chat-last-message">Спасибо за помощь ❤️</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-name="Иван Петров">
+                    <div class="chat-avatar">И</div>
+                    <div class="chat-item-content">
+                        <div class="chat-item-header">
+                            <div class="chat-name">Иван Петров</div>
+                            <div class="chat-time">14:30</div>
+                        </div>
+                        <div class="chat-last-message">Завтра в 15:00 всё готово</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-name="Поддержка">
+                    <div class="chat-avatar">П</div>
+                    <div class="chat-item-content">
+                        <div class="chat-item-header">
+                            <div class="chat-name">Поддержка</div>
+                            <div class="chat-time">11:30</div>
+                        </div>
+                        <div class="chat-last-message">Ваш вопрос решен</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основная область с перепиской -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <div id="chatHeader">Гарант</div>
+                        <div class="chat-header-status">online</div>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <button class="sidebar-btn" title="Поиск">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="sidebar-btn" title="Информация">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button class="sidebar-btn" title="Меню">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="messages">
+                <div class="message other">
+                    Здравствуйте! Я — ваш гарант. Все сделки проходят через меня ✅
+                    <div class="message-time">12:30</div>
+                </div>
+                <div class="message other">
+                    Готов помочь с проведением безопасной сделки. Расскажите, что вас интересует?
+                    <div class="message-time">12:31</div>
+                </div>
+                <div class="message user">
+                    Добрый день! Хочу купить аккаунт Steam
+                    <div class="message-time">12:32</div>
+                </div>
+                <div class="message other">
+                    Отлично! У нас есть несколько проверенных предложений. Могу показать вам варианты
+                    <div class="message-time">12:33</div>
+                </div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    Гарант печатает...
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <div class="chat-input-tools">
+                    <button class="chat-input-tool" title="Прикрепить файл">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="chat-input-tool" title="Смайлики">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                </div>
+                <input type="text" id="messageInput" placeholder="Введите сообщение...">
+                <button id="sendBtn">
+                    <i class="fas fa-paper-plane"></i> Отправить
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../chat/chat.js"></script>
+    <script type="module" src="../../scripts/settingsModal/main.js"></script>
+    <script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script>
+</body>
+</html>
