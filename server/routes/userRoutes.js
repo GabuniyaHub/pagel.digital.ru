@@ -9,7 +9,7 @@ const { OAuth2Client } = require('google-auth-library');
 const googleAuthClient = new OAuth2Client({
     clientId: '293649929067-v7prhbomfisdih5868evj6e66p6r42em.apps.googleusercontent.com',
     clientSecret: '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',
-    redirectUri: 'http://www.pagel-digital.ru/auth/callback',
+    redirectUri: 'https://www.pagel-digital.ru/auth/callback',
 });
 // const { OAuth2Client } = require('google-auth-library');
 const { parse } = require("url");
