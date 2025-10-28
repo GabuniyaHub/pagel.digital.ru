@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О проекте — PL-GL</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Шрифты -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+
+
+  <link rel="stylesheet" href="../../assets/styles/lending/general.css">
+</head>
+<body class="antialiased">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+      <span class="text-2xl font-extrabold tracking-tight text-gradient">PL-GL</span>
+
+      <nav class="hidden md:flex space-x-8 text-[17px]">
+        <a href="./present.html" class="hover:text-gray-700 transition">Главная</a>
+        <a href="#" class="htext-[#3b4d61] font-semibold">О проекте</a>
+        <a href="./escrow.html" class="hover:text-gray-700 transition">Эскроу</a>
+        <a href="./contacts.html" class="hover:text-gray-700 transition">Контакты</a>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <a href="/pages/user-auth/login.html" class="btn-primary px-5 py-2 rounded-lg font-semibold transition" data-lang-key="navLogin">Войти</a>
+
+        <!-- Language Switcher -->
+         <!-- <div class="relative">
+          <button id="langBtn" class="px-2 py-1 border border-gray-300 rounded text-sm flex items-center space-x-1 focus:outline-none">
+            <span id="langCurrent">RU</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <ul id="langMenu" class="absolute right-0 mt-1 bg-white border border-gray-300 rounded shadow-md hidden text-sm z-50">
+            <li>
+              <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="ru">
+                <img src="https://flagcdn.com/w20/ru.png" class="w-4 h-3" alt="RU">
+                <span>RU</span>
+              </button>
+            </li>
+            <li>
+              <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="en">
+                <img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3" alt="EN">
+                <span>EN</span>
+              </button>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="pt-40 pb-24 bg-gradient-to-br from-[#eef1f4] to-[#f9fafb] text-center relative overflow-hidden">
+    <div class="max-w-3xl mx-auto px-6 fade-in">
+      <h1 class="text-6xl font-extrabold mb-6 text-gradient">О проекте PL-GL</h1>
+      <p class="text-gray-700 text-lg leading-relaxed">
+        PL-GL — это современная платформа для безопасных сделок с аккаунтами в соцсетях.  
+        Мы создаём новое пространство доверия, где продавцы и покупатели чувствуют себя уверенно.
+      </p>
+    </div>
+    
+    <img src="https://avatars.mds.yandex.net/i?id=9c6a1d2601c00e9127ddebe7d7dd73e6ac454d38-12569476-images-thumbs&n=13" class="absolute inset-0 w-full h-full object-cover opacity-10" alt="О проекте">
+  </section>
+
+  <!-- МИССИЯ -->
+  <section class="py-24 bg-white">
+    <div class="max-w-6xl mx-auto text-center px-6 fade-in">
+      <h2 class="text-4xl mb-8 accent font-bold">Наша миссия</h2>
+      <p class="text-gray-700 max-w-3xl mx-auto text-lg leading-relaxed">
+        Мы стремимся к прозрачности и честности в цифровом мире.  
+        PL-GL помогает пользователям безопасно покупать и продавать аккаунты, исключая риск мошенничества.  
+        Благодаря системе Эскроу, каждая сделка защищена до полного её завершения.
+      </p>
+    </div>
+  </section>
+
+  <!-- КАК РАБОТАЕТ ЭСКРОУ -->
+  <section class="py-24 bg-[#f9fafb]">
+    <div class="max-w-6xl mx-auto text-center px-6 fade-in">
+      <h2 class="text-4xl mb-12 accent font-bold">Как работает Эскроу</h2>
+      <div class="grid md:grid-cols-3 gap-10">
+        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
+          <img src="https://img.icons8.com/ios-filled/100/3b4d61/wallet--v1.png" class="mx-auto mb-6 w-14" />
+          <h3 class="font-semibold text-xl mb-3">1. Покупатель вносит оплату</h3>
+          <p class="text-gray-600">Средства блокируются на защищённом счёте Эскроу до завершения сделки.</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
+          <img src="https://img.icons8.com/?size=100&id=2140&format=png&color=000000" class="mx-auto mb-6 w-14" />
+          <h3 class="font-semibold text-xl mb-3">2. Продавец передаёт данные</h3>
+          <p class="text-gray-600">Продавец передаёт данные аккаунта покупателю после подтверждения оплаты.</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
+          <img src="https://img.icons8.com/ios-filled/100/3b4d61/checked.png" class="mx-auto mb-6 w-14" />
+          <h3 class="font-semibold text-xl mb-3">3. Средства переводятся</h3>
+          <p class="text-gray-600">После подтверждения получения — деньги поступают продавцу.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПРЕИМУЩЕСТВА -->
+  <section class="py-24 bg-white">
+    <div class="max-w-6xl mx-auto text-center px-6 fade-in">
+      <h2 class="text-4xl mb-12 accent font-bold">Почему выбирают нас</h2>
+      <div class="grid md:grid-cols-3 gap-10">
+        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
+          <img src="https://img.icons8.com/ios-filled/100/3b4d61/security-checked--v1.png" class="mx-auto mb-6 w-14" />
+          <h3 class="font-semibold text-xl mb-3">Надёжность</h3>
+          <p class="text-gray-600">Ваши данные и финансы защищены на всех этапах сделки.</p>
+        </div>
+        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
+          <img src="https://img.icons8.com/ios-filled/100/3b4d61/handshake.png" class="mx-auto mb-6 w-14" />
+          <h3 class="font-semibold text-xl mb-3">Прозрачность</h3>
+          <p class="text-gray-600">Каждая сделка сопровождается полной историей и подтверждениями.</p>
+        </div>
+        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
+          <img src="https://img.icons8.com/ios-filled/100/3b4d61/online-support.png" class="mx-auto mb-6 w-14" />
+          <h3 class="font-semibold text-xl mb-3">Поддержка 24/7</h3>
+          <p class="text-gray-600">Команда поддержки помогает пользователям в любое время суток.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- КОНТАКТЫ -->
+  <section class="py-24 bg-[#f9fafb] text-center fade-in">
+    <h2 class="text-4xl mb-6 accent font-bold">Свяжитесь с нами</h2>
+    <p class="text-gray-700 mb-10">Есть вопросы или предложения? Напишите — мы всегда открыты к диалогу.</p>
+    <a href="mailto:support@pl-gl.ru" class="btn-primary px-8 py-4 rounded-xl shadow hover:shadow-lg transition text-lg font-semibold">
+      support@pl-gl.ru
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-300 py-10 text-center">
+    <div class="mb-4">
+      <a href="https://vk.com/pl_gl" target="_blank" class="inline-block mx-3 hover:opacity-80">
+        <img src="https://img.icons8.com/color/48/vk-com.png" alt="VK" class="inline w-8 h-8">
+      </a>
+      <a href="https://t.me/DigitalGoodsExchange_PL_GL" target="_blank" class="inline-block mx-3 hover:opacity-80">
+        <img src="https://img.icons8.com/color/48/telegram-app.png" alt="Telegram" class="inline w-8 h-8">
+      </a>
+    </div>
+    <p>© 2025 PL-GL | Все права защищены</p>
+    <p class="mt-3 text-sm">
+      <a href="./policy.html" class="hover:text-white">Политика конфиденциальности</a> | 
+      <a href="./termsOfService.html" class="hover:text-white">Условия использования</a>
+    </p>
+  </footer>
+
+  <!-- Анимации -->
+  <script>
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const onScroll = () => {
+      fadeElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) el.classList.add('visible');
+      });
+    };
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+  </script>
+
+</body>
+</html>

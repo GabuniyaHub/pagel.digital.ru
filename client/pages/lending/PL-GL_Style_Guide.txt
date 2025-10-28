@@ -1,0 +1,63 @@
+
+=== PL-GL DESIGN SYSTEM ===
+
+1. GENERAL STYLE
+- Theme: IT / Marketplace / Finance / Security
+- Tone: reliable, modern, minimalistic, tech-oriented
+- Visual mood: clean, structured, trustworthy
+
+2. FONTS
+- Main text: Inter, sans-serif
+- Headings: Sofia Sans Extra Condensed, sans-serif
+- Alternative: Poppins (for UI text, nav, buttons)
+- Letter spacing for headings: 0.5px
+
+3. COLORS
+- Primary: #3b4d61 (deep blue-gray)
+- Gradient: linear-gradient(to right, #3b4d61, #65758e)
+- Background: #f5f7fa or white
+- Accent background: #eef2f6 / #f1f5f9
+- Text: #1a1a1a or #3b4d61
+- Dark gradient: from #3b4d61 to #1e2833
+
+4. LAYOUT
+- Uses Tailwind CSS (CDN)
+- Max width: max-w-6xl / max-w-7xl
+- Padding: px-6, py-24
+- Sections centered (text-center, mx-auto)
+- Page structure: Header → Hero → About → How It Works → Escrow → Categories → Footer
+
+5. COMPONENTS
+- Header: white bg, shadow, sticky top, nav links with hover transition
+- Hero: gradient bg (from #f1f5f9 to white) + faint background image (opacity 10%)
+- Cards: p-8, bg-gray-50, rounded-2xl, shadow, hover:shadow-lg
+- Escrow section: dark gradient bg, white text, centered content
+- Footer: bg-gray-900, text-gray-300, social icons (VK + Telegram), small text links
+
+6. ANIMATIONS
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+7. EFFECTS
+- Hover: soft shadow increase (hover:shadow-lg)
+- Buttons: darker on hover
+- Links: smooth color transition
+
+8. VISUAL TONE
+- Trust, simplicity, modern tech
+- Minimalistic, blue-gray palette
+- Use Icons8 vector icons
+- Avoid heavy photography; prefer abstract light patterns with low opacity
+
+9. PROMPT TEMPLATE
+"Create an HTML page in PL-GL style:
+Use Tailwind CSS, Inter + Sofia Sans fonts, primary color #3b4d61 with gradient #3b4d61 → #65758e.
+Include rounded-2xl light-gray cards with shadow hover, gradient headings, fade-in animation, simple layout with header and footer.
+Use soft tech backgrounds (opacity 10%) and minimalism throughout."

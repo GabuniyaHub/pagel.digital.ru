@@ -19,7 +19,7 @@ dotenv.config();
 
 // Константы
 const PORT = 3000;
-const SECRET_KEY = process.env.JWT_SECRET || "guram"; // Секретный ключ для JWT
+const SECRET_KEY = process.env.JWT_SECRET ; // || "guram" Секретный ключ для JWT
 
 // Импорты локальных модулей
 const { client } = require("./config/db");
@@ -29,6 +29,7 @@ const adminRoutes = require("./routes/AdminPanel/adminRoutes");
 const marketRoutes = require("./routes/MarketRoutes/marketRoutes.js");
 const accountRoutes = require("./routes/account/accountRoutes.js");
 const settingsRoutes = require("./routes/settingsRoutes/settingsRoutes.js");
+const chatRoutes = require("./routes/chatRoutes/chatRoutes.js");
 
 // Инициализация данных
 const failedAttempts = new Map(); // Хранит количество неудачных попыток для каждого email
@@ -54,7 +55,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Настройка CORS
 app.use(
   cors({
-    origin: "http://localhost:3001", // Адрес вашего React-приложения
+    origin: "http://localhost:3001",
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
   })
@@ -72,6 +73,7 @@ app.use("/admin", adminRoutes); // Маршруты для админ-панел
 app.use("/market", marketRoutes); // Маршруты для медиа-сетей
 app.use("/account", accountRoutes); // Маршруты для аккаунта
 app.use("/settings", settingsRoutes); // Маршруты для настроек
+app.use("/chat", chatRoutes); // Маршруты для чата
 
 
 

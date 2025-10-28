@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PL-GL — Политика конфиденциальности</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&family=Sofia+Sans+Extra+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- General CSS -->
+  <link rel="stylesheet" href="../../assets/styles/lending/general.css">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7fa;
+      color: #1a1a1a;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Sofia Sans Extra Condensed', sans-serif;
+      letter-spacing: 0.4px;
+    }
+
+    .text-gradient {
+      background: linear-gradient(to right, #3b4d61, #65758e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .btn-primary {
+      background-color: #3b4d61;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background-color: #2f3e50;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Политика секции */
+    .policy-section {
+      font-family: 'Roboto', sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      color: #333;
+    }
+
+    .policy-section h2 {
+      font-family: 'Sofia Sans Extra Condensed', sans-serif;
+      letter-spacing: 0.4px;
+      font-size: 1.75rem;
+      color: #3b4d61;
+      margin-bottom: 0.75rem;
+    }
+
+    .policy-section p,
+    .policy-section li {
+      color: #444;
+    }
+
+    .policy-section strong {
+      color: #3b4d61;
+    }
+
+    .policy-section ul,
+    .policy-section ol {
+      margin-top: 0.75rem;
+    }
+
+    /* Hero */
+    .hero-pattern {
+      background: linear-gradient(to right, #f7f9fb, #edf1f6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-pattern::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/symphony.png');
+      opacity: 0.06;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* Анимация плавного пульса */
+    @keyframes pulse-slow {
+        0%, 100% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.1); opacity: 0.4; }
+    }
+    .animate-pulse-slow {
+        animation: pulse-slow 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse-slower {
+        0%, 100% { transform: scale(1); opacity: 0.2; }
+        50% { transform: scale(1.05); opacity: 0.3; }
+    }
+    .animate-pulse-slower {
+        animation: pulse-slower 12s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+      <span class="text-2xl font-extrabold tracking-tight text-gradient">PL-GL</span>
+      <nav class="hidden md:flex space-x-8 text-[17px]">
+        <a href="./present.html" class="hover:text-gray-700 transition">Главная</a>
+        <a href="./aboutUS.html" class="hover:text-gray-700 transition">О проекте</a>
+        <a href="./escrow.html" class="hover:text-gray-700 transition">Эскроу</a>
+        <a href="./contacts.html" class="hover:text-gray-700 transition">Контакты</a>
+      </nav>
+      <div class="flex items-center space-x-4">
+        <a href="/pages/user-auth/login.html" class="btn-primary px-5 py-2 rounded-lg font-semibold transition" data-lang-key="navLogin">Войти</a>
+
+        <!-- Language Switcher -->
+         <!-- <div class="relative">
+          <button id="langBtn" class="px-2 py-1 border border-gray-300 rounded text-sm flex items-center space-x-1 focus:outline-none">
+            <span id="langCurrent">RU</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <ul id="langMenu" class="absolute right-0 mt-1 bg-white border border-gray-300 rounded shadow-md hidden text-sm z-50">
+            <li>
+              <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="ru">
+                <img src="https://flagcdn.com/w20/ru.png" class="w-4 h-3" alt="RU">
+                <span>RU</span>
+              </button>
+            </li>
+            <li>
+              <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="en">
+                <img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3" alt="EN">
+                <span>EN</span>
+              </button>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+  </header>
+
+<!-- HERO -->
+<section class="relative border-b border-gray-200 overflow-hidden">
+  <!-- Фоновое изображение с градиентом -->
+  <div class="absolute inset-0 bg-gradient-to-r from-[#f7f9fb] to-[#e9eef3]"></div>
+  <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
+  
+  <!-- Абстрактные фигуры -->
+  <div class="absolute -top-16 -left-16 w-72 h-72 bg-gradient-to-br from-[#3b4d61]/30 to-[#65758e]/20 rounded-full animate-pulse-slow"></div>
+  <div class="absolute -bottom-20 -right-24 w-96 h-96 bg-gradient-to-tr from-[#3b4d61]/20 to-[#65758e]/10 rounded-full animate-pulse-slower"></div>
+
+  <div class="relative max-w-6xl mx-auto px-6 py-24 text-center z-10">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-5xl sm:text-6xl font-bold text-gradient mb-5 tracking-tight">
+        Политика конфиденциальности
+      </h1>
+      <p class="text-gray-700 text-lg leading-relaxed max-w-2xl mx-auto">
+        Этот документ описывает, какие данные мы собираем, как используем и защищаем их.  
+        Подходит для маркетплейса, IT-сервиса и финансово-ориентированных продуктов.
+      </p>
+    </div>
+  </div>
+</section>
+
+  <!-- MAIN CONTENT -->
+    <!-- MAIN CONTENT -->
+<main class="bg-[#f5f7fa]">
+  <div class="max-w-5xl mx-auto px-6 py-20 space-y-12">
+    <article id="policy" class="space-y-12">
+
+      <!-- 1. Введение -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.05s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">1</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Введение</h2>
+        <p>
+          PL-GL (далее — «Сервис», «мы») признаёт важность защиты персональных данных. 
+          Настоящая Политика объясняет, какие данные мы собираем, с какой целью и на каких основаниях, 
+          как долго их храним, а также права пользователей.
+        </p>
+      </section>
+
+      <!-- 2. Какие данные мы собираем -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.10s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">2</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Какие данные мы собираем</h2>
+        <ul class="list-disc pl-16 space-y-2">
+          <li><strong>Обязательные данные:</strong> имя, email, телефон — при регистрации и оформлении заказа.</li>
+          <li><strong>Технические данные:</strong> IP-адрес, тип браузера, cookie, данные сессии и аналитики.</li>
+          <li><strong>Платёжные данные:</strong> обрабатываются через платёжных провайдеров, мы не храним реквизиты карт.</li>
+          <li><strong>Дополнительные данные:</strong> история заказов, сообщения в поддержку, отзывы.</li>
+        </ul>
+      </section>
+
+      <!-- 3. Зачем мы используем данные -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.15s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">3</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Зачем мы используем данные</h2>
+        <ol class="list-decimal pl-16 space-y-1">
+          <li>обеспечения функционирования сервиса и аутентификации;</li>
+          <li>обработки заказов и оплаты;</li>
+          <li>персонализации интерфейса и рекомендаций;</li>
+          <li>обратной связи и поддержки пользователей;</li>
+          <li>выполнения юридических обязательств и борьбы с мошенничеством;</li>
+          <li>аналитики и улучшения продукта (анонимизированные данные).</li>
+        </ol>
+      </section>
+
+      <!-- 4. Cookie и технологии отслеживания -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.20s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">4</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Cookie и технологии отслеживания</h2>
+        <p>
+          Мы используем cookie и аналогичные технологии для обеспечения работоспособности сайта, аналитики и персонализации. 
+          Вы можете управлять настройками cookie в браузере или через интерфейс настроек на сайте.
+        </p>
+      </section>
+
+      <!-- 5. Передача данных третьим лицам -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.25s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">5</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Передача данных третьим лицам</h2>
+        <p>
+          Мы можем передавать данные сервис-провайдерам: хостинг, платёжные шлюзы, аналитика, служба поддержки. 
+          Все подрядчики обязуются защищать данные и могут обрабатывать их только в рамках оказания услуг. 
+          Мы не продаём персональные данные третьим лицам.
+        </p>
+      </section>
+
+      <!-- 6. Безопасность данных -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.30s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">6</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Безопасность данных</h2>
+        <p>
+          Мы внедрили технические и организационные меры для защиты данных: шифрование TLS, контроль доступа, резервное копирование и мониторинг. 
+          Однако абсолютную безопасность гарантировать невозможно — мы работаем над минимизацией рисков.
+        </p>
+      </section>
+
+      <!-- 7. Сроки хранения -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.35s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">7</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Сроки хранения</h2>
+        <p>
+          Данные хранятся столько, сколько необходимо для целей их обработки и в соответствии с применимым законодательством. 
+          Технические логи и аналитика — обычно до 1–3 лет (анонимизированные — дольше), пользовательские данные — по запросу или до удаления аккаунта.
+        </p>
+      </section>
+
+      <!-- 8. Права пользователя -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.40s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">8</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Права пользователя</h2>
+        <p>
+          Вы имеете право: получать копию своих данных, требовать их исправления или удаления, 
+          ограничивать обработку, переносимость данных и подавать жалобу в контролирующий орган. 
+          Запросы направляйте на адрес электронной почты ниже.
+        </p>
+      </section>
+
+      <!-- 9. Обновления политики -->
+      <section class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.45s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">9</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Обновления политики</h2>
+        <p>
+          Мы можем обновлять Политику. Обо всех существенных изменениях будет сообщено на сайте с указанием даты. 
+          Текущая версия действует с момента её публикации.
+        </p>
+      </section>
+
+      <!-- 10. Контакты -->
+      <section id="contact" class="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-xl transition transform hover:-translate-y-1 fade-in policy-section" style="transition-delay:.50s">
+        <div class="absolute -top-5 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white font-bold">10</div>
+        <h2 class="text-2xl grad-text mb-4 pl-16">Контакты</h2>
+        <p>
+          По вопросам конфиденциальности пишите: 
+          <a href="mailto:privacy@pl-gl.example" class="text-[#3b4d61] underline">privacy@pl-gl.example</a>
+        </p>
+        <p class="text-sm text-gray-600 mt-2">
+          Адрес организации и другие реквизиты могут быть размещены в разделе «О нас».
+        </p>
+      </section>
+
+    </article>
+  </div>
+</main>
+
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-300 py-10 text-center">
+    <div class="mb-4">
+      <a href="https://vk.com/pl_gl" target="_blank" class="inline-block mx-3 hover:opacity-80">
+        <img src="https://img.icons8.com/color/48/vk-com.png" alt="VK" class="inline w-8 h-8">
+      </a>
+      <a href="https://t.me/DigitalGoodsExchange_PL_GL" target="_blank" class="inline-block mx-3 hover:opacity-80">
+        <img src="https://img.icons8.com/color/48/telegram-app.png" alt="Telegram" class="inline w-8 h-8">
+      </a>
+    </div>
+    <p>© 2025 PL-GL | Все права защищены</p>
+    <p class="mt-3 text-sm">
+      <a href="#" class="hover:text-white">Политика конфиденциальности</a> | 
+      <a href="./termsOfService.html" class="hover:text-white">Условия использования</a>
+    </p>
+  </footer>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', ()=>{
+      document.querySelectorAll('.fade-in').forEach((el,i)=>{
+        setTimeout(()=>el.classList.add('visible'), 80*i);
+      });
+    });
+  </script>
+
+</body>
+</html>
