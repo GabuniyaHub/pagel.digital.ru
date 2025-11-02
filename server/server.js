@@ -30,6 +30,7 @@ const marketRoutes = require("./routes/MarketRoutes/marketRoutes.js");
 const accountRoutes = require("./routes/account/accountRoutes.js");
 const settingsRoutes = require("./routes/settingsRoutes/settingsRoutes.js");
 const chatRoutes = require("./routes/chatRoutes/chatRoutes.js");
+const lendingRoutes = require("./routes/lending/lendingRoutes.js");
 
 // Инициализация данных
 const failedAttempts = new Map(); // Хранит количество неудачных попыток для каждого email
@@ -42,10 +43,10 @@ createTables();
 // Инициализация Express-приложения
 const app = express();
 app.use(cookieParser());
-// app.use(express.json());
 app.use(express.json({ limit: '5mb', type: 'application/json' }));
 app.use(express.static(path.join(__dirname, "../client")));
 app.use('/pages', express.static(path.join(__dirname, 'client', 'pages')));
+app.use('/assets', express.static(path.join(__dirname, 'client', 'assets')));
 
 //multer
 // Раздача загруженных файлов
@@ -74,6 +75,7 @@ app.use("/market", marketRoutes); // Маршруты для медиа-сете
 app.use("/account", accountRoutes); // Маршруты для аккаунта
 app.use("/settings", settingsRoutes); // Маршруты для настроек
 app.use("/chat", chatRoutes); // Маршруты для чата
+app.use("/lending", lendingRoutes); //Лендинг
 
 
 
