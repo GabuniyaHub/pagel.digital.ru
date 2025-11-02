@@ -10,7 +10,7 @@ const optionalAuth = require('../../middleware/MarketMiddleware/optionalAuth'); 
 
 
 ChatRoutes.get('/', verifyToken, () => {
-    req.sendFile(path.join(__dirname, '/pages/chat/chat.html'));
+    req.sendFile(path.join(__dirname, '../../../client/pages/chat/chat.html'));
 });
 
 ChatRoutes.get('/get/data/all/users', verifyToken, checkBlockStatusWithoutToken, async (req, res) => {

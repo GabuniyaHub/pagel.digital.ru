@@ -570,7 +570,7 @@ function userRouters(req, res) {
             });
         });
     } else if (req.method === "GET" && req.url === "/") { //http://PL-GL.ru/
-        const filePath = path.join(__dirname, "/pages/lending/lending.html");
+        const filePath = path.join(__dirname, "../../client/pages/lending/lending.html");
         fs.readFile(filePath, (err, data) => {
             if (err) {
                 res.writeHead(500, { "Content-Type": "text/plain" });

@@ -3,27 +3,27 @@ const lendingRoutes = express.Router();
 const path = require('path');
 
 lendingRoutes.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/pages/lending/present.html'));
+    res.sendFile(path.join(__dirname, '../../../client/pages/lending/present.html'));
 });
 
 lendingRoutes.get('/escrow', (req, res) => {
-    res.sendFile(path.join(__dirname, '/pages/lending/escrow.html'));
+    res.sendFile(path.join(__dirname, '../../../client/pages/lending/escrow.html'));
 });
 
 lendingRoutes.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '/pages/lending/aboutUS.html'));
+    res.sendFile(path.join(__dirname, '../../../client/pages/lending/aboutUS.html'));
 });
 
-lengdingRoutes.get('/contacts', (req, res) => {
-    res.sendFile(path.join(__dirname, '/pages/lending/contacts.html'));
+lendingRoutes.get('/contacts', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../../client/pages/lending/contacts.html'));
 });
 
 lendingRoutes.get('/policy', (req, res) => {
-    res.sendFile(path.join(__dirname, '/pages/lending/policy.html'));
+    res.sendFile(path.join(__dirname, '../../../client/pages/lending/policy.html'));
 });
 
 lendingRoutes.get('/terms', (req, res) => {
-    res.sendFile(path.join(__dirname, '/pages/lending/termsOfService.html'));
+    res.sendFile(path.join(__dirname, '../../../client/pages/lending/termsOfService.html'));
 });
 
 module.exports = lendingRoutes;
