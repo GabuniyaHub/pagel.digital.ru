@@ -1,7 +1,6 @@
 const express = require('express');
 const lendingRoutes = express.Router();
 const path = require('path');
-const db = require('../../config/db'); // база данных
 
 lendingRoutes.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/pages/lending/present.html'));
