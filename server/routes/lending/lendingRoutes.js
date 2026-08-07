@@ -3,7 +3,7 @@ const lendingRoutes = express.Router();
 const path = require('path');
 
 lendingRoutes.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../client/pages/lending/present.html'));
+    res.sendFile(path.join(__dirname, '../../client/pages/lending/present.html'));
 });
 
 lendingRoutes.get('/escrow', (req, res) => {
