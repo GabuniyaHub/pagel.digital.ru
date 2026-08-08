@@ -1,4 +1,5 @@
 import { getData } from './getData.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const data = await getData();

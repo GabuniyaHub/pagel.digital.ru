@@ -1,25 +1,24 @@
-// Импорты модулей
-const http = require("http"); // Работа с HTTP-сервером
-const fs = require("fs"); // Работа с файловой системой
-const path = require("path"); // Работа с путями
-const formidable = require("formidable"); // Обработка файлов
-const express = require("express"); // Фреймворк для создания серверов
-const bcrypt = require("bcrypt"); // Хэширование паролей
-const { parse } = require("url"); // Парсинг URL
-const dotenv = require("dotenv"); // Работа с переменными окружения
-const jwt = require("jsonwebtoken"); // Работа с JWT
-const { Client } = require("pg"); // Работа с PostgreSQL
-const nodemailer = require("nodemailer"); // Отправка email
-const cors = require("cors"); // Разрешение CORS
-const cookieParser = require('cookie-parser'); //куки
+const http = require("http");
+const fs = require("fs"); 
+const path = require("path"); 
+const formidable = require("formidable");
+const express = require("express"); 
+const bcrypt = require("bcrypt"); 
+const { parse } = require("url");
+const dotenv = require("dotenv"); 
+const jwt = require("jsonwebtoken"); 
+const { Client } = require("pg"); 
+const nodemailer = require("nodemailer"); 
+const cors = require("cors");
+const cookieParser = require('cookie-parser');
 
 
 // Загрузка переменных окружения
 dotenv.config();
 
 // Константы
-const PORT = 3000;
-const SECRET_KEY = process.env.JWT_SECRET ; // || "guram" Секретный ключ для JWT
+const PORT = process.env.PORT;
+const SECRET_KEY = process.env.JWT_SECRET ;
 
 // Импорты локальных модулей
 const { client } = require("./config/db");

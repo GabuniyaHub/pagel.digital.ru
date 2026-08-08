@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    // languages
+    "target": "es2022",
+    "lib": ["ES2022"],
+
+    // modules
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+
+    // директории
+    "rootDir": "./server",
+    "outDir": "./dist",
+    
+    // включить всю строгость 
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "allowJs": true,
+    "checkJs": true,
+
+    // Дополнительно
+    "esModuleInterop": true,
+    "skipDefaultLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+
+    // Декораторы (nest)
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["server/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
