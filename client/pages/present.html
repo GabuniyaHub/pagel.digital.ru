@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PL-GL — Маркетплейс социальных сетей</title>
+
+  <title>PL-GL — YouTube Marketplace</title>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Шрифты -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -19,19 +23,24 @@
     }
 
     h1, h2, h3 {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Sofia Sans Extra Condensed', sans-serif;
+      letter-spacing: 0.5px;
     }
 
-    .accent {
-      color: #3b4d61;
+    .text-gradient {
+      background: linear-gradient(to right, #3b4d61, #65758e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .btn-primary {
-      background-color: #3b4d61;
-      color: #fff;
+      background: #3b4d61;
+      color: white;
     }
+
     .btn-primary:hover {
-      background-color: #2c3b4d;
+      background: #2c3b4d;
     }
 
     .fade-in {
@@ -39,206 +48,799 @@
       transform: translateY(20px);
       transition: all 0.6s ease-out;
     }
+
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .text-gradient {
-      background: linear-gradient(to right, #3b4d61, #65758e);
-      -webkit-background-clip: text;
-      color: transparent;
+    .soft-card {
+      background: #f8fafc;
+      border: 1px solid #eef2f6;
     }
   </style>
 </head>
 
 <body class="antialiased">
 
-  <!-- HEADER -->
+  <!-- =========================
+       HEADER
+  ========================== -->
+
   <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-      <span class="text-2xl font-extrabold tracking-tight text-gradient">PL-GL</span>
+
+      <span class="text-2xl font-extrabold tracking-tight text-gradient">
+        PL-GL
+      </span>
 
       <nav class="hidden md:flex space-x-8 text-[17px]">
-        <a href="#" class="htext-[#3b4d61] font-semibold">Главная</a>
-        <a href="./aboutProject" class="hover:text-gray-700 transition">О проекте</a>
-        <a href="./escrow" class="hover:text-gray-700 transition">Эскроу</a>
-        <a href="./contacts" class="hover:text-gray-700 transition">Контакты</a>
+        <a href="#" class="text-[#3b4d61] font-semibold">
+          Главная
+        </a>
+
+        <a href="./aboutProject" class="hover:text-gray-700 transition">
+          О проекте
+        </a>
+
+        <a href="./escrow" class="hover:text-gray-700 transition">
+          Эскроу
+        </a>
+
+        <a href="./contacts" class="hover:text-gray-700 transition">
+          Контакты
+        </a>
       </nav>
 
-      <a href="#" class="btn-primary px-5 py-2 rounded-lg font-semibold transition">Войти</a>
+      <a href="#" class="btn-primary px-5 py-2 rounded-lg font-semibold transition">
+        Войти
+      </a>
+
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="relative overflow-hidden py-32 bg-gradient-to-br from-[#f1f5f9] via-[#e8ecf3] to-white">
-    <!-- Фоновое изображение соцсетей -->
-    <div class="absolute inset-0 opacity-10 bg-[url('https://www.green4t.com/wp-content/uploads/2023/09/capa-iot-sustentabilidade-draft1-30-ago-23-dg.jpg')] bg-cover bg-center"></div>
 
-    <div class="relative max-w-6xl mx-auto px-6 flex flex-col items-center text-center md:items-start md:text-left">
-      <h1 class="text-5xl md:text-6xl font-extrabold leading-tight text-gradient fade-in">
-        Маркетплейс<br>социальных сетей
-      </h1>
-      <p class="text-lg text-gray-700 mt-6 max-w-xl fade-in">
-        PL-GL — платформа для покупки и продажи аккаунтов Instagram, Telegram, TikTok, X и других соцсетей.  
-        Сделки проходят безопасно через систему Эскроу.
-      </p>
-      <a href="#" class="btn-primary px-8 py-3 mt-10 text-lg rounded-xl font-semibold transition fade-in">Начать</a>
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <section class="relative overflow-hidden bg-gradient-to-br from-[#f1f5f9] via-[#e9edf2] to-white">
+
+    <!-- Soft tech background -->
+    <div class="absolute inset-0 opacity-[0.07]
+      bg-[url('https://www.green4t.com/wp-content/uploads/2023/09/capa-iot-sustentabilidade-draft1-30-ago-23-dg.jpg')]
+      bg-cover bg-center">
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-6 py-28 md:py-36">
+
+      <div class="max-w-3xl">
+
+        <div class="inline-flex items-center gap-2 px-4 py-2 mb-7
+                    bg-white/70 border border-[#eef2f6]
+                    rounded-full text-sm text-[#3b4d61] fade-in">
+
+          <span class="w-2 h-2 rounded-full bg-[#3b4d61]"></span>
+
+          Marketplace для YouTube
+        </div>
+
+        <h1 class="text-6xl md:text-8xl font-extrabold leading-[0.9]
+                   text-gradient fade-in">
+
+          Всё для<br>
+          YouTube.
+        </h1>
+
+        <p class="text-lg md:text-xl text-gray-600 mt-8
+                  max-w-2xl leading-relaxed fade-in">
+
+          Покупайте и продавайте YouTube-каналы, просмотры,
+          монтаж и услуги для развития ваших проектов —
+          в одном месте.
+
+        </p>
+
+        <div class="flex flex-wrap gap-4 mt-10 fade-in">
+
+          <a href="#categories"
+             class="btn-primary px-7 py-3.5 rounded-xl
+                    font-semibold transition">
+
+            Смотреть предложения
+          </a>
+
+          <a href="#how-it-works"
+             class="px-7 py-3.5 rounded-xl
+                    bg-white border border-gray-200
+                    text-[#3b4d61] font-semibold
+                    hover:shadow-md transition">
+
+            Как это работает
+          </a>
+
+        </div>
+
+      </div>
+
     </div>
   </section>
 
-  <!-- О ПРОЕКТЕ -->
 
-<section class="bg-white py-24">
-  <div class="max-w-6xl mx-auto text-center px-6 fade-in">
-    <h2 class="text-4xl font-bold mb-12 text-gradient">Почему выбирают нас</h2>
+  <!-- =========================
+       WHY PL-GL
+  ========================== -->
 
-    <div class="grid md:grid-cols-3 gap-10">
-
-      <!-- Безопасные сделки -->
-      <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-        <div class="flex justify-center mb-5">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-[#3b4d61]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c.7956 0 1.5587.3161 2.1213.8787C14.6839 12.4413 15 13.2044 15 14m-6 0c0-.7956.3161-1.5587.8787-2.1213C10.4413 11.3161 11.2044 11 12 11m0 0V7a4 4 0 018 0v4m-8 0h8m-4 7h.01" />
-          </svg>
-        </div>
-        <h3 class="font-semibold text-xl mb-3">Безопасные сделки</h3>
-        <p class="text-gray-600">
-          Все операции проходят через Эскроу — ваши средства хранятся в безопасности до подтверждения сделки.
-        </p>
-      </div>
-
-      <!-- Проверенные продавцы -->
-      <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-        <div class="flex justify-center mb-5">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-[#3b4d61]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <h3 class="font-semibold text-xl mb-3">Проверенные продавцы</h3>
-        <p class="text-gray-600">
-          Каждый аккаунт проходит ручную модерацию и проверку достоверности данных.
-        </p>
-      </div>
-
-      <!-- Простота и удобство -->
-      <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-        <div class="flex justify-center mb-5">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-[#3b4d61]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 9h8m-8 4h6m2-9H8a2 2 0 00-2 2v12a2 2 0 002 2h8l4-4V6a2 2 0 00-2-2z" />
-          </svg>
-        </div>
-        <h3 class="font-semibold text-xl mb-3">Простота и удобство</h3>
-        <p class="text-gray-600">
-          Интуитивный интерфейс, фильтры и поддержка 24/7 для вашего комфорта.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-
-  <!-- КАК ЭТО РАБОТАЕТ -->
-  <section class="py-24 bg-gradient-to-b from-gray-50 to-white">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="text-4xl font-bold mb-12 text-gradient">Как это работает</h2>
-      <div class="grid md:grid-cols-3 gap-10">
-        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/ios-filled/100/search--v1.png" class="mx-auto mb-6 w-16" />
-          <h3 class="font-bold text-xl mb-3">1. Найдите аккаунт</h3>
-          <p class="text-gray-600">Выберите из множества реальных предложений подходящий профиль.</p>
-        </div>
-        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/ios-filled/100/chat-message.png" class="mx-auto mb-6 w-16" />
-          <h3 class="font-bold text-xl mb-3">2. Обсудите детали</h3>
-          <p class="text-gray-600">Свяжитесь с продавцом и уточните все нюансы перед сделкой.</p>
-        </div>
-        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/ios-filled/100/money-bag.png" class="mx-auto mb-6 w-16" />
-          <h3 class="font-bold text-xl mb-3">3. Оплатите безопасно</h3>
-          <p class="text-gray-600">Оплата хранится в Эскроу до подтверждения получения аккаунта.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ЭСКРОУ -->
-  <section class="py-24 bg-gradient-to-br from-[#3b4d61] to-[#1e2833] text-white relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10 bg-[url('https://avatars.mds.yandex.net/i?id=666e32c52a0c375be9f66fd23e275fd7_l-12166422-images-thumbs&n=13')] bg-cover bg-center"></div>
-    <div class="relative max-w-5xl mx-auto px-6 text-center">
-      <img src="https://img.icons8.com/ios-filled/100/ffffff/lock--v1.png" class="mx-auto mb-6 opacity-90" />
-      <h3 class="font-bold text-4xl mb-6">Эскроу — ваш финансовый щит</h3>
-      <p class="text-lg text-gray-200 mb-10 max-w-3xl mx-auto">
-        Мы используем систему Эскроу, которая защищает обе стороны сделки.  
-        Средства блокируются до тех пор, пока покупатель не подтвердит получение аккаунта.  
-        Безопасность, прозрачность и доверие — наш приоритет.
-      </p>
-      <a href="#" class="bg-white text-[#3b4d61] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-        Подробнее о Эскроу
-      </a>
-    </div>
-  </section>
-
-  <!-- КАТЕГОРИИ -->
   <section class="bg-white py-24">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="text-4xl font-bold mb-12 text-gradient">Популярные соцсети</h2>
-      <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-10">
-        <div class="bg-gray-50 rounded-2xl p-8 shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/color/96/instagram-new.png" class="mx-auto mb-4 w-16" />
-          <h3 class="font-bold text-lg mb-2">Instagram</h3>
-          <p class="text-gray-600 text-sm">Аккаунты с активной аудиторией и высокой вовлечённостью.</p>
-        </div>
-        <div class="bg-gray-50 rounded-2xl p-8 shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/color/96/telegram-app.png" class="mx-auto mb-4 w-16" />
-          <h3 class="font-bold text-lg mb-2">Telegram</h3>
-          <p class="text-gray-600 text-sm">Каналы и группы с живыми подписчиками.</p>
-        </div>
-        <div class="bg-gray-50 rounded-2xl p-8 shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/color/96/tiktok.png" class="mx-auto mb-4 w-16" />
-          <h3 class="font-bold text-lg mb-2">TikTok</h3>
-          <p class="text-gray-600 text-sm">Аккаунты с ростом и стабильным охватом.</p>
-        </div>
-        <div class="bg-gray-50 rounded-2xl p-8 shadow hover:shadow-lg transition fade-in">
-          <img src="https://img.icons8.com/color/96/twitterx--v1.png" class="mx-auto mb-4 w-16" />
-          <h3 class="font-bold text-lg mb-2">X (Twitter)</h3>
-          <p class="text-gray-600 text-sm">Профили с тематическим контентом и активной аудиторией.</p>
-        </div>
+
+    <div class="max-w-6xl mx-auto px-6">
+
+      <div class="max-w-2xl mx-auto text-center fade-in">
+
+        <span class="text-sm uppercase tracking-widest
+                     text-gray-400">
+          PL-GL
+        </span>
+
+        <h2 class="text-5xl md:text-6xl font-bold
+                   text-gradient mt-3">
+          YouTube без лишнего.
+        </h2>
+
+        <p class="text-gray-600 mt-5 text-lg">
+          Всё необходимое для работы с YouTube
+          собрано в одном понятном маркетплейсе.
+        </p>
+
       </div>
+
+
+      <div class="grid md:grid-cols-3 gap-6 mt-14">
+
+
+        <!-- Card 1 -->
+
+        <div class="soft-card p-8 rounded-2xl
+                    shadow-sm hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-[#eef2f6]
+                      flex items-center justify-center
+                      mb-6">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/youtube-play.png"
+              alt="YouTube"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-3">
+            Всё в одном месте
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
+            Каналы, просмотры, монтаж и другие
+            услуги для YouTube — без поиска
+            по десяткам площадок.
+          </p>
+
+        </div>
+
+
+        <!-- Card 2 -->
+
+        <div class="soft-card p-8 rounded-2xl
+                    shadow-sm hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-[#eef2f6]
+                      flex items-center justify-center
+                      mb-6">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/shield.png"
+              alt="Безопасность"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-3">
+            Безопасные сделки
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
+            Сделки проходят через Эскроу.
+            Средства остаются защищёнными
+            до выполнения условий.
+          </p>
+
+        </div>
+
+
+        <!-- Card 3 -->
+
+        <div class="soft-card p-8 rounded-2xl
+                    shadow-sm hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-[#eef2f6]
+                      flex items-center justify-center
+                      mb-6">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/rocket.png"
+              alt="Развитие"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-3">
+            Для роста
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
+            От готового канала до монтажа —
+            находите инструменты и услуги
+            для развития своего проекта.
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-300 py-10 text-center">
-    <div class="mb-4">
-      <a href="https://vk.com" target="_blank" class="inline-block mx-3 hover:opacity-80">
-        <img src="https://img.icons8.com/color/48/vk-com.png" alt="VK" class="inline w-8 h-8">
-      </a>
-      <a href="https://t.me" target="_blank" class="inline-block mx-3 hover:opacity-80">
-        <img src="https://img.icons8.com/color/48/telegram-app.png" alt="Telegram" class="inline w-8 h-8">
-      </a>
+
+  <!-- =========================
+       HOW IT WORKS
+  ========================== -->
+
+  <section id="how-it-works"
+           class="py-24 bg-gradient-to-b
+                  from-[#f5f7fa] to-white">
+
+    <div class="max-w-6xl mx-auto px-6">
+
+      <div class="text-center max-w-2xl mx-auto fade-in">
+
+        <span class="text-sm uppercase tracking-widest
+                     text-gray-400">
+          Просто
+        </span>
+
+        <h2 class="text-5xl md:text-6xl font-bold
+                   text-gradient mt-3">
+          Как это работает
+        </h2>
+
+        <p class="text-gray-600 mt-5 text-lg">
+          Три шага от поиска предложения
+          до завершения сделки.
+        </p>
+
+      </div>
+
+
+      <div class="grid md:grid-cols-3 gap-6 mt-14">
+
+
+        <!-- Step 1 -->
+
+        <div class="bg-white p-8 rounded-2xl
+                    shadow-sm hover:shadow-lg
+                    transition fade-in">
+
+          <div class="text-sm font-semibold
+                      text-[#65758e] mb-6">
+            01
+          </div>
+
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/search--v1.png"
+            alt="Поиск"
+            class="w-12 h-12 mb-6"
+          />
+
+          <h3 class="text-2xl font-bold mb-3">
+            Найдите нужное
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
+            Выберите YouTube-канал, просмотры,
+            монтаж или другую услугу.
+          </p>
+
+        </div>
+
+
+        <!-- Step 2 -->
+
+        <div class="bg-white p-8 rounded-2xl
+                    shadow-sm hover:shadow-lg
+                    transition fade-in">
+
+          <div class="text-sm font-semibold
+                      text-[#65758e] mb-6">
+            02
+          </div>
+
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/chat-message.png"
+            alt="Детали"
+            class="w-12 h-12 mb-6"
+          />
+
+          <h3 class="text-2xl font-bold mb-3">
+            Выберите предложение
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
+            Изучите условия, стоимость и детали
+            предложения перед покупкой.
+          </p>
+
+        </div>
+
+
+        <!-- Step 3 -->
+
+        <div class="bg-white p-8 rounded-2xl
+                    shadow-sm hover:shadow-lg
+                    transition fade-in">
+
+          <div class="text-sm font-semibold
+                      text-[#65758e] mb-6">
+            03
+          </div>
+
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/money-bag.png"
+            alt="Оплата"
+            class="w-12 h-12 mb-6"
+          />
+
+          <h3 class="text-2xl font-bold mb-3">
+            Проведите сделку
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
+            Оплата проходит через Эскроу
+            до выполнения условий сделки.
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
-    <p>© 2025 PL-GL | Все права защищены</p>
-    <p class="mt-3 text-sm">
-      <a href="#" class="hover:text-white">Политика конфиденциальности</a> | 
-      <a href="#" class="hover:text-white">Условия использования</a>
+
+  </section>
+
+
+  <!-- =========================
+       ESCROW
+  ========================== -->
+
+  <section class="py-24
+                  bg-gradient-to-br
+                  from-[#3b4d61] to-[#1e2833]
+                  text-white relative overflow-hidden">
+
+    <div class="absolute inset-0 opacity-[0.06]
+      bg-[url('https://avatars.mds.yandex.net/i?id=666e32c52a0c375be9f66fd23e275fd7_l-12166422-images-thumbs&n=13')]
+      bg-cover bg-center">
+    </div>
+
+    <div class="relative max-w-5xl mx-auto
+                px-6 text-center">
+
+      <div class="w-14 h-14 mx-auto mb-7
+                  rounded-2xl bg-white/10
+                  flex items-center justify-center">
+
+        <img
+          src="https://img.icons8.com/ios-filled/100/ffffff/lock--v1.png"
+          alt="Эскроу"
+          class="w-7 h-7"
+        />
+
+      </div>
+
+      <h2 class="text-5xl md:text-6xl
+                 font-bold mb-6">
+
+        Сделка под защитой.
+
+      </h2>
+
+      <p class="text-lg text-gray-300
+                max-w-2xl mx-auto
+                leading-relaxed mb-10">
+
+        Эскроу защищает обе стороны сделки.
+        Средства блокируются до выполнения
+        согласованных условий.
+
+      </p>
+
+      <a href="./escrow"
+         class="inline-block
+                bg-white text-[#3b4d61]
+                px-7 py-3.5 rounded-xl
+                font-semibold
+                hover:bg-gray-100
+                transition">
+
+        Подробнее об Эскроу
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       CATEGORIES
+  ========================== -->
+
+  <section id="categories"
+           class="bg-white py-24">
+
+    <div class="max-w-6xl mx-auto px-6">
+
+      <div class="max-w-2xl mx-auto text-center fade-in">
+
+        <span class="text-sm uppercase tracking-widest
+                     text-gray-400">
+          Marketplace
+        </span>
+
+        <h2 class="text-5xl md:text-6xl
+                   font-bold text-gradient mt-3">
+
+          Что ищете?
+
+        </h2>
+
+        <p class="text-gray-600 mt-5 text-lg">
+          Основные категории PL-GL
+          для работы с YouTube.
+        </p>
+
+      </div>
+
+
+      <div class="grid sm:grid-cols-2
+                  lg:grid-cols-4 gap-6 mt-14">
+
+
+        <!-- YouTube Channels -->
+
+        <div class="group bg-[#f5f7fa]
+                    rounded-2xl p-7
+                    hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-white
+                      flex items-center justify-center
+                      mb-7 shadow-sm">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/youtube-play.png"
+              alt="YouTube-каналы"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-2">
+            YouTube-каналы
+          </h3>
+
+          <p class="text-gray-600 text-sm
+                    leading-relaxed mb-6">
+
+            Готовые каналы для запуска
+            или развития проекта.
+
+          </p>
+
+          <span class="text-[#3b4d61]
+                       font-semibold text-sm
+                       group-hover:translate-x-1
+                       inline-block transition">
+
+            Смотреть →
+
+          </span>
+
+        </div>
+
+
+        <!-- Views -->
+
+        <div class="group bg-[#f5f7fa]
+                    rounded-2xl p-7
+                    hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-white
+                      flex items-center justify-center
+                      mb-7 shadow-sm">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/visible.png"
+              alt="Просмотры"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-2">
+            Просмотры
+          </h3>
+
+          <p class="text-gray-600 text-sm
+                    leading-relaxed mb-6">
+
+            Услуги для увеличения охватов
+            и продвижения видео.
+
+          </p>
+
+          <span class="text-[#3b4d61]
+                       font-semibold text-sm
+                       group-hover:translate-x-1
+                       inline-block transition">
+
+            Смотреть →
+
+          </span>
+
+        </div>
+
+
+        <!-- Editing -->
+
+        <div class="group bg-[#f5f7fa]
+                    rounded-2xl p-7
+                    hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-white
+                      flex items-center justify-center
+                      mb-7 shadow-sm">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/video-editing.png"
+              alt="Монтаж"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-2">
+            Монтаж
+          </h3>
+
+          <p class="text-gray-600 text-sm
+                    leading-relaxed mb-6">
+
+            Монтаж видео, Shorts
+            и создание контента.
+
+          </p>
+
+          <span class="text-[#3b4d61]
+                       font-semibold text-sm
+                       group-hover:translate-x-1
+                       inline-block transition">
+
+            Смотреть →
+
+          </span>
+
+        </div>
+
+
+        <!-- Services -->
+
+        <div class="group bg-[#f5f7fa]
+                    rounded-2xl p-7
+                    hover:shadow-lg
+                    transition fade-in">
+
+          <div class="w-12 h-12 rounded-xl
+                      bg-white
+                      flex items-center justify-center
+                      mb-7 shadow-sm">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/services.png"
+              alt="Услуги"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+          <h3 class="text-2xl font-bold mb-2">
+            Услуги
+          </h3>
+
+          <p class="text-gray-600 text-sm
+                    leading-relaxed mb-6">
+
+            Всё необходимое для работы
+            и развития YouTube-проекта.
+
+          </p>
+
+          <span class="text-[#3b4d61]
+                       font-semibold text-sm
+                       group-hover:translate-x-1
+                       inline-block transition">
+
+            Смотреть →
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FINAL CTA
+  ========================== -->
+
+  <section class="py-20 bg-[#f5f7fa]">
+
+    <div class="max-w-4xl mx-auto px-6 text-center">
+
+      <h2 class="text-5xl md:text-6xl
+                 font-bold text-gradient fade-in">
+
+        YouTube начинается здесь.
+
+      </h2>
+
+      <p class="text-lg text-gray-600
+                mt-5 mb-8 fade-in">
+
+        Найдите нужное предложение
+        или разместите своё.
+
+      </p>
+
+      <a href="#"
+         class="inline-block btn-primary
+                px-8 py-3.5 rounded-xl
+                font-semibold transition fade-in">
+
+        Начать
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="bg-gray-900
+                 text-gray-300
+                 py-10 text-center">
+
+    <div class="mb-5">
+
+      <a href="https://vk.com"
+         target="_blank"
+         class="inline-block mx-3
+                hover:opacity-80 transition">
+
+        <img
+          src="https://img.icons8.com/color/48/vk-com.png"
+          alt="VK"
+          class="inline w-8 h-8"
+        />
+
+      </a>
+
+
+      <a href="https://t.me"
+         target="_blank"
+         class="inline-block mx-3
+                hover:opacity-80 transition">
+
+        <img
+          src="https://img.icons8.com/color/48/telegram-app.png"
+          alt="Telegram"
+          class="inline w-8 h-8"
+        />
+
+      </a>
+
+    </div>
+
+    <p>
+      © 2025 PL-GL | Все права защищены
     </p>
+
+    <p class="mt-3 text-sm">
+
+      <a href="#"
+         class="hover:text-white transition">
+        Политика конфиденциальности
+      </a>
+
+      <span class="mx-2">|</span>
+
+      <a href="#"
+         class="hover:text-white transition">
+        Условия использования
+      </a>
+
+    </p>
+
   </footer>
 
-  <!-- JS для анимаций -->
+
+  <!-- =========================
+       ANIMATIONS
+  ========================== -->
+
   <script>
-    const fadeElements = document.querySelectorAll('.fade-in');
+
+    const fadeElements =
+      document.querySelectorAll('.fade-in');
+
     const onScroll = () => {
+
       fadeElements.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) el.classList.add('visible');
+
+        const rect =
+          el.getBoundingClientRect();
+
+        if (rect.top <
+            window.innerHeight - 100) {
+
+          el.classList.add('visible');
+
+        }
+
       });
+
     };
-    window.addEventListener('scroll', onScroll);
+
+    window.addEventListener(
+      'scroll',
+      onScroll
+    );
+
     onScroll();
+
   </script>
 
 </body>
 </html>
+```
