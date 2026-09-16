@@ -9,7 +9,7 @@ async function handleCredentialResponse(response) {
   
     try {
         // Отправляем токен на сервер
-        const serverResponse = await fetch('https://www.pagel-digital.ru/auth/google', {
+        const serverResponse = await fetch('/auth/google', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ async function handleCredentialResponse(response) {
 
     
           // Перенаправляем пользователя
-          window.location.href = '../../../pages/index.html';
+          window.location.href = '/pages/index.html';
         } else {
         //   alert('Ошибка авторизации: ' + data.message);
           Swal.fire("Ошибка", data.message , "error");

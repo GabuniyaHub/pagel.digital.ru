@@ -21,6 +21,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "guram"; //JWT
 const failedAttempts = new Map(); // Хранит количество неудачных попыток для каждого email
 const blockedUsers = new Map();  // Хранит время разблокировки для каждого email
 const verificationCodes = new Map(); // Временное хранилище кодов
+const verifiedEmails = new Set(); // Email, прошедшие проверку до создания аккаунта
 
 const { verifyToken } = require("../middleware/authMiddleware");
 const checkBlockStatus = require("../middleware/UsersAutharizationMiddleware/checkBlockStatus");
@@ -55,19 +56,25 @@ function userRouters(req, res) {
                     return res.end(JSON.stringify({ success: false, message: "Все поля обязательны" }));
                 }
 
+                if (!verifiedEmails.has(email)) {
+                    res.writeHead(400, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({ success: false, message: "Сначала подтвердите email" }));
+                }
+
                 // Хешируем пароль
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password, salt);
 
                 // SQL-запрос на добавление пользователя
                 const query = `
-                        INSERT INTO users (nickname, email, password_hash)
-                        VALUES ($1, $2, $3)
-                        RETURNING id;
+                        INSERT INTO users (nickname, email, password_hash, verified)
+                        VALUES ($1, $2, $3, TRUE)
+                        RETURNING id, email;
                     `;
 
                 const result = await client.query(query, [name, email, hashedPassword]);
                 console.log("Пользователь успешно зарегистрирован:", result.rows[0]);
+                verifiedEmails.delete(email);
 
                 // Проверка блокировки пользователя администратором (из базы данных)
                 // const checkBlockedQuery = `SELECT is_blocked FROM users WHERE id = $1`;
@@ -167,9 +174,7 @@ function userRouters(req, res) {
             const storedCode = verificationCodes.get(email);
             if (storedCode && storedCode === code) {
                 verificationCodes.delete(email); // Удаляем использованный код
-
-                // Обновление статуса в БД
-                await client.query("UPDATE users SET verified = TRUE WHERE email = $1", [email]);
+                verifiedEmails.add(email);
 
                 res.writeHead(200, { "Content-Type": "application/json" });
                 return res.end(JSON.stringify({ success: true, message: "Email подтвержден!" }));

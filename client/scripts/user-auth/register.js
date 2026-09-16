@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     showConfirmButton: false
                 });
 
-                window.location.href = '../../pages/index.html';
+                    window.location.href = '/pages/index.html';
             } else {
                 Swal.fire("Ошибка", result.message, "error");
             }
