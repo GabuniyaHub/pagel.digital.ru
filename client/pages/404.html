@@ -1,63 +1,209 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>404 — Страница не найдена</title>
+
+    <title>404 — Страница не найдена | PL-GL</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0f1117;
-            color: #eaeaea;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        body {
+            font-family: 'Inter', sans-serif;
         }
-        .box {
-            text-align: center;
-            padding: 40px;
-            max-width: 520px;
+
+        .font-heading {
+            font-family: 'Poppins', sans-serif;
         }
-        .code {
-            font-size: 96px;
-            font-weight: 800;
-            letter-spacing: -4px;
-            background: linear-gradient(135deg, #4f8cff, #9b5cff);
+
+        .text-gradient {
+            background: linear-gradient(to right, #3b4d61, #65758e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            background-clip: text;
         }
-        h1 {
-            font-size: 24px;
-            margin: 0 0 12px;
+
+        .bg-gradient-plgl {
+            background: linear-gradient(to right, #3b4d61, #65758e);
         }
-        p {
-            color: #a0a0a0;
-            margin: 0 0 28px;
-            line-height: 1.5;
+
+        .fade-in {
+            animation: fadeIn 0.7s ease-out forwards;
         }
-        a {
-            display: inline-block;
-            padding: 12px 24px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #4f8cff, #9b5cff);
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity .2s;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        a:hover { opacity: .85; }
     </style>
 </head>
-<body>
-    <div class="box">
-        <div class="code">404</div>
-        <h1>Страница не найдена</h1>
-        <p>Возможно, она была удалена, переименована или вы ошиблись в адресе.</p>
-        <a href="/">Вернуться на главную</a>
-    </div>
+
+<body class="min-h-screen bg-[#f5f7fa] text-[#1a1a1a]">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm">
+
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+            <a
+                href="/"
+                class="text-2xl font-bold tracking-tight text-gradient"
+            >
+                PL-GL
+            </a>
+
+            <a
+                href="/pages/user-auth/login.html"
+                class="bg-gradient-plgl text-white px-5 py-2 rounded-lg font-semibold hover:opacity-90 transition"
+            >
+                Войти
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- 404 -->
+    <main class="min-h-[calc(100vh-73px)] flex items-center justify-center px-6 py-20 relative overflow-hidden">
+
+        <!-- Decorative background -->
+        <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#3b4d61] opacity-[0.035]"></div>
+
+        <div class="absolute -bottom-40 -left-32 w-[28rem] h-[28rem] rounded-full bg-[#65758e] opacity-[0.035]"></div>
+
+
+        <div class="relative z-10 max-w-2xl w-full text-center fade-in">
+
+            <!-- Label -->
+            <div class="inline-flex items-center px-4 py-2 mb-7 rounded-full bg-white shadow-sm">
+                <span class="text-sm font-semibold text-[#3b4d61]">
+                    PL-GL · YouTube
+                </span>
+            </div>
+
+
+            <!-- Error code -->
+            <div class="font-heading text-[110px] sm:text-[140px] leading-none font-bold tracking-[-6px] text-gradient mb-5">
+                404
+            </div>
+
+
+            <!-- Title -->
+            <h1 class="font-heading text-3xl sm:text-4xl font-bold text-[#3b4d61] mb-5">
+                Страница не найдена
+            </h1>
+
+
+            <!-- Description -->
+            <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-9">
+                Похоже, этой страницы больше нет или адрес был указан неправильно.
+                Вернитесь на PL-GL и продолжите работу с YouTube.
+            </p>
+
+
+            <!-- Main action -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+
+                <a
+                    href="/"
+                    class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-plgl text-white font-semibold shadow-sm hover:shadow-md hover:opacity-90 transition"
+                >
+                    Вернуться на главную
+                </a>
+
+                <a
+                    href="/lending/contacts"
+                    class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white border border-gray-200 text-[#3b4d61] font-semibold hover:border-[#3b4d61] hover:shadow-sm transition"
+                >
+                    Связаться с нами
+                </a>
+
+            </div>
+
+
+            <!-- Categories -->
+            <div class="mt-14">
+
+                <p class="text-sm text-gray-500 mb-5">
+                    На PL-GL можно найти
+                </p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+
+                    <a
+                        href="/"
+                        class="bg-white rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition"
+                    >
+                        <div class="text-[#3b4d61] font-semibold text-sm">
+                            YouTube-каналы
+                        </div>
+                    </a>
+
+
+                    <a
+                        href="/"
+                        class="bg-white rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition"
+                    >
+                        <div class="text-[#3b4d61] font-semibold text-sm">
+                            Просмотры
+                        </div>
+                    </a>
+
+
+                    <a
+                        href="/"
+                        class="bg-white rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition"
+                    >
+                        <div class="text-[#3b4d61] font-semibold text-sm">
+                            Монтаж
+                        </div>
+                    </a>
+
+
+                    <a
+                        href="/"
+                        class="bg-white rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition"
+                    >
+                        <div class="text-[#3b4d61] font-semibold text-sm">
+                            Услуги
+                        </div>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 py-6 text-center">
+
+        <p class="text-sm">
+            © 2025 PL-GL · Всё для YouTube
+        </p>
+
+    </footer>
+
 </body>
 </html>
+```
