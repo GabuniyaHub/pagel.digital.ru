@@ -1,8 +1,0 @@
-Посмотреть контейнеры
-docker ps
-
-зайди внутрь контейнера с базой
-docker exec -it pagel-digital-db-1 sh
-
-Открыть базу 
-psql -U plgl_user -d PagelDigital
