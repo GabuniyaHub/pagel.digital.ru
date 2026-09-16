@@ -1,268 +1,1324 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Эскроу — PL-GL</title>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Шрифты (совместимы с предыдущими страницами) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="/assets/styles/lending/general.css">
 
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1a1a;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Sofia Sans Extra Condensed', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .text-gradient {
+      background: linear-gradient(to right, #3b4d61, #65758e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .accent {
+      color: #3b4d61;
+    }
+
+    .btn-primary {
+      background: #3b4d61;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #2c3b4d;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .soft-card {
+      background: #f8fafc;
+      border: 1px solid #eef2f6;
+    }
+
+    .icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #eef2f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-number {
+      font-size: 14px;
+      font-weight: 700;
+      color: #65758e;
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
+
+
 <body class="antialiased">
 
-  <!-- HEADER -->
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
   <header class="bg-white shadow-md sticky top-0 z-50">
+
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-      <span class="text-2xl font-extrabold tracking-tight text-gradient">PL-GL</span>
+
+      <span class="text-2xl font-extrabold tracking-tight text-gradient">
+        PL-GL
+      </span>
+
 
       <nav class="hidden md:flex space-x-8 text-[17px]">
-        <a href="/lending" class="hover:text-gray-700 transition">Главная</a>
-        <a href="/lending/about" class="hover:text-gray-700 transition">О проекте</a>
-        <a href="#" class="htext-[#3b4d61] font-semibold">Эскроу</a>
-        <a href="/lending/contacts" class="hover:text-gray-700 transition">Контакты</a>
+
+        <a href="/lending"
+           class="hover:text-gray-700 transition">
+          Главная
+        </a>
+
+        <a href="/lending/about"
+           class="hover:text-gray-700 transition">
+          О проекте
+        </a>
+
+        <a href="/lending/escrow"
+           class="text-[#3b4d61] font-semibold">
+          Эскроу
+        </a>
+
+        <a href="/lending/contacts"
+           class="hover:text-gray-700 transition">
+          Контакты
+        </a>
+
       </nav>
 
-      <div class="flex items-center space-x-4">
-        <a href="/pages/user-auth/login.html" class="btn-primary px-5 py-2 rounded-lg font-semibold transition" data-lang-key="navLogin">Войти</a>
 
-        <!-- Language Switcher -->
-         <!-- <div class="relative">
-          <button id="langBtn" class="px-2 py-1 border border-gray-300 rounded text-sm flex items-center space-x-1 focus:outline-none">
-            <span id="langCurrent">RU</span>
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
-          </button>
-          <ul id="langMenu" class="absolute right-0 mt-1 bg-white border border-gray-300 rounded shadow-md hidden text-sm z-50">
-            <li>
-              <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="ru">
-                <img src="https://flagcdn.com/w20/ru.png" class="w-4 h-3" alt="RU">
-                <span>RU</span>
-              </button>
-            </li>
-            <li>
-              <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="en">
-                <img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3" alt="EN">
-                <span>EN</span>
-              </button>
-            </li>
-          </ul>
-        </div> -->
+      <div class="flex items-center space-x-4">
+
+        <a
+          href="/pages/user-auth/login.html"
+          class="btn-primary px-5 py-2 rounded-lg font-semibold transition"
+          data-lang-key="navLogin"
+        >
+          Войти
+        </a>
+
       </div>
+
     </div>
+
   </header>
 
-  <!-- HERO -->
-  <section class="relative overflow-hidden pt-28 pb-20 bg-gradient-to-br from-[#eef1f4] to-[#f9fafb]">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10">
-      <div class="md:w-1/2 fade-in">
-        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight text-gradient">Эскроу — ваш финансовый щит</h1>
-        <p class="text-gray-700 mt-6 text-lg max-w-xl">
-          Система Эскроу удерживает средства до завершения сделки, защищая и покупателя, и продавца.
-          Мы выступаем гарантом выполнения условий — так сделки проходят честно и прозрачно.
+
+
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <section class="relative overflow-hidden
+                  bg-gradient-to-br
+                  from-[#f1f5f9]
+                  via-[#e9edf2]
+                  to-white">
+
+    <!-- Soft abstract background -->
+
+    <div class="absolute inset-0 opacity-[0.06]
+      bg-[url('https://www.green4t.com/wp-content/uploads/2023/09/capa-iot-sustentabilidade-draft1-30-ago-23-dg.jpg')]
+      bg-cover bg-center">
+    </div>
+
+
+    <div class="relative max-w-6xl mx-auto
+                px-6 py-28 md:py-36">
+
+      <div class="max-w-3xl fade-in">
+
+
+        <div class="inline-flex items-center gap-2
+                    px-4 py-2 mb-7
+                    bg-white/70
+                    border border-[#eef2f6]
+                    rounded-full
+                    text-sm text-[#3b4d61]">
+
+          <span class="w-2 h-2 rounded-full
+                       bg-[#3b4d61]">
+          </span>
+
+          Безопасность сделок PL-GL
+
+        </div>
+
+
+        <h1 class="text-6xl md:text-8xl
+                   font-extrabold
+                   leading-[0.9]
+                   text-gradient">
+
+          Сделка<br>
+          под защитой.
+
+        </h1>
+
+
+        <p class="text-lg md:text-xl
+                  text-gray-600
+                  mt-8
+                  max-w-2xl
+                  leading-relaxed">
+
+          Эскроу защищает средства покупателя
+          и интересы продавца при сделках
+          с YouTube-каналами и услугами.
+
         </p>
-        <div class="mt-8 flex gap-4">
-          <a href="#" class="btn-primary px-6 py-3 rounded-xl font-semibold">Подробнее</a>
-          <a href="mailto:support@pl-gl.ru" class="px-6 py-3 rounded-xl border border-gray-200 hover:shadow-sm transition">Связаться</a>
+
+
+        <div class="flex flex-wrap gap-4 mt-10">
+
+          <a
+            href="#how-escrow-works"
+            class="btn-primary
+                   px-7 py-3.5
+                   rounded-xl
+                   font-semibold
+                   transition"
+          >
+            Как это работает
+          </a>
+
+
+          <a
+            href="mailto:support@pl-gl.ru"
+            class="px-7 py-3.5
+                   rounded-xl
+                   bg-white
+                   border border-gray-200
+                   text-[#3b4d61]
+                   font-semibold
+                   hover:shadow-md
+                   transition"
+          >
+            Связаться
+          </a>
+
         </div>
+
       </div>
 
-      <!-- Полупрозрачная иллюстрация рукопожатия (встроенный SVG) -->
-      <div class="md:w-1/2 flex justify-center fade-in">
-        <div class="w-80 h-56 relative">
-          <!-- SVG иллюстрация handshake — большой, мягко-прозрачный -->
-          <svg viewBox="0 0 800 560" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-20">
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1">
-                <stop offset="0" stop-color="#3b4d61"/>
-                <stop offset="1" stop-color="#64748b"/>
-              </linearGradient>
-            </defs>
-            <!-- упрощённая иконка рукопожатия -->
-            <path d="M120 360c40-60 120-120 200-100s110 90 170 110 120 30 160 0" stroke="url(#g1)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M420 260c30-30 80-58 130-40s70 60 100 80" stroke="url(#g1)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M260 300c20-18 50-40 80-36s36 38 70 56" stroke="url(#g1)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-            <!-- декоративные круги -->
-            <circle cx="600" cy="80" r="40" fill="#dce6ee" />
-            <circle cx="720" cy="180" r="28" fill="#e9eef3" />
-            <circle cx="680" cy="320" r="20" fill="#eef3f6" />
-          </svg>
-        </div>
-      </div>
     </div>
+
   </section>
 
-  <!-- HOW ESCROW WORKS -->
-  <section class="py-20 bg-white">
-    <div class="max-w-6xl mx-auto px-6 text-center fade-in">
-      <h2 class="text-4xl font-bold mb-8 text-gradient">Как работает Эскроу</h2>
 
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- Шаг 1 -->
-        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-          <div class="icon-circle mb-4 mx-auto">
-            <!-- Иконка кошелька -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#3b4d61]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="6" width="20" height="12" rx="2" />
-              <path d="M16 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-xl mb-3">1. Покупатель вносит оплату</h3>
-          <p class="text-gray-600">Деньги блокируются на защищённом счёте Эскроу до подтверждения получения товара/аккаунта.</p>
-        </div>
 
-        <!-- Шаг 2 -->
-        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-          <div class="icon-circle mb-4 mx-auto">
-            <!-- Иконка передачи / handshake small -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#3b4d61]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M8 14l2 2 6-6" />
-              <path d="M2 12l4 4" />
-              <path d="M12 6l6 6" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-xl mb-3">2. Продавец передаёт данные</h3>
-          <p class="text-gray-600">Продавец предоставляет доступ к аккаунту или отправляет цифровой товар для проверки покупателем.</p>
-        </div>
+  <!-- =========================
+       SHORT INTRO
+  ========================== -->
 
-        <!-- Шаг 3 -->
-        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-          <div class="icon-circle mb-4 mx-auto">
-            <!-- Иконка галочки -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#3b4d61]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h3 class="font-semibold text-xl mb-3">3. Подтверждение и выпуск средств</h3>
-          <p class="text-gray-600">После подтверждения покупателем — средства переводятся продавцу. Если есть спор, запускается процесс арбитража.</p>
-        </div>
-      </div>
+  <section class="bg-white py-20">
+
+    <div class="max-w-4xl mx-auto
+                px-6 text-center fade-in">
+
+      <span class="text-sm uppercase
+                   tracking-widest text-gray-400">
+        Эскроу PL-GL
+      </span>
+
+
+      <h2 class="text-5xl md:text-6xl
+                 font-bold
+                 text-gradient
+                 mt-3">
+
+        Деньги не уходят сразу.
+
+      </h2>
+
+
+      <p class="text-lg text-gray-600
+                mt-6
+                max-w-2xl
+                mx-auto
+                leading-relaxed">
+
+        Средства удерживаются до тех пор,
+        пока согласованные условия сделки
+        не будут выполнены.
+
+      </p>
+
     </div>
+
   </section>
 
-  <!-- WHY ESCROW IS IMPORTANT -->
-  <section class="py-20 bg-gradient-to-br from-[#f6fbff] to-white">
-    <div class="max-w-6xl mx-auto px-6 fade-in">
-      <h2 class="text-4xl font-bold mb-8 text-center text-gradient">Зачем нужен Эскроу?</h2>
-      <div class="grid md:grid-cols-3 gap-6 mt-6">
-        <div class="p-6 bg-white rounded-2xl shadow">
-          <div class="flex items-start gap-4">
-            <div class="icon-circle">
-              <!-- shield -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#3b4d61]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M12 2l7 3v5c0 5-3.5 9-7 10-3.5-1-7-5-7-10V5l7-3z" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-semibold">Гарантия выполнения условий</h4>
-              <p class="text-gray-600 text-sm">Средства не передаются, пока условия сделки не будут выполнены и подтверждены стороной-покупателем.</p>
-            </div>
-          </div>
-        </div>
 
-        <div class="p-6 bg-white rounded-2xl shadow">
-          <div class="flex items-start gap-4">
-            <div class="icon-circle">
-              <!-- eye / transparency -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#3b4d61]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-semibold">Прозрачность</h4>
-              <p class="text-gray-600 text-sm">Каждая транзакция имеет лог действий и статусы, доступные обеим сторонам.</p>
-            </div>
-          </div>
-        </div>
 
-        <div class="p-6 bg-white rounded-2xl shadow">
-          <div class="flex items-start gap-4">
-            <div class="icon-circle">
-              <!-- support -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#3b4d61]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M18 8a6 6 0 10-12 0v5a6 6 0 006 6h0" />
-                <path d="M8 19v2h8v-2" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-semibold">Поддержка и арбитраж</h4>
-              <p class="text-gray-600 text-sm">В случае спора включается служба поддержки и, при необходимости, арбитражная процедура.</p>
-            </div>
-          </div>
-        </div>
+  <!-- =========================
+       HOW ESCROW WORKS
+  ========================== -->
+
+  <section
+    id="how-escrow-works"
+    class="py-24
+           bg-gradient-to-b
+           from-[#f5f7fa]
+           to-white"
+  >
+
+    <div class="max-w-6xl mx-auto px-6">
+
+
+      <div class="max-w-2xl mx-auto
+                  text-center fade-in">
+
+        <span class="text-sm uppercase
+                     tracking-widest
+                     text-gray-400">
+          Процесс
+        </span>
+
+
+        <h2 class="text-5xl md:text-6xl
+                   font-bold
+                   text-gradient
+                   mt-3">
+
+          Как работает Эскроу
+
+        </h2>
+
+
+        <p class="text-lg text-gray-600 mt-5">
+
+          Всё просто и прозрачно —
+          от оплаты до завершения сделки.
+
+        </p>
+
       </div>
+
+
+
+      <div class="grid md:grid-cols-3
+                  gap-6 mt-14">
+
+
+        <!-- STEP 01 -->
+
+        <div class="bg-white
+                    p-8
+                    rounded-2xl
+                    shadow-sm
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="step-number mb-6">
+            01
+          </div>
+
+
+          <div class="icon-box mb-6">
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-[#3b4d61]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect
+                x="2"
+                y="6"
+                width="20"
+                height="12"
+                rx="2"
+              />
+
+              <path
+                d="M16 12a1 1 0 1 0 0-2
+                   1 1 0 0 0 0 2z"
+              />
+            </svg>
+
+          </div>
+
+
+          <h3 class="text-2xl
+                     font-bold mb-3">
+
+            Оплата
+
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Покупатель оплачивает сделку.
+            Средства временно блокируются
+            системой Эскроу.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- STEP 02 -->
+
+        <div class="bg-white
+                    p-8
+                    rounded-2xl
+                    shadow-sm
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="step-number mb-6">
+            02
+          </div>
+
+
+          <div class="icon-box mb-6">
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-[#3b4d61]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+
+              <path
+                d="M8 12h8"
+              />
+
+              <path
+                d="M12 8l4 4-4 4"
+              />
+
+            </svg>
+
+          </div>
+
+
+          <h3 class="text-2xl
+                     font-bold mb-3">
+
+            Передача
+
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Продавец передаёт канал,
+            выполняет услугу или предоставляет
+            согласованный цифровой продукт.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- STEP 03 -->
+
+        <div class="bg-white
+                    p-8
+                    rounded-2xl
+                    shadow-sm
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="step-number mb-6">
+            03
+          </div>
+
+
+          <div class="icon-box mb-6">
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-[#3b4d61]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+
+              <path
+                d="M5 13l4 4L19 7"
+              />
+
+            </svg>
+
+          </div>
+
+
+          <h3 class="text-2xl
+                     font-bold mb-3">
+
+            Подтверждение
+
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            После подтверждения выполнения
+            условий средства переводятся
+            продавцу.
+
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 
-  <!-- FAQ -->
-  <section class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-6 fade-in">
-      <h2 class="text-3xl font-bold mb-6 text-gradient text-center">Часто задаваемые вопросы</h2>
 
-      <div class="space-y-4">
-        <details class="p-4 bg-gray-50 rounded-lg">
-          <summary class="font-semibold cursor-pointer">Что если продавец не передаёт аккаунт?</summary>
-          <div class="mt-2 text-gray-600 text-sm">Если продавец не выполняет условия — покупатель вправе запросить возврат средств Эскроу. Наша служба поддержки запускает проверку и, при подтверждении нарушения, возвращает деньги покупателю.</div>
+
+  <!-- =========================
+       FOR YOUTUBE
+  ========================== -->
+
+  <section class="bg-white py-24">
+
+    <div class="max-w-6xl mx-auto px-6">
+
+
+      <div class="max-w-2xl
+                  mx-auto text-center fade-in">
+
+        <span class="text-sm uppercase
+                     tracking-widest
+                     text-gray-400">
+
+          YouTube
+
+        </span>
+
+
+        <h2 class="text-5xl md:text-6xl
+                   font-bold
+                   text-gradient
+                   mt-3">
+
+          Для любых YouTube-сделок.
+
+        </h2>
+
+
+        <p class="text-lg text-gray-600
+                  mt-5">
+
+          Эскроу подходит для основных
+          категорий предложений на PL-GL.
+
+        </p>
+
+      </div>
+
+
+
+      <div class="grid md:grid-cols-3
+                  gap-6 mt-14">
+
+
+        <!-- CHANNELS -->
+
+        <div class="soft-card
+                    p-8
+                    rounded-2xl
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="icon-box mb-6">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/youtube-play.png"
+              alt="YouTube"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+
+          <h3 class="text-2xl
+                     font-bold mb-3">
+
+            YouTube-каналы
+
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Безопасная передача доступа
+            и контроль выполнения условий
+            сделки.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- SERVICES -->
+
+        <div class="soft-card
+                    p-8
+                    rounded-2xl
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="icon-box mb-6">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/video-editing.png"
+              alt="Монтаж"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+
+          <h3 class="text-2xl
+                     font-bold mb-3">
+
+            Монтаж и услуги
+
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Средства передаются после
+            выполнения согласованной
+            работы.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- DIGITAL -->
+
+        <div class="soft-card
+                    p-8
+                    rounded-2xl
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="icon-box mb-6">
+
+            <img
+              src="https://img.icons8.com/ios-filled/50/3b4d61/visible.png"
+              alt="Продвижение"
+              class="w-6 h-6"
+            />
+
+          </div>
+
+
+          <h3 class="text-2xl
+                     font-bold mb-3">
+
+            Просмотры и продвижение
+
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Условия сделки фиксируются
+            заранее, а результат
+            подтверждается перед выплатой.
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       WHY ESCROW
+  ========================== -->
+
+  <section
+    class="py-24
+           bg-gradient-to-b
+           from-[#f5f7fa]
+           to-white"
+  >
+
+    <div class="max-w-6xl mx-auto px-6">
+
+
+      <div class="max-w-2xl
+                  mx-auto text-center fade-in">
+
+        <span class="text-sm uppercase
+                     tracking-widest
+                     text-gray-400">
+
+          Защита
+
+        </span>
+
+
+        <h2 class="text-5xl md:text-6xl
+                   font-bold
+                   text-gradient
+                   mt-3">
+
+          Почему это важно
+
+        </h2>
+
+      </div>
+
+
+
+      <div class="grid md:grid-cols-3
+                  gap-6 mt-14">
+
+
+        <!-- PROTECTION -->
+
+        <div class="bg-white
+                    p-7
+                    rounded-2xl
+                    shadow-sm
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="icon-box mb-6">
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-[#3b4d61]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+
+              <path
+                d="M12 2l7 3v5c0 5-3.5 9-7 10
+                   -3.5-1-7-5-7-10V5l7-3z"
+              />
+
+            </svg>
+
+          </div>
+
+
+          <h3 class="text-2xl font-bold mb-3">
+            Защита средств
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Покупатель не передаёт деньги
+            продавцу напрямую до выполнения
+            условий сделки.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- TRANSPARENCY -->
+
+        <div class="bg-white
+                    p-7
+                    rounded-2xl
+                    shadow-sm
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="icon-box mb-6">
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-[#3b4d61]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+
+              <path
+                d="M2 12s4-7 10-7
+                   10 7 10 7-4 7-10 7S2 12 2 12z"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+              />
+
+            </svg>
+
+          </div>
+
+
+          <h3 class="text-2xl font-bold mb-3">
+            Прозрачность
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            Обе стороны видят статус
+            сделки и понимают,
+            на каком она этапе.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- SUPPORT -->
+
+        <div class="bg-white
+                    p-7
+                    rounded-2xl
+                    shadow-sm
+                    hover:shadow-lg
+                    transition
+                    fade-in">
+
+          <div class="icon-box mb-6">
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-[#3b4d61]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+
+              <path
+                d="M18 8a6 6 0 10-12 0v5
+                   a6 6 0 006 6h0"
+              />
+
+              <path
+                d="M8 19v2h8v-2"
+              />
+
+            </svg>
+
+          </div>
+
+
+          <h3 class="text-2xl font-bold mb-3">
+            Поддержка
+          </h3>
+
+
+          <p class="text-gray-600
+                    leading-relaxed">
+
+            При возникновении спорной
+            ситуации стороны могут
+            обратиться в поддержку.
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       FAQ
+  ========================== -->
+
+  <section class="bg-white py-24">
+
+    <div class="max-w-4xl mx-auto px-6">
+
+
+      <div class="text-center fade-in">
+
+        <span class="text-sm uppercase
+                     tracking-widest
+                     text-gray-400">
+
+          FAQ
+
+        </span>
+
+
+        <h2 class="text-5xl md:text-6xl
+                   font-bold
+                   text-gradient
+                   mt-3 mb-12">
+
+          Частые вопросы
+
+        </h2>
+
+      </div>
+
+
+
+      <div class="space-y-3 fade-in">
+
+
+        <details
+          class="group bg-[#f5f7fa]
+                 rounded-2xl
+                 px-6 py-5"
+        >
+
+          <summary
+            class="font-semibold
+                   cursor-pointer
+                   text-[#3b4d61]
+                   list-none
+                   flex justify-between
+                   items-center"
+          >
+
+            Что происходит, если продавец
+            не выполняет условия?
+
+            <span class="text-xl
+                         text-gray-400
+                         group-open:rotate-45
+                         transition">
+              +
+            </span>
+
+          </summary>
+
+
+          <p class="mt-4
+                    text-gray-600
+                    text-sm
+                    leading-relaxed">
+
+            В таком случае покупатель может
+            обратиться в поддержку. Ситуация
+            рассматривается в рамках условий
+            конкретной сделки.
+
+          </p>
+
         </details>
 
-        <details class="p-4 bg-gray-50 rounded-lg">
-          <summary class="font-semibold cursor-pointer">Сколько времени занимает арбитраж?</summary>
-          <div class="mt-2 text-gray-600 text-sm">Обычно первичная проверка занимает 24–72 часа. В сложных случаях срок может быть больше — мы уведомляем обе стороны о ходе проверки.</div>
+
+
+        <details
+          class="group bg-[#f5f7fa]
+                 rounded-2xl
+                 px-6 py-5"
+        >
+
+          <summary
+            class="font-semibold
+                   cursor-pointer
+                   text-[#3b4d61]
+                   list-none
+                   flex justify-between
+                   items-center"
+          >
+
+            Когда продавец получает деньги?
+
+            <span class="text-xl
+                         text-gray-400
+                         group-open:rotate-45
+                         transition">
+              +
+            </span>
+
+          </summary>
+
+
+          <p class="mt-4
+                    text-gray-600
+                    text-sm
+                    leading-relaxed">
+
+            После выполнения условий сделки
+            и подтверждения со стороны
+            покупателя.
+
+          </p>
+
         </details>
 
-        <details class="p-4 bg-gray-50 rounded-lg">
-          <summary class="font-semibold cursor-pointer">Какие платежные методы поддерживаются?</summary>
-          <div class="mt-2 text-gray-600 text-sm">Мы поддерживаем банковские переводы, платёжные системы и внутренние балансы (в зависимости от региона — список доступных методов отображается при создании сделки).</div>
+
+
+        <details
+          class="group bg-[#f5f7fa]
+                 rounded-2xl
+                 px-6 py-5"
+        >
+
+          <summary
+            class="font-semibold
+                   cursor-pointer
+                   text-[#3b4d61]
+                   list-none
+                   flex justify-between
+                   items-center"
+          >
+
+            Можно ли использовать Эскроу
+            для услуг монтажа?
+
+            <span class="text-xl
+                         text-gray-400
+                         group-open:rotate-45
+                         transition">
+              +
+            </span>
+
+          </summary>
+
+
+          <p class="mt-4
+                    text-gray-600
+                    text-sm
+                    leading-relaxed">
+
+            Да, если такая возможность
+            предусмотрена условиями
+            конкретной категории или сделки.
+
+          </p>
+
         </details>
+
+
+
+        <details
+          class="group bg-[#f5f7fa]
+                 rounded-2xl
+                 px-6 py-5"
+        >
+
+          <summary
+            class="font-semibold
+                   cursor-pointer
+                   text-[#3b4d61]
+                   list-none
+                   flex justify-between
+                   items-center"
+          >
+
+            Что делать при споре?
+
+            <span class="text-xl
+                         text-gray-400
+                         group-open:rotate-45
+                         transition">
+              +
+            </span>
+
+          </summary>
+
+
+          <p class="mt-4
+                    text-gray-600
+                    text-sm
+                    leading-relaxed">
+
+            Обратитесь в поддержку и
+            предоставьте информацию
+            по сделке. Дальнейшие действия
+            определяются условиями сделки
+            и правилами платформы.
+
+          </p>
+
+        </details>
+
       </div>
+
     </div>
+
   </section>
 
-  <!-- CONTACT -->
-  <section class="py-16 bg-gradient-to-br from-[#f6fbff] to-white text-center">
-    <div class="max-w-4xl mx-auto px-6 fade-in">
-      <h3 class="text-2xl font-bold mb-4 accent">Нужна помощь с конкретной сделкой?</h3>
-      <p class="text-gray-700 mb-6">Напиши в поддержку — мы поможем в режиме приоритета.</p>
-      <a href="mailto:support@pl-gl.ru" class="btn-primary px-8 py-3 rounded-xl font-semibold">Написать в поддержку</a>
-    </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-300 py-10 text-center">
-    <div class="mb-4">
-      <a href="https://vk.com/pl_gl" target="_blank" class="inline-block mx-3 hover:opacity-80">
-        <img src="https://img.icons8.com/color/48/vk-com.png" alt="VK" class="inline w-8 h-8">
+
+  <!-- =========================
+       CONTACT CTA
+  ========================== -->
+
+  <section
+    class="py-24
+           bg-gradient-to-br
+           from-[#3b4d61]
+           to-[#1e2833]
+           text-white"
+  >
+
+    <div class="max-w-4xl mx-auto
+                px-6 text-center fade-in">
+
+
+      <div class="w-14 h-14
+                  mx-auto mb-7
+                  rounded-2xl
+                  bg-white/10
+                  flex items-center
+                  justify-center">
+
+        <img
+          src="https://img.icons8.com/ios-filled/100/ffffff/lock--v1.png"
+          alt="Защита"
+          class="w-7 h-7"
+        />
+
+      </div>
+
+
+      <h2 class="text-5xl md:text-6xl
+                 font-bold">
+
+        Остались вопросы?
+
+      </h2>
+
+
+      <p class="text-lg
+                text-gray-300
+                mt-5 mb-9
+                max-w-2xl
+                mx-auto">
+
+        Если нужна помощь с конкретной
+        сделкой — свяжитесь с нашей
+        поддержкой.
+
+      </p>
+
+
+      <a
+        href="mailto:support@pl-gl.ru"
+        class="inline-block
+               bg-white
+               text-[#3b4d61]
+               px-8 py-3.5
+               rounded-xl
+               font-semibold
+               hover:bg-gray-100
+               transition"
+      >
+
+        Написать в поддержку
+
       </a>
-      <a href="https://t.me/DigitalGoodsExchange_PL_GL" target="_blank" class="inline-block mx-3 hover:opacity-80">
-        <img src="https://img.icons8.com/color/48/telegram-app.png" alt="Telegram" class="inline w-8 h-8">
-      </a>
+
     </div>
-    <p>© 2025 PL-GL | Все права защищены</p>
-    <p class="mt-3 text-sm">
-      <a href="/lending/policy" class="hover:text-white">Политика конфиденциальности</a> | 
-      <a href="/lending/terms" class="hover:text-white">Условия использования</a>
+
+  </section>
+
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="bg-gray-900
+                 text-gray-300
+                 py-10
+                 text-center">
+
+    <div class="mb-5">
+
+
+      <a
+        href="https://vk.com/pl_gl"
+        target="_blank"
+        class="inline-block mx-3
+               hover:opacity-80 transition"
+      >
+
+        <img
+          src="https://img.icons8.com/color/48/vk-com.png"
+          alt="VK"
+          class="inline w-8 h-8"
+        />
+
+      </a>
+
+
+
+      <a
+        href="https://t.me/DigitalGoodsExchange_PL_GL"
+        target="_blank"
+        class="inline-block mx-3
+               hover:opacity-80 transition"
+      >
+
+        <img
+          src="https://img.icons8.com/color/48/telegram-app.png"
+          alt="Telegram"
+          class="inline w-8 h-8"
+        />
+
+      </a>
+
+    </div>
+
+
+    <p>
+      © 2025 PL-GL | Все права защищены
     </p>
+
+
+    <p class="mt-3 text-sm">
+
+      <a
+        href="/lending/policy"
+        class="hover:text-white transition"
+      >
+        Политика конфиденциальности
+      </a>
+
+      <span class="mx-2">|</span>
+
+      <a
+        href="/lending/terms"
+        class="hover:text-white transition"
+      >
+        Условия использования
+      </a>
+
+    </p>
+
   </footer>
 
-  <!-- JS для появления секций -->
+
+
+  <!-- =========================
+       ANIMATIONS
+  ========================== -->
+
   <script>
-    const fadeElements = document.querySelectorAll('.fade-in');
+
+    const fadeElements =
+      document.querySelectorAll('.fade-in');
+
     const onScroll = () => {
+
       fadeElements.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) el.classList.add('visible');
+
+        const rect =
+          el.getBoundingClientRect();
+
+        if (
+          rect.top <
+          window.innerHeight - 100
+        ) {
+
+          el.classList.add('visible');
+
+        }
+
       });
+
     };
-    window.addEventListener('scroll', onScroll);
+
+
+    window.addEventListener(
+      'scroll',
+      onScroll
+    );
+
     onScroll();
+
   </script>
+
 
 </body>
 </html>
+```

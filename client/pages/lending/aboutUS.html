@@ -8,13 +8,48 @@
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Шрифты -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="/assets/styles/lending/general.css">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1a1a1a;
+      background: #f5f7fa;
+    }
+
+    .text-gradient {
+      background: linear-gradient(to right, #3b4d61, #65758e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .accent {
+      color: #3b4d61;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
+
 <body class="antialiased">
 
   <!-- HEADER -->
@@ -24,29 +59,38 @@
 
       <nav class="hidden md:flex space-x-8 text-[17px]">
         <a href="/lending" class="hover:text-gray-700 transition">Главная</a>
-        <a href="#" class="htext-[#3b4d61] font-semibold">О проекте</a>
-        <a href="/lending/about" class="hover:text-gray-700 transition">Эскроу</a>
+        <a href="/lending/about" class="text-[#3b4d61] font-semibold">О проекте</a>
+        <a href="/lending/escrow" class="hover:text-gray-700 transition">Эскроу</a>
         <a href="/lending/contacts" class="hover:text-gray-700 transition">Контакты</a>
       </nav>
 
       <div class="flex items-center space-x-4">
-        <a href="/pages/user-auth/login.html" class="btn-primary px-5 py-2 rounded-lg font-semibold transition" data-lang-key="navLogin">Войти</a>
+        <a href="/pages/user-auth/login.html"
+           class="bg-[#3b4d61] text-white px-5 py-2 rounded-lg font-semibold hover:bg-[#2f3e4f] transition"
+           data-lang-key="navLogin">
+          Войти
+        </a>
 
         <!-- Language Switcher -->
-         <!-- <div class="relative">
-          <button id="langBtn" class="px-2 py-1 border border-gray-300 rounded text-sm flex items-center space-x-1 focus:outline-none">
+        <!--
+        <div class="relative">
+          <button id="langBtn"
+                  class="px-2 py-1 border border-gray-300 rounded text-sm flex items-center space-x-1 focus:outline-none">
             <span id="langCurrent">RU</span>
             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
-          <ul id="langMenu" class="absolute right-0 mt-1 bg-white border border-gray-300 rounded shadow-md hidden text-sm z-50">
+
+          <ul id="langMenu"
+              class="absolute right-0 mt-1 bg-white border border-gray-300 rounded shadow-md hidden text-sm z-50">
             <li>
               <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="ru">
                 <img src="https://flagcdn.com/w20/ru.png" class="w-4 h-3" alt="RU">
                 <span>RU</span>
               </button>
             </li>
+
             <li>
               <button class="px-3 py-1 w-full text-left hover:bg-gray-100 flex items-center space-x-2" data-lang="en">
                 <img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3" alt="EN">
@@ -54,122 +98,343 @@
               </button>
             </li>
           </ul>
-        </div> -->
+        </div>
+        -->
       </div>
     </div>
   </header>
 
+
   <!-- HERO -->
-  <section class="pt-40 pb-24 bg-gradient-to-br from-[#eef1f4] to-[#f9fafb] text-center relative overflow-hidden">
-    <div class="max-w-3xl mx-auto px-6 fade-in">
-      <h1 class="text-6xl font-extrabold mb-6 text-gradient">О проекте PL-GL</h1>
-      <p class="text-gray-700 text-lg leading-relaxed">
-        PL-GL — это современная платформа для безопасных сделок с аккаунтами в соцсетях.  
-        Мы создаём новое пространство доверия, где продавцы и покупатели чувствуют себя уверенно.
+  <section class="pt-32 pb-24 bg-gradient-to-br from-[#eef1f4] to-[#f9fafb] relative overflow-hidden">
+
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+
+      <div class="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-white shadow-sm text-sm font-semibold text-[#3b4d61]">
+        PL-GL для YouTube
+      </div>
+
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6 text-gradient">
+        Всё для YouTube — в одном месте
+      </h1>
+
+      <p class="text-gray-700 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+        PL-GL — специализированная платформа для работы с YouTube.
+        Здесь можно покупать и продавать YouTube-каналы, находить просмотры,
+        монтаж и другие услуги для развития каналов.
       </p>
+
     </div>
-    
-    <img src="https://avatars.mds.yandex.net/i?id=9c6a1d2601c00e9127ddebe7d7dd73e6ac454d38-12569476-images-thumbs&n=13" class="absolute inset-0 w-full h-full object-cover opacity-10" alt="О проекте">
+
+    <!-- Лёгкий декоративный фон -->
+    <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#3b4d61] opacity-[0.03]"></div>
+    <div class="absolute -bottom-40 -left-32 w-[28rem] h-[28rem] rounded-full bg-[#65758e] opacity-[0.03]"></div>
+
   </section>
 
-  <!-- МИССИЯ -->
+
+  <!-- ЧТО ТАКОЕ PL-GL -->
   <section class="py-24 bg-white">
-    <div class="max-w-6xl mx-auto text-center px-6 fade-in">
-      <h2 class="text-4xl mb-8 accent font-bold">Наша миссия</h2>
-      <p class="text-gray-700 max-w-3xl mx-auto text-lg leading-relaxed">
-        Мы стремимся к прозрачности и честности в цифровом мире.  
-        PL-GL помогает пользователям безопасно покупать и продавать аккаунты, исключая риск мошенничества.  
-        Благодаря системе Эскроу, каждая сделка защищена до полного её завершения.
-      </p>
+
+    <div class="max-w-6xl mx-auto px-6 fade-in">
+
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-4xl mb-8 accent font-bold">
+          Что такое PL-GL
+        </h2>
+
+        <p class="text-gray-700 text-lg leading-relaxed">
+          PL-GL объединяет основные направления, необходимые для работы
+          с YouTube, в одном удобном пространстве.
+          Мы делаем процесс поиска, покупки и продажи цифровых YouTube-активов
+          и услуг максимально простым и понятным.
+        </p>
+      </div>
+
     </div>
+
   </section>
 
-  <!-- КАК РАБОТАЕТ ЭСКРОУ -->
+
+  <!-- ОСНОВНЫЕ НАПРАВЛЕНИЯ -->
   <section class="py-24 bg-[#f9fafb]">
-    <div class="max-w-6xl mx-auto text-center px-6 fade-in">
-      <h2 class="text-4xl mb-12 accent font-bold">Как работает Эскроу</h2>
-      <div class="grid md:grid-cols-3 gap-10">
-        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
-          <img src="https://img.icons8.com/ios-filled/100/3b4d61/wallet--v1.png" class="mx-auto mb-6 w-14" />
-          <h3 class="font-semibold text-xl mb-3">1. Покупатель вносит оплату</h3>
-          <p class="text-gray-600">Средства блокируются на защищённом счёте Эскроу до завершения сделки.</p>
-        </div>
-        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
-          <img src="https://img.icons8.com/?size=100&id=2140&format=png&color=000000" class="mx-auto mb-6 w-14" />
-          <h3 class="font-semibold text-xl mb-3">2. Продавец передаёт данные</h3>
-          <p class="text-gray-600">Продавец передаёт данные аккаунта покупателю после подтверждения оплаты.</p>
-        </div>
-        <div class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition">
-          <img src="https://img.icons8.com/ios-filled/100/3b4d61/checked.png" class="mx-auto mb-6 w-14" />
-          <h3 class="font-semibold text-xl mb-3">3. Средства переводятся</h3>
-          <p class="text-gray-600">После подтверждения получения — деньги поступают продавцу.</p>
-        </div>
+
+    <div class="max-w-6xl mx-auto px-6 fade-in">
+
+      <div class="text-center mb-12">
+        <h2 class="text-4xl mb-4 accent font-bold">
+          Основные направления
+        </h2>
+
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Всё необходимое для развития и работы с YouTube — без лишнего.
+        </p>
       </div>
+
+      <div class="grid md:grid-cols-4 gap-6">
+
+        <!-- YouTube-каналы -->
+        <div class="bg-white p-7 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/youtube-play.png"
+            class="mx-auto mb-5 w-12"
+            alt="YouTube"
+          >
+
+          <h3 class="font-semibold text-lg mb-2">
+            YouTube-каналы
+          </h3>
+
+          <p class="text-gray-600 text-sm">
+            Покупка и продажа каналов.
+          </p>
+        </div>
+
+        <!-- Просмотры -->
+        <div class="bg-white p-7 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/visible.png"
+            class="mx-auto mb-5 w-12"
+            alt="Просмотры"
+          >
+
+          <h3 class="font-semibold text-lg mb-2">
+            Просмотры
+          </h3>
+
+          <p class="text-gray-600 text-sm">
+            Решения для продвижения видео.
+          </p>
+        </div>
+
+        <!-- Монтаж -->
+        <div class="bg-white p-7 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/video-editing.png"
+            class="mx-auto mb-5 w-12"
+            alt="Монтаж"
+          >
+
+          <h3 class="font-semibold text-lg mb-2">
+            Монтаж
+          </h3>
+
+          <p class="text-gray-600 text-sm">
+            Монтаж видео для YouTube.
+          </p>
+        </div>
+
+        <!-- Услуги -->
+        <div class="bg-white p-7 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <img
+            src="https://img.icons8.com/ios-filled/100/3b4d61/services.png"
+            class="mx-auto mb-5 w-12"
+            alt="Услуги"
+          >
+
+          <h3 class="font-semibold text-lg mb-2">
+            Услуги
+          </h3>
+
+          <p class="text-gray-600 text-sm">
+            Дополнительные услуги для каналов.
+          </p>
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 
-  <!-- ПРЕИМУЩЕСТВА -->
+
+  <!-- КАК МЫ РАБОТАЕМ -->
   <section class="py-24 bg-white">
-    <div class="max-w-6xl mx-auto text-center px-6 fade-in">
-      <h2 class="text-4xl mb-12 accent font-bold">Почему выбирают нас</h2>
-      <div class="grid md:grid-cols-3 gap-10">
-        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-          <img src="https://img.icons8.com/ios-filled/100/3b4d61/security-checked--v1.png" class="mx-auto mb-6 w-14" />
-          <h3 class="font-semibold text-xl mb-3">Надёжность</h3>
-          <p class="text-gray-600">Ваши данные и финансы защищены на всех этапах сделки.</p>
-        </div>
-        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-          <img src="https://img.icons8.com/ios-filled/100/3b4d61/handshake.png" class="mx-auto mb-6 w-14" />
-          <h3 class="font-semibold text-xl mb-3">Прозрачность</h3>
-          <p class="text-gray-600">Каждая сделка сопровождается полной историей и подтверждениями.</p>
-        </div>
-        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition">
-          <img src="https://img.icons8.com/ios-filled/100/3b4d61/online-support.png" class="mx-auto mb-6 w-14" />
-          <h3 class="font-semibold text-xl mb-3">Поддержка 24/7</h3>
-          <p class="text-gray-600">Команда поддержки помогает пользователям в любое время суток.</p>
-        </div>
+
+    <div class="max-w-6xl mx-auto px-6 fade-in">
+
+      <div class="text-center mb-12">
+        <h2 class="text-4xl mb-4 accent font-bold">
+          Как работает PL-GL
+        </h2>
+
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Простая схема без лишних действий.
+        </p>
       </div>
+
+      <div class="grid md:grid-cols-3 gap-10">
+
+        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <div class="w-12 h-12 mx-auto mb-6 rounded-full bg-[#eef2f6] flex items-center justify-center">
+            <span class="text-[#3b4d61] font-bold text-lg">1</span>
+          </div>
+
+          <h3 class="font-semibold text-xl mb-3">
+            Выбираете
+          </h3>
+
+          <p class="text-gray-600">
+            Находите нужный YouTube-канал или услугу.
+          </p>
+        </div>
+
+
+        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <div class="w-12 h-12 mx-auto mb-6 rounded-full bg-[#eef2f6] flex items-center justify-center">
+            <span class="text-[#3b4d61] font-bold text-lg">2</span>
+          </div>
+
+          <h3 class="font-semibold text-xl mb-3">
+            Договариваетесь
+          </h3>
+
+          <p class="text-gray-600">
+            Обсуждаете условия сделки с продавцом.
+          </p>
+        </div>
+
+
+        <div class="p-8 bg-gray-50 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <div class="w-12 h-12 mx-auto mb-6 rounded-full bg-[#eef2f6] flex items-center justify-center">
+            <span class="text-[#3b4d61] font-bold text-lg">3</span>
+          </div>
+
+          <h3 class="font-semibold text-xl mb-3">
+            Получаете
+          </h3>
+
+          <p class="text-gray-600">
+            Завершаете сделку и получаете нужный результат.
+          </p>
+        </div>
+
+      </div>
+
     </div>
+
   </section>
+
+
+  <!-- ЭСКРОУ -->
+  <section class="py-24 bg-gradient-to-r from-[#3b4d61] to-[#65758e] text-white">
+
+    <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+
+      <div class="w-14 h-14 mx-auto mb-6 rounded-2xl bg-white/10 flex items-center justify-center">
+        <img
+          src="https://img.icons8.com/ios-filled/100/ffffff/security-checked--v1.png"
+          class="w-8"
+          alt="Эскроу"
+        >
+      </div>
+
+      <h2 class="text-4xl font-bold mb-6">
+        Безопасные сделки
+      </h2>
+
+      <p class="text-white/85 text-lg leading-relaxed max-w-2xl mx-auto">
+        Для сделок, где важна защита сторон, PL-GL использует систему Эскроу.
+        Средства могут удерживаться до выполнения условий сделки и подтверждения
+        её завершения.
+      </p>
+
+    </div>
+
+  </section>
+
 
   <!-- КОНТАКТЫ -->
   <section class="py-24 bg-[#f9fafb] text-center fade-in">
-    <h2 class="text-4xl mb-6 accent font-bold">Свяжитесь с нами</h2>
-    <p class="text-gray-700 mb-10">Есть вопросы или предложения? Напишите — мы всегда открыты к диалогу.</p>
-    <a href="mailto:support@pl-gl.ru" class="btn-primary px-8 py-4 rounded-xl shadow hover:shadow-lg transition text-lg font-semibold">
+
+    <h2 class="text-4xl mb-6 accent font-bold">
+      Остались вопросы?
+    </h2>
+
+    <p class="text-gray-700 mb-10">
+      Напишите нам, если хотите узнать больше о PL-GL.
+    </p>
+
+    <a
+      href="mailto:support@pl-gl.ru"
+      class="bg-[#3b4d61] text-white px-8 py-4 rounded-xl shadow hover:shadow-lg hover:bg-[#2f3e4f] transition text-lg font-semibold"
+    >
       support@pl-gl.ru
     </a>
+
   </section>
+
 
   <!-- FOOTER -->
   <footer class="bg-gray-900 text-gray-300 py-10 text-center">
+
     <div class="mb-4">
-      <a href="https://vk.com/pl_gl" target="_blank" class="inline-block mx-3 hover:opacity-80">
-        <img src="https://img.icons8.com/color/48/vk-com.png" alt="VK" class="inline w-8 h-8">
+
+      <a
+        href="https://vk.com/pl_gl"
+        target="_blank"
+        class="inline-block mx-3 hover:opacity-80"
+      >
+        <img
+          src="https://img.icons8.com/color/48/vk-com.png"
+          alt="VK"
+          class="inline w-8 h-8"
+        >
       </a>
-      <a href="https://t.me/DigitalGoodsExchange_PL_GL" target="_blank" class="inline-block mx-3 hover:opacity-80">
-        <img src="https://img.icons8.com/color/48/telegram-app.png" alt="Telegram" class="inline w-8 h-8">
+
+      <a
+        href="https://t.me/DigitalGoodsExchange_PL_GL"
+        target="_blank"
+        class="inline-block mx-3 hover:opacity-80"
+      >
+        <img
+          src="https://img.icons8.com/color/48/telegram-app.png"
+          alt="Telegram"
+          class="inline w-8 h-8"
+        >
       </a>
+
     </div>
-    <p>© 2025 PL-GL | Все права защищены</p>
-    <p class="mt-3 text-sm">
-      <a href="/lending/policy" class="hover:text-white">Политика конфиденциальности</a> | 
-      <a href="/lending/terms" class="hover:text-white">Условия использования</a>
+
+    <p>
+      © 2025 PL-GL | Все права защищены
     </p>
+
+    <p class="mt-3 text-sm">
+
+      <a href="/lending/policy" class="hover:text-white">
+        Политика конфиденциальности
+      </a>
+
+      |
+
+      <a href="/lending/terms" class="hover:text-white">
+        Условия использования
+      </a>
+
+    </p>
+
   </footer>
+
 
   <!-- Анимации -->
   <script>
     const fadeElements = document.querySelectorAll('.fade-in');
+
     const onScroll = () => {
       fadeElements.forEach(el => {
         const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) el.classList.add('visible');
+
+        if (rect.top < window.innerHeight - 100) {
+          el.classList.add('visible');
+        }
       });
     };
+
     window.addEventListener('scroll', onScroll);
     onScroll();
   </script>
 
 </body>
 </html>
+```
