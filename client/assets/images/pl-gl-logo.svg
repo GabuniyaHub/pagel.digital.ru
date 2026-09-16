@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 128">
+  <defs>
+    <linearGradient id="plgl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b4d61"/>
+      <stop offset="100%" stop-color="#65758e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- PL-GL play mark -->
+  <g transform="translate(8 8)">
+    <path d="M20 24 Q20 12 31 7 L103 48 Q113 54 103 60 L31 101 Q20 95 20 84 Z"
+          fill="url(#plgl)"/>
+    <path d="M42 38 L78 59 L42 80 Z" fill="#ffffff"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="132" y="87"
+        font-family="Inter, Arial, sans-serif"
+        font-size="72"
+        font-weight="800"
+        letter-spacing="-2"
+        fill="url(#plgl)">PL-GL</text>
+</svg>
