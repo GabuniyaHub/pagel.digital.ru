@@ -2,28 +2,30 @@ const express = require('express');
 const lendingRoutes = express.Router();
 const path = require('path');
 
+const LENDING_DIR = path.join(__dirname, '../../../client/pages/lending');
+
 lendingRoutes.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/pages/lending/present.html'));
+    res.sendFile(path.join(LENDING_DIR, 'present.html'));
 });
 
 lendingRoutes.get('/escrow', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../client/pages/lending/escrow.html'));
+    res.sendFile(path.join(LENDING_DIR, 'escrow.html'));
 });
 
 lendingRoutes.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../client/pages/lending/aboutUS.html'));
+    res.sendFile(path.join(LENDING_DIR, 'aboutUS.html'));
 });
 
 lendingRoutes.get('/contacts', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../client/pages/lending/contacts.html'));
+    res.sendFile(path.join(LENDING_DIR, 'contacts.html'));
 });
 
 lendingRoutes.get('/policy', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../client/pages/lending/policy.html'));
+    res.sendFile(path.join(LENDING_DIR, 'policy.html'));
 });
 
 lendingRoutes.get('/terms', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../client/pages/lending/termsOfService.html'));
+    res.sendFile(path.join(LENDING_DIR, 'termsOfService.html'));
 });
 
 module.exports = lendingRoutes;
