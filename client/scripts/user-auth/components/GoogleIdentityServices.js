@@ -51,6 +51,8 @@ async function handleCredentialResponse(response) {
         theme: 'outline', // Тема: outline или filled
         size: 'large',    // Размер: small, medium, large
         text: 'signup_with', // Текст: signin_with или signup_with
+        shape: 'rectangular',
+        width: '100%',
        }
     );
   };
