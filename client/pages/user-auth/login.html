@@ -1,104 +1,659 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet">
+
+    <!-- Google -->
+    <script
+        src="https://accounts.google.com/gsi/client"
+        async
+        defer>
+    </script>
+
+    <!-- Existing styles -->
     <link rel="stylesheet" href="../../assets/styles/user-auth/login.css">
-    <link rel="stylesheet" href="../../assets/styles/header/navbar.css">
+
+    <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
-    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png">
-    <title>Вход</title>
+
+    <!-- Favicon -->
+    <link
+        rel="icon"
+        href="https://img.icons8.com/color/96/000000/planet.png">
+
+    <title>Вход — PL-GL</title>
+
+    <style>
+        html {
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .heading-font {
+            font-family: "Sofia Sans Extra Condensed", sans-serif;
+        }
+
+        .auth-background {
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(59, 77, 97, 0.07),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 90%,
+                    rgba(101, 117, 142, 0.06),
+                    transparent 28%
+                ),
+                #f5f7fa;
+        }
+
+        .login-card-animation {
+            animation: loginFadeIn 0.6s ease-out both;
+        }
+
+        @keyframes loginFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spinner-border {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner 0.7s linear infinite;
+        }
+
+        @keyframes spinner {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
-<body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo">
-                    <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
-                    <span><a href="../index.html">PL-GL</a></span>
-                </div>
-                <div class="menu-icon" id="menu-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="../index.html">Главная</a></li>
-                    <!-- <li><a href="#">Услуги</a></li> -->
-                    <!-- <li><a href="#">Справка</a></li> -->
-                    <!-- <li><a href="#">Поиск</a></li> -->
-                    <!-- <li><a href="#">Отзывы</a></li> -->
-                    <!-- <li><a href="#">О нас</a></li> -->
-                    <!-- <li><a href="#">Контакты</a></li> -->
-                    <li id="register-item"><a href="register.html">Регистрация</a></li>
-                    <li id="account-item" style="display: none;">
-                        <a href="/account">
-                            <img id="account-avatar" src="" alt="Аватар" class="account-circle">
-                        </a>
-                    </li>
-                    <li id="sell-item" style="display: none;"><a href="/sell">Продать</a></li>
-                </ul>
-            </div>
-        </nav>
+
+<body class="min-h-screen auth-background text-[#1a1a1a]">
+
+
+
+    <header class="px-5 sm:px-8 py-5 sm:py-6">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+
+            <!-- Logo -->
+
+            <a
+                href="/"
+                class="flex items-center gap-2.5 group"
+            >
+
+                <span class="text-2xl font-extrabold tracking-tight text-gradient"> PL-GL </span>
+            </a>
+
+
+            <!-- Back to homepage -->
+
+            <a
+                href="/"
+                class="
+                    inline-flex
+                    items-center
+                    gap-1.5
+                    px-3
+                    sm:px-4
+                    py-2
+                    rounded-xl
+                    text-xs
+                    sm:text-sm
+                    font-medium
+                    text-[#3b4d61]
+                    bg-white
+                    border
+                    border-[#e5e9ee]
+                    shadow-sm
+                    hover:shadow-md
+                    hover:-translate-y-0.5
+                    transition-all
+                    duration-200
+                "
+            >
+                <span class="material-symbols-outlined text-[18px]">
+                    arrow_back
+                </span>
+
+                <span>
+                    На главную
+                </span>
+            </a>
+
+        </div>
     </header>
 
-    <section>
-        <div class="wrapper">
-            <form id="loginForm">
-                <h1>Войти в аккаунт</h1>
 
-                <div class="input-box">
-                    <input type="text" placeholder="Email" required id="usernameInput">
-                    <i class='bx bxs-user'></i>
+    <!-- ================================
+         Login
+    ================================= -->
+
+    <main
+        class="
+            min-h-[calc(100vh-88px)]
+            flex
+            items-center
+            justify-center
+            px-4
+            sm:px-6
+            py-8
+            sm:py-12
+        "
+    >
+
+        <div class="w-full max-w-[440px]">
+
+            <!-- Login Card -->
+
+            <div
+                class="
+                    login-card-animation
+                    bg-white
+                    rounded-2xl
+                    sm:rounded-[24px]
+                    border
+                    border-[#e7ebef]
+                    shadow-[0_20px_55px_rgba(30,40,51,0.08)]
+                    px-5
+                    py-7
+                    sm:px-9
+                    sm:py-10
+                "
+            >
+
+                <!-- Heading -->
+
+                <div class="text-center mb-7 sm:mb-8">
+
+                    <!-- Brand badge -->
+
+                    <div
+                        class="
+                            inline-flex
+                            items-center
+                            gap-2
+                            px-3
+                            py-1.5
+                            rounded-full
+                            bg-[#eef2f6]
+                            text-[#3b4d61]
+                            text-[11px]
+                            sm:text-xs
+                            font-semibold
+                            mb-4
+                        "
+                    >
+                        <span
+                            class="
+                                w-1.5
+                                h-1.5
+                                rounded-full
+                                bg-[#65758e]
+                            "
+                        ></span>
+
+                        PL-GL · YouTube
+                    </div>
+
+
+                    <h1
+                        class="
+                            heading-font
+                            text-[46px]
+                            sm:text-[54px]
+                            leading-none
+                            tracking-[0.5px]
+                            font-bold
+                            text-[#3b4d61]
+                            mb-3
+                        "
+                    >
+                        Войти
+                    </h1>
+
+
+                    <p
+                        class="
+                            text-xs
+                            sm:text-sm
+                            leading-relaxed
+                            text-gray-500
+                            max-w-[300px]
+                            mx-auto
+                        "
+                    >
+                        Войдите в аккаунт, чтобы продолжить работу с PL-GL.
+                    </p>
+
                 </div>
 
-                <div class="input-box">
-                    <input type="password" placeholder="Пароль" required id="passwordInput">
-                    <i class='bx bxs-lock-alt' id="togglePassword" style="cursor: pointer;"></i>
-                </div>
 
-                <div class="remeber-forgot">
-                    <label><input type="checkbox" id="rememberMe" checked> Запомнить меня</label>
-                    <a href="#" id="forgotPasswordLink">
-                        <span id="forgotPasswordText">Забыли пароль?</span>
-                        <span id="forgotPasswordSpinner" class="spinner-border spinner-border-sm" role="status"
-                            aria-hidden="true" style="display: none;"></span>
-                    </a>
-                </div>
+                <!-- ================================
+                     Existing Login Form
+                ================================= -->
 
-                <button type="submit" class="btn btn-light" id="loginButton">
-                    <span id="loginButtonText">Войти</span>
-                    <span id="loginSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
-                        style="display: none;"></span>
-                </button>
+                <form id="loginForm">
 
-                <div class="oauth-buttons">
-                    <button type="button" class="btn-google" id="googleSignInButton">
-                        <i class='bx bxl-google'></i> Войти через Google
+                    <!-- Email -->
+
+                    <div class="relative mb-4">
+
+                        <input
+                            type="text"
+                            placeholder="Email"
+                            required
+                            id="usernameInput"
+                            class="
+                                w-full
+                                h-14
+                                rounded-xl
+                                border
+                                border-[#e1e5ea]
+                                bg-[#f8fafc]
+                                px-4
+                                pr-12
+                                text-sm
+                                text-[#1a1a1a]
+                                outline-none
+                                placeholder:text-gray-400
+                                transition-all
+                                duration-200
+                                focus:bg-white
+                                focus:border-[#65758e]
+                                focus:ring-4
+                                focus:ring-[#3b4d61]/10
+                            "
+                        >
+
+                        <i
+                            class="
+                                bx
+                                bxs-user
+                                absolute
+                                right-4
+                                top-1/2
+                                -translate-y-1/2
+                                text-[20px]
+                                text-[#8b97a6]
+                            "
+                        ></i>
+
+                    </div>
+
+
+                    <!-- Password -->
+
+                    <div class="relative mb-4">
+
+                        <input
+                            type="password"
+                            placeholder="Пароль"
+                            required
+                            id="passwordInput"
+                            class="
+                                w-full
+                                h-14
+                                rounded-xl
+                                border
+                                border-[#e1e5ea]
+                                bg-[#f8fafc]
+                                px-4
+                                pr-12
+                                text-sm
+                                text-[#1a1a1a]
+                                outline-none
+                                placeholder:text-gray-400
+                                transition-all
+                                duration-200
+                                focus:bg-white
+                                focus:border-[#65758e]
+                                focus:ring-4
+                                focus:ring-[#3b4d61]/10
+                            "
+                        >
+
+                        <i
+                            class="
+                                bx
+                                bxs-lock-alt
+                                absolute
+                                right-4
+                                top-1/2
+                                -translate-y-1/2
+                                text-[20px]
+                                text-[#8b97a6]
+                                cursor-pointer
+                                hover:text-[#3b4d61]
+                                transition-colors
+                                duration-200
+                            "
+                            id="togglePassword"
+                            style="cursor: pointer;"
+                        ></i>
+
+                    </div>
+
+
+                    <!-- Remember / Forgot -->
+
+                    <div
+                        class="
+                            flex
+                            flex-col
+                            xs:flex-row
+                            sm:flex-row
+                            sm:items-center
+                            sm:justify-between
+                            gap-3
+                            mb-6
+                            px-0.5
+                        "
+                    >
+
+                        <label
+                            class="
+                                flex
+                                items-center
+                                gap-2
+                                text-xs
+                                text-gray-500
+                                cursor-pointer
+                                select-none
+                            "
+                        >
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                                checked
+                                class="
+                                    w-4
+                                    h-4
+                                    rounded
+                                    border-gray-300
+                                    accent-[#3b4d61]
+                                    cursor-pointer
+                                "
+                            >
+
+                            Запомнить меня
+                        </label>
+
+
+                        <a
+                            href="#"
+                            id="forgotPasswordLink"
+                            class="
+                                text-xs
+                                font-medium
+                                text-[#3b4d61]
+                                hover:text-[#65758e]
+                                transition-colors
+                                duration-200
+                            "
+                        >
+
+                            <span id="forgotPasswordText">
+                                Забыли пароль?
+                            </span>
+
+                            <span
+                                id="forgotPasswordSpinner"
+                                class="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                                style="display: none;"
+                            ></span>
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Login Button -->
+
+                    <button
+                        type="submit"
+                        class="
+                            btn
+                            btn-light
+                            w-full
+                            min-h-[54px]
+                            rounded-xl
+                            border-0
+                            text-sm
+                            font-semibold
+                            text-white
+                            cursor-pointer
+                            bg-gradient-to-r
+                            from-[#3b4d61]
+                            to-[#65758e]
+                            shadow-[0_8px_20px_rgba(59,77,97,0.18)]
+                            hover:shadow-[0_11px_25px_rgba(59,77,97,0.24)]
+                            hover:-translate-y-0.5
+                            active:translate-y-0
+                            transition-all
+                            duration-200
+                        "
+                        id="loginButton"
+                    >
+
+                        <span id="loginButtonText">
+                            Войти
+                        </span>
+
+                        <span
+                            id="loginSpinner"
+                            class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                            style="display: none;"
+                        ></span>
+
                     </button>
-                </div>
 
-                <!-- Добавляем контейнер для VK -->
-                <!-- <div id="vkid-button-container"></div> -->
 
-                <div class="register-link">
-                    <p>Еще нет аккаунта? <a href="register.html">Регистрация</a></p>
-                </div>
-            </form>
+                    <!-- ================================
+                         Google OAuth
+                    ================================= -->
+
+                    <div class="oauth-buttons mt-3">
+
+                        <button
+                            type="button"
+                            class="
+                                btn-google
+                                w-full
+                                min-h-[52px]
+                                rounded-xl
+                                border
+                                border-[#e1e5ea]
+                                bg-white
+                                text-gray-700
+                                text-sm
+                                font-medium
+                                flex
+                                items-center
+                                justify-center
+                                gap-2
+                                cursor-pointer
+                                hover:bg-[#f8fafc]
+                                hover:border-[#d5dae0]
+                                hover:shadow-md
+                                hover:-translate-y-0.5
+                                transition-all
+                                duration-200
+                            "
+                            id="googleSignInButton"
+                        >
+
+                            <i
+                                class="bx bxl-google text-[20px]"
+                            ></i>
+
+                            Войти через Google
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Registration -->
+
+                    <div
+                        class="
+                            register-link
+                            text-center
+                            mt-6
+                            pt-5
+                            border-t
+                            border-[#edf0f3]
+                        "
+                    >
+
+                        <p
+                            class="
+                                text-xs
+                                sm:text-[13px]
+                                text-gray-500
+                            "
+                        >
+
+                            Еще нет аккаунта?
+
+                            <a
+                                href="register.html"
+                                class="
+                                    font-semibold
+                                    text-[#3b4d61]
+                                    hover:text-[#65758e]
+                                    transition-colors
+                                    duration-200
+                                "
+                            >
+                                Регистрация
+                            </a>
+
+                        </p>
+
+                    </div>
+
+                </form>
+
+            </div>
+
         </div>
-    </section>
+
+    </main>
+
+     <footer class="bg-gray-900
+                 text-gray-300
+                 py-10 text-center">
+
+    <div class="mb-5">
+
+      <a href="https://vk.com"
+         target="_blank"
+         class="inline-block mx-3
+                hover:opacity-80 transition">
+
+        <img
+          src="https://img.icons8.com/color/48/vk-com.png"
+          alt="VK"
+          class="inline w-8 h-8"
+        />
+
+      </a>
+
+
+      <a href="https://t.me"
+         target="_blank"
+         class="inline-block mx-3
+                hover:opacity-80 transition">
+
+        <img
+          src="https://img.icons8.com/color/48/telegram-app.png"
+          alt="Telegram"
+          class="inline w-8 h-8"
+        />
+
+      </a>
+
+    </div>
+
+    <p>
+      © 2025 PL-GL | Все права защищены
+    </p>
+
+    <p class="mt-3 text-sm">
+
+    <a href="/lending/policy"
+         class="hover:text-white transition">
+        Политика конфиденциальности
+      </a>
+
+      <span class="mx-2">|</span>
+
+    <a href="/lending/terms"
+         class="hover:text-white transition">
+        Условия использования
+      </a>
+
+    </p>
+
+  </footer>
+
+
+    <!-- ================================
+         Existing scripts — DO NOT REMOVE
+    ================================= -->
 
     <script src="../../scripts/user-auth/login.js"></script>
+
     <script src="../../scripts/user-auth/loginFogotPass.js"></script>
+
     <script src="../../scripts/user-auth/components/googleidentifyforLogin.js"></script>
-    <!-- <script src="../../scripts/user-auth/components/vkIdentifyForLogin.js"></script> -->
+
 </body>
 
 </html>
+```

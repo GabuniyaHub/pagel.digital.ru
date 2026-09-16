@@ -24,6 +24,8 @@ async function handleCredentialResponse(response) {
 
       if (data.success) {
           // Сохраняем токен и данные пользователя в зависимости от состояния чекбокса
+          const rememberMe = document.getElementById('rememberMe').checked;
+
           if (rememberMe) {
               localStorage.setItem('jwt', data.token);
               localStorage.setItem('user', JSON.stringify(data.user));

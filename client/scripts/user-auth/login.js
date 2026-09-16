@@ -190,14 +190,6 @@ document.getElementById('togglePassword').addEventListener('click', function () 
     this.classList.toggle('bxs-lock-open-alt');
 });
 
-const menuIcon = document.getElementById('menu-icon');
-const navLinks = document.getElementById('nav-links');
-
-menuIcon.addEventListener('click', function () {
-    menuIcon.classList.toggle('active');
-    navLinks.classList.toggle('active');
-});
-
 // Функция для отключения кнопки и показа спиннера
 function setLoadingState(isLoading) {
     const loginButton = document.getElementById('loginButton');
