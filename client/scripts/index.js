@@ -8,13 +8,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });    
     
     //JS для service 
-    document.getElementById("toggle-services").addEventListener("click", function () {
-        const servicesContent = document.querySelector(".services-content");
-        servicesContent.classList.toggle("hidden");
-    
-        // Анимация поворота кнопки
-        this.classList.toggle("rotated");
-    });
+    const servicesToggle = document.getElementById("toggle-services");
+    if (servicesToggle) {
+        servicesToggle.addEventListener("click", function () {
+            const servicesContent = document.querySelector(".services-content");
+            servicesContent.classList.toggle("hidden");
+
+            // Анимация поворота кнопки
+            this.classList.toggle("rotated");
+        });
+    }
 
     //JS для all-platforms
     document.getElementById("toggle-all-platforms").addEventListener("click", function () {

@@ -1441,37 +1441,40 @@ router.get('/:id', (req, res) => {
   res.render('market/platform', { platform });
 });
 
-//Маршрут для отображения листингов каталога
-router.get('/:platformName/:catalogName/items', async (req, res) => {
-  const { platformName, catalogName } = req.params;
+const catalogAliases = {
+  'channel-buy': 'Купить канал',
+  'channel-sell': 'Продать канал',
+  'promotion': 'Продвижение',
+  'editing': 'Монтаж',
+  'design': 'Дизайн',
+  'content': 'Контент',
+  'voiceover': 'Озвучка',
+  'other-services': 'Другие услуги',
+  'become-executor': 'Исполнитель',
+  'analytics': 'Аналитика',
+  'content-under-key': 'Контент под ключ',
+  'audience-growth': 'Рост аудитории'
+};
+
+async function renderCatalogPage(req, res, platformName, catalogName) {
   const search = req.query.q ? req.query.q.trim() : '';
   const page = parseInt(req.query.page) || 1;
   const pageSize = 30;
   const offset = (page - 1) * pageSize;
 
   try {
-    
-    // let query = `
-    //   SELECT l.*, p.slug AS platform_slug, u.is_premium
-    //   FROM listings l
-    //   JOIN categories c ON l.category_id = c.id
-    //   JOIN platforms p ON c.platform_id = p.id
-    //   JOIN users u ON l.user_id = u.id
-    //   WHERE p.slug = $1 AND c.name = $2
-    // `;
-
     let query = `
-    SELECT
-      l.*,
-      p.slug AS platform_slug,
-      u.is_premium,
-      u.verified,
-      (l.is_pinned AND l.pin_expiration_date > NOW()) AS is_pinned_active
-    FROM listings l
-    JOIN categories c ON l.category_id = c.id
-    JOIN platforms p ON c.platform_id = p.id
-    JOIN users u ON l.user_id = u.id
-    WHERE p.slug = $1 AND c.name = $2
+      SELECT
+        l.*,
+        p.slug AS platform_slug,
+        u.is_premium,
+        u.verified,
+        (l.is_pinned AND l.pin_expiration_date > NOW()) AS is_pinned_active
+      FROM listings l
+      JOIN categories c ON l.category_id = c.id
+      JOIN platforms p ON c.platform_id = p.id
+      JOIN users u ON l.user_id = u.id
+      WHERE p.slug = $1 AND c.name = $2
     `;
 
     let params = [platformName, catalogName];
@@ -1491,19 +1494,6 @@ router.get('/:platformName/:catalogName/items', async (req, res) => {
       params.push(`%${search}%`);
     }
 
-    // без према и закрепа
-    // query += `
-    //   ORDER BY l.position ASC
-    //   LIMIT $${params.length + 1} OFFSET $${params.length + 2}
-    // `;
-
-    // без закрепа
-    // query += `
-    //   ORDER BY u.is_premium DESC, l.position ASC
-    //   LIMIT $${params.length + 1} OFFSET $${params.length + 2}
-    // `;
-
-    // (сортировка по премиуму, закрепленным и позиции)
     query += `
       ORDER BY 
         u.is_premium DESC,
@@ -1514,20 +1504,18 @@ router.get('/:platformName/:catalogName/items', async (req, res) => {
 
     params.push(pageSize, offset);
 
-    const totalCouentQuery = `
-        SELECT COUNT(*)FROM listings l
-        JOIN categories c ON l.category_id = c.id
-        JOIN platforms p ON c.platform_id = p.id
-        WHERE p.slug = $1 AND c.name = $2
-      `;
+    const totalCountQuery = `
+      SELECT COUNT(*)
+      FROM listings l
+      JOIN categories c ON l.category_id = c.id
+      JOIN platforms p ON c.platform_id = p.id
+      WHERE p.slug = $1 AND c.name = $2
+    `;
 
     const result = await client.query(query, params);
-
-    const totalCouentResult = await client.query(totalCouentQuery, [platformName, catalogName]);
-    const totalCount = parseInt(totalCouentResult.rows[0].count);
-
+    const totalCountResult = await client.query(totalCountQuery, [platformName, catalogName]);
+    const totalCount = parseInt(totalCountResult.rows[0].count);
     const hasMore = offset + result.rows.length < totalCount;
-
 
     const product = {
       name: catalogName,
@@ -1546,6 +1534,25 @@ router.get('/:platformName/:catalogName/items', async (req, res) => {
     console.error('Ошибка при выполнении запроса:', err);
     return res.status(500).render('market/errors/500', { message: 'Ошибка сервера' });
   }
+}
+
+router.get('/:platformName/:catalogName', async (req, res) => {
+  const { platformName, catalogName } = req.params;
+
+  if (!platformName || !catalogName) {
+    return res.status(404).render('market/errors/404', { message: 'Каталог не найден' });
+  }
+
+  const aliasName = catalogAliases[catalogName];
+  const resolvedCatalogName = aliasName || decodeURIComponent(catalogName).replace(/-/g, ' ');
+
+  return renderCatalogPage(req, res, platformName, resolvedCatalogName);
+});
+
+//Маршрут для отображения листингов каталога
+router.get('/:platformName/:catalogName/items', async (req, res) => {
+  const { platformName, catalogName } = req.params;
+  return renderCatalogPage(req, res, platformName, decodeURIComponent(catalogName).replace(/-/g, ' '));
 });
 
 // API-роут для увелечения счетчика литсинга
