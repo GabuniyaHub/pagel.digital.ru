@@ -42,7 +42,13 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             body: JSON.stringify({ email, password, rememberMe })
         });
 
-        const result = await response.json();
+        const responseText = await response.text();
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch {
+            throw new Error(`Сервер вернул неожиданный ответ (${response.status})`);
+        }
         console.log(result);
 
         if (response.ok) {
@@ -74,7 +80,13 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                         body: JSON.stringify({ email, code: confirmationCode })
                     });
 
-                    const confirmationResult = await confirmationResponse.json();
+                    const confirmationText = await confirmationResponse.text();
+                    let confirmationResult;
+                    try {
+                        confirmationResult = JSON.parse(confirmationText);
+                    } catch {
+                        throw new Error(`Сервер вернул неожиданный ответ (${confirmationResponse.status})`);
+                    }
 
                     if (confirmationResponse.ok) {
 
@@ -100,9 +112,9 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                         window.location.href = '../../pages/index.html';
                     } else {
                         // Обработка ошибок при вводе кода
-                        if (confirmationResult.message.includes("Доступ заблокирован")) {
+                        if (confirmationResult.message?.includes("Доступ заблокирован")) {
                             Swal.fire("Ошибка", confirmationResult.message, "error");
-                        } else if (confirmationResult.message.includes("Осталось попыток")) {
+                        } else if (confirmationResult.message?.includes("Осталось попыток")) {
                             Swal.fire("Ошибка", confirmationResult.message, "error");
                         } else {
                             Swal.fire("Ошибка", confirmationResult.message || "Неверный код подтверждения.", "error");
@@ -130,7 +142,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             }
         } else {
             // Обработка ошибок при входе
-            if (result.message.includes("Доступ заблокирован")) {
+            if (result.message?.includes("Доступ заблокирован")) {
                 Swal.fire("Ошибка", result.message, "error");
             } else {
                 Swal.fire("Ошибка входа", result.message, "error");
