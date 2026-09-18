@@ -13,8 +13,8 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 
 
-// Загрузка переменных окружения
-dotenv.config();
+// Загрузка переменных окружения из корня проекта
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 const { requireJwtSecret } = require('./config/auth');
 requireJwtSecret();
 

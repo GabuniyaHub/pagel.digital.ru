@@ -162,7 +162,20 @@ DB_HOST=127.0.0.1
 DB_PORT=5432
 
 # JWT
-JWT_SECRET=guram
+# Generate with: openssl rand -base64 48
+JWT_SECRET=replace-with-a-random-value-at-least-32-characters
+JWT_EXPIRES_IN=15m
+
+# Google OAuth web client ID
+GOOGLE_CLIENT_ID=your-google-web-client-id
+
+# Gmail SMTP App Password, not the regular Google password
+SMTP_USER=your@gmail.com
+SMTP_PASS=your-16-character-app-password
+SMTP_FROM=your@gmail.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
 
 # Порт
 PORT=3000
