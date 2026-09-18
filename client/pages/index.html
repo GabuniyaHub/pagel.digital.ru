@@ -7,7 +7,12 @@
     <meta name="theme-color" content="#3b4d61">
     <title>PL-GL — Всё для YouTube</title>
 
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="../assets/images/pl-gl-logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/images/favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicon-180x180.png">
+    <link rel="icon" href="../assets/images/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&family=Sofia+Sans+Extra+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -108,6 +113,7 @@
         }
         .nav-links > li > a:hover,
         .search-dropdown > a:hover { background:var(--pl-soft); }
+        .nav-links > li { margin:0; }
         #search-toggle { gap:8px; }
         #search-toggle i { font-size:14px; }
         #register-item > a {
@@ -125,17 +131,27 @@
             padding:0 14px;
             font-weight:700;
         }
-        .account-dropdown { position:relative; }
-        .account-circle {
+        .account-dropdown {
+            position:relative;
+            display:flex;
+            align-items:center;
+        }
+        .account-dropdown > .account-circle {
             display:flex;
             align-items:center;
             justify-content:center;
             width:40px;
             height:40px;
+            margin-top:0;
             border-radius:12px;
             color:var(--pl-primary);
             background:var(--pl-soft);
             text-decoration:none;
+        }
+        .account-dropdown .account-circle i {
+            margin:0;
+            font-size:24px;
+            line-height:1;
         }
         .dropdown-content {
             position:absolute;
