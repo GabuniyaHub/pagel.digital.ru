@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { requireJwtSecret } = require("../../config/auth");
-const client = require("../config/db");
+const client = require("../../config/db");
 
 const checkAdminInDB = (req, res, next) => {
   const authHeader = req.headers["authorization"];
