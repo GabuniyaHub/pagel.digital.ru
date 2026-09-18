@@ -19,15 +19,24 @@ router.post('/upload', upload.single('file'), (req, res) => {
   res.json({ filename: req.file.filename });
 });
 
+router.post('/logout', (req, res) => {
+    res.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production'
+    });
+    res.json({ success: true });
+});
+
 
 // ROUTES PRIVATE
 // API-роут для получения страницы аккаунта
-router.get('/', optionalAuth, (req, res) => {
+router.get('/', verifyToken, (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/pages/account/account.html'));
 });
 
 // API-роут для получения данных аккаунта
-router.get('/get/data', optionalAuth, async (req, res) => {
+router.get('/get/data', verifyToken, async (req, res) => {
     try {
         const userId = req.user?.id;
         if (!userId) {

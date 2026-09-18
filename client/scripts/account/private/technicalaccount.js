@@ -7,9 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         navLinks.classList.toggle('active');
     });    
     
-   // 🔹 LOCALSTORAGE + SESSIONSTORAGE
-   const token = localStorage.getItem("jwt") || sessionStorage.getItem("jwt"); // Проверяем токен в обоих хранилищах
-   const user = JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user")); // Данные пользователя
+    const user = JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "null");
 
     if (token && user) { // Если есть токен и пользователь
         // Скрываем "Вход" и "Регистрация"
@@ -34,9 +32,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("sell-item").style.display = "none";
     } 
 
-    if (!token) { 
-        window.location.href = "/pages/user-auth/login.html"; // Перенаправление на главную страницу, если нет токена
-    }
+    fetch('/account/get/data', { credentials: 'include' })
+        .then(response => {
+            if (response.status === 401) {
+                window.location.href = "/pages/user-auth/login.html";
+            }
+        })
+        .catch(() => {
+            window.location.href = "/pages/user-auth/login.html";
+        });
 
     //Обработчик показа скрытия меню навигационной панели:
     const accountCircle = document.querySelector(".account-circle");
@@ -61,15 +65,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (logoutButton) {
         logoutButton.addEventListener("click", function (e) {
             e.preventDefault();
-            localStorage.removeItem("jwt"); // Удаляем токен из localStorage
             localStorage.removeItem("user");
-
-            sessionStorage.removeItem("jwt"); // Удаляем токен из sessionStorage
             sessionStorage.removeItem("user");
 
-            document.cookie = "jwt=; Max-Age=0; path=/"; // Удаляем токен их cookies
-
-            window.location.href = "/pages/index.html"; // Перенаправление на главную страницу
+            fetch('/account/logout', { method: 'POST', credentials: 'include' })
+                .finally(() => {
+                    window.location.href = "/pages/index.html";
+                });
         });
     }
 });
