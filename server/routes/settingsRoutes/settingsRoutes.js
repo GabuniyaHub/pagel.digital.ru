@@ -4,6 +4,7 @@ const path = require('path');
 const axios = require('axios');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 
 // Импорт базы данных
@@ -80,7 +81,7 @@ router.post('/request-confirmation', verifyToken, async (req, res) => {
     }
 
     // Генерируем код
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = crypto.randomInt(100000, 1000000).toString();
     // console.log(`[CODEGEN] Сгенерирован код: ${code}`);
 
     // Сохраняем в БД (таблица confirmations: userId, action, code, expiresAt)

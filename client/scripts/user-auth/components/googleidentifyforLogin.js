@@ -29,11 +29,9 @@ async function handleCredentialResponse(response) {
           if (rememberMe) {
               localStorage.setItem('jwt', data.token);
               localStorage.setItem('user', JSON.stringify(data.user));
-              document.cookie = `jwt=${data.token}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
           } else {
               sessionStorage.setItem('jwt', data.token);
               sessionStorage.setItem('user', JSON.stringify(data.user));
-              document.cookie = `jwt=${data.token}; path=/; SameSite=Lax`;
           }
 
           // Перенаправляем пользователя

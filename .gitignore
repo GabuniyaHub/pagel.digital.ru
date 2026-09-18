@@ -44,6 +44,7 @@ Thumbs.db
 *.p12
 *.pfx
 .secrets
+server/config/googleAuth.json
 
 # Тесты и покрытие
 /coverage

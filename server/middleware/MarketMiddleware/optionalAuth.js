@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = process.env.JWT_SECRET || "guram";
+const { requireJwtSecret } = require('../../config/auth');
 
 function optionalAuth(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -10,7 +10,7 @@ function optionalAuth(req, res, next) {
   if (!token) return next();
 
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
+    const decoded = jwt.verify(token, requireJwtSecret());
     // req.user = decoded;
 
     req.user = {

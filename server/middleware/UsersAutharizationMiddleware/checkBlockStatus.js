@@ -3,8 +3,7 @@ const client = require("../../config/db"); // Подключение к базе
 
 const checkBlockStatus = async (req, res, next) => {
     try {
-        console.log("req.user:", req.user); // Логируем объект req.user
-        const userId = req.user?.userId; // Получаем ID пользователя из req.user (предполагается, что verifyToken его добавляет)
+        const userId = req.user?.id;
 
         if (!userId) {
             return res.status(401).json({ message: "Не авторизован" });

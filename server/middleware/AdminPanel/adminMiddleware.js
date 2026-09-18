@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = process.env.JWT_SECRET || "guram";
+const { requireJwtSecret } = require("../../config/auth");
 const client = require("../config/db");
 
 const checkAdminInDB = (req, res, next) => {
@@ -11,7 +11,7 @@ const checkAdminInDB = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, SECRET_KEY, async (err, decoded) => {
+  jwt.verify(token, requireJwtSecret(), async (err, decoded) => {
     if (err || !decoded?.email) {
       return res.writeHead(403, { "Content-Type": "application/json" })
         .end(JSON.stringify({ message: "Неверный токен" }));

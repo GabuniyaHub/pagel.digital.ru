@@ -1,11 +1,18 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "bebrikivan199@gmail.com",
-    pass: "nqcq zhhj irek paiy", // ⚠️ лучше вынести в .env
-  },
-});
+function getTransporter() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
 
-module.exports = transporter;
+  if (!user || !pass) {
+    throw new Error("SMTP_USER and SMTP_PASS must be set");
+  }
+
+  return nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
+}
+
+module.exports = {
+  sendMail(...args) {
+    return getTransporter().sendMail(...args);
+  },
+};

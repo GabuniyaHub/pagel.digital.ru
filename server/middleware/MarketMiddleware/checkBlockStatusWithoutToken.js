@@ -3,13 +3,10 @@ const client = require("../../config/db"); // Подключение к базе
 
 const checkBlockStatusWithoutToken = async (req, res, next) => {
     try {
-        const userId = req.headers['x-user-id'];
-        console.log("userId из заголовка:", userId);
+        const userId = req.user?.id;
         
         if (!userId) {
-            // return res.status(400).json({ message: "ID пользователя не указан" });
-            console.warn("userId не указан в заголовке");
-            return next(); // Если userId не указан, пропускаем запрос дальше
+            return next();
         }
 
         const checkBlockedQuery = `SELECT is_blocked FROM users WHERE id = $1`;

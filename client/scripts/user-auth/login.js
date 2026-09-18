@@ -88,34 +88,16 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
                         // console.log(token);
 
-                        // Если код подтвержден, повторяем запрос на вход
-                        const loginResponse = await fetch('/api/log', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ email, password, rememberMe })
+                        loginUser(token, user, rememberMe);
+
+                        Swal.fire({
+                            title: "Успешный вход!",
+                            text: "Вы будете перенаправлены...",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
                         });
-
-                        const loginResult = await loginResponse.json();
-
-                        if (loginResponse.ok) {
-
-                            loginUser(token, user, rememberMe);
-
-                            console.log(token, user, rememberMe);
-
-                            Swal.fire({
-                                title: "Успешный вход!",
-                                text: "Вы будете перенаправлены...",
-                                icon: "success",
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                            window.location.href = '../../pages/index.html';
-                        } else {
-                            Swal.fire("Ошибка", loginResult.message, "error");
-                        }
+                        window.location.href = '../../pages/index.html';
                     } else {
                         // Обработка ошибок при вводе кода
                         if (confirmationResult.message.includes("Доступ заблокирован")) {
@@ -168,11 +150,9 @@ function loginUser(token, user, rememberMe) {
     if (rememberMe) {
         localStorage.setItem("jwt", token);
         localStorage.setItem("user", JSON.stringify(user));
-        document.cookie = `jwt=${token}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
     } else {
         sessionStorage.setItem("jwt", token);
         sessionStorage.setItem("user", JSON.stringify(user));
-        document.cookie = `jwt=${token}; path=/; SameSite=Lax`;
     }
     location.reload();
 }

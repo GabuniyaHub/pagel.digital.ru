@@ -3,25 +3,78 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const axios = require('axios');
 const client = require("../config/db");
-const { OAuth2Client } = require('google-auth-library');
-const googleAuthClient = new OAuth2Client({
-    clientId: '293649929067-v7prhbomfisdih5868evj6e66p6r42em.apps.googleusercontent.com',
-    clientSecret: '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',
-    redirectUri: 'https://www.pagel-digital.ru/auth/callback',
-});
+const googleAuthClient = require('../config/googleAuth');
 // const { OAuth2Client } = require('google-auth-library');
 const { parse } = require("url");
 const dotenv = require("dotenv");
 const { Client } = require("pg");
 
 
-const SECRET_KEY = process.env.JWT_SECRET || "guram"; //JWT
+const { JWT_EXPIRES_IN, requireJwtSecret } = require('../config/auth');
+const { sendConfirmationCode } = require('../utils/nodemailer/nodemailer');
+const SECRET_KEY = requireJwtSecret();
 const failedAttempts = new Map(); // Хранит количество неудачных попыток для каждого email
 const blockedUsers = new Map();  // Хранит время разблокировки для каждого email
 const verificationCodes = new Map(); // Временное хранилище кодов
 const verifiedEmails = new Set(); // Email, прошедшие проверку до создания аккаунта
+
+const codeRequests = new Map();
+const CODE_TTL_MS = 10 * 60 * 1000;
+const CODE_REQUEST_WINDOW_MS = 15 * 60 * 1000;
+const MAX_CODE_REQUESTS = 5;
+const MAX_VERIFICATION_ATTEMPTS = 5;
+const verificationAttempts = new Map();
+
+function setAuthCookie(res, token) {
+    const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+    res.setHeader('Set-Cookie', `jwt=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=900${secure}`);
+}
+
+function isValidPassword(password) {
+    return typeof password === 'string'
+        && /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&\-_.]{8,}$/.test(password);
+}
+
+function issueVerificationCode(email) {
+    const now = Date.now();
+    const requests = (codeRequests.get(email) || []).filter(time => now - time < CODE_REQUEST_WINDOW_MS);
+    if (requests.length >= MAX_CODE_REQUESTS) return null;
+    requests.push(now);
+    codeRequests.set(email, requests);
+
+    const code = crypto.randomInt(100000, 1000000).toString();
+    verificationCodes.set(email, { code, expiresAt: now + CODE_TTL_MS });
+    return code;
+}
+
+function isValidVerificationCode(email, code) {
+    const entry = verificationCodes.get(email);
+    if (!entry || entry.expiresAt < Date.now()) {
+        verificationCodes.delete(email);
+        return false;
+    }
+    const candidate = String(code);
+    return entry.code.length === candidate.length
+        && crypto.timingSafeEqual(Buffer.from(entry.code), Buffer.from(candidate));
+}
+
+function registerVerificationFailure(email) {
+    const attempts = (verificationAttempts.get(email) || 0) + 1;
+    verificationAttempts.set(email, attempts);
+    if (attempts >= MAX_VERIFICATION_ATTEMPTS) {
+        verificationAttempts.delete(email);
+        verificationCodes.delete(email);
+        return false;
+    }
+    return true;
+}
+
+function clearVerificationAttempts(email) {
+    verificationAttempts.delete(email);
+}
 
 const { verifyToken } = require("../middleware/authMiddleware");
 const checkBlockStatus = require("../middleware/UsersAutharizationMiddleware/checkBlockStatus");
@@ -48,12 +101,16 @@ function userRouters(req, res) {
         req.on("end", async () => {
             const { name, email, password } = JSON.parse(body);
             try {
-                console.log("Данные, полученные от клиента:", body);
 
                 // Проверка на пустые поля
                 if (!name || !email || !password) {
                     res.writeHead(400, { "Content-Type": "application/json" });
                     return res.end(JSON.stringify({ success: false, message: "Все поля обязательны" }));
+                }
+
+                if (!isValidPassword(password)) {
+                    res.writeHead(400, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({ success: false, message: "Пароль должен быть не менее 8 символов, содержать букву и цифру" }));
                 }
 
                 if (!verifiedEmails.has(email)) {
@@ -93,12 +150,10 @@ function userRouters(req, res) {
                 const token = jwt.sign(
                     { userId: result.rows[0].id, email: result.rows[0].email },
                     SECRET_KEY, // Замените на ваш секретный ключ
-                    { expiresIn: '30d' } // Токен будет действителен 7 d
+                    { expiresIn: JWT_EXPIRES_IN }
                 );
 
-                console.log("Фактический SECRET_KEY (reg):", SECRET_KEY);
-                console.log("Длина ключа (reg):", SECRET_KEY.length);
-
+                setAuthCookie(res, token);
                 res.writeHead(201, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({
                     success: true,
@@ -130,34 +185,20 @@ function userRouters(req, res) {
                 return res.end(JSON.stringify({ success: false, message: "Email обязателен" }));
             }
 
-            // Генерация 6-значного кода
-            const confirmationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            verificationCodes.set(email, confirmationCode); // Сохраняем код
+            const confirmationCode = issueVerificationCode(email);
+            if (!confirmationCode) {
+                res.writeHead(429, { "Content-Type": "application/json" });
+                return res.end(JSON.stringify({ success: false, message: "Слишком много запросов кода. Попробуйте позже." }));
+            }
 
-            // Отправка кода через nodemailer
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: { user: 'pageldigitaleu@gmail.com', pass: 'ldsb scmr bris joja' }
-            });
+            const delivery = await sendConfirmationCode(email, confirmationCode);
+            if (!delivery.success) {
+                res.writeHead(500, { "Content-Type": "application/json" });
+                return res.end(JSON.stringify({ success: false, message: "Ошибка при отправке кода" }));
+            }
 
-            const mailOptions = {
-                from: 'pageldigitaleu@gmail.com',
-                to: email,
-                subject: 'Код подтверждения',
-                text: `Ваш код подтверждения: ${confirmationCode}`
-            };
-
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error("Ошибка при отправке кода.", error);
-                    res.writeHead(500, { "Content-Type": "application/json" });
-                    return res.end(JSON.stringify({ success: false, message: "Ошибка при отправке кода" }));
-                } else {
-                    console.log("Код на email отправлен:", info.response);
-                    res.writeHead(200, { "Content-Type": "application/json" });
-                    return res.end(JSON.stringify({ success: true, message: "Код отправлен" }));
-                }
-            });
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({ success: true, message: "Код отправлен" }));
         });
     } else if (req.method === 'POST' && req.url === "/api/verify-code") { //api/verify-code
         let body = "";
@@ -171,9 +212,9 @@ function userRouters(req, res) {
                 return res.end(JSON.stringify({ success: false, message: "Все поля обязательны" }));
             }
 
-            const storedCode = verificationCodes.get(email);
-            if (storedCode && storedCode === code) {
+            if (isValidVerificationCode(email, code)) {
                 verificationCodes.delete(email); // Удаляем использованный код
+                clearVerificationAttempts(email);
                 verifiedEmails.add(email);
 
                 res.writeHead(200, { "Content-Type": "application/json" });
@@ -278,39 +319,18 @@ function userRouters(req, res) {
                 }
 
                 // Всегда отправляем код подтверждения
-                const confirmationCode = Math.floor(100000 + Math.random() * 900000).toString();
-                verificationCodes.set(email, confirmationCode); // Сохраняем код
-
-                // console.log(confirmationCode);
-
-                // Отправка кода через nodemailer
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: { user: 'pageldigitaleu@gmail.com', pass: 'ldsb scmr bris joja' }
-                });
-
-                const mailOptions = {
-                    from: 'pageldigitaleu@gmail.com',
-                    to: email,
-                    subject: 'Код подтверждения',
-                    text: `Ваш код подтверждения: ${confirmationCode}`
-                };
-
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        console.error("Ошибка при отправке кода.", error);
-                        res.writeHead(500, { "Content-Type": "application/json" });
-                        return res.end(JSON.stringify({ success: false, message: "Ошибка при отправке кода" }));
-                    } else {
-                        console.log("Код на email отправлен:", info.response);
-                        res.writeHead(200, { "Content-Type": "application/json" });
-                        return res.end(JSON.stringify({
-                            success: true,
-                            message: "Код подтверждения отправлен на ваш email",
-                            requiresConfirmation: true // Указываем, что требуется подтверждение
-                        }));
-                    }
-                });
+                const confirmationCode = issueVerificationCode(email);
+                if (!confirmationCode) {
+                    res.writeHead(429, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({ success: false, message: "Слишком много запросов кода. Попробуйте позже." }));
+                }
+                const delivery = await sendConfirmationCode(email, confirmationCode);
+                if (!delivery.success) {
+                    res.writeHead(500, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({ success: false, message: "Ошибка при отправке кода" }));
+                }
+                res.writeHead(200, { "Content-Type": "application/json" });
+                return res.end(JSON.stringify({ success: true, message: "Код подтверждения отправлен на ваш email", requiresConfirmation: true }));
             } catch (err) {
                 console.error("Ошибка при входе: ", err);
                 res.writeHead(500, { "Content-Type": "application/json" });
@@ -348,36 +368,18 @@ function userRouters(req, res) {
                     return res.end(JSON.stringify({ success: false, message: "Пользователь с таким email не найден" }));
                 }
 
-                // Генерация 6-значного кода
-                const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-                verificationCodes.set(email, resetCode); // Сохраняем код
-                console.log("Код подтверждения сгенерирован:", resetCode);
-
-                // Отправка кода через nodemailer
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: { user: 'pageldigitaleu@gmail.com', pass: 'ldsb scmr bris joja' }
-                });
-
-                const mailOptions = {
-                    from: 'pageldigitaleu@gmail.com',
-                    to: email,
-                    subject: 'Код для сброса пароля',
-                    text: `Ваш код для сброса пароля: ${resetCode}`
-                };
-
-                console.log("Отправка email...");
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        console.error("Ошибка при отправке кода:", error);
-                        res.writeHead(500, { "Content-Type": "application/json" });
-                        return res.end(JSON.stringify({ success: false, message: "Ошибка при отправке кода" }));
-                    } else {
-                        console.log("Код на email отправлен:", info.response);
-                        res.writeHead(200, { "Content-Type": "application/json" });
-                        return res.end(JSON.stringify({ success: true, message: "Код для сброса пароля отправлен на ваш email" }));
-                    }
-                });
+                const resetCode = issueVerificationCode(email);
+                if (!resetCode) {
+                    res.writeHead(429, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({ success: false, message: "Слишком много запросов кода. Попробуйте позже." }));
+                }
+                const delivery = await sendConfirmationCode(email, resetCode, 'Код для сброса пароля');
+                if (!delivery.success) {
+                    res.writeHead(500, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({ success: false, message: "Ошибка при отправке кода" }));
+                }
+                res.writeHead(200, { "Content-Type": "application/json" });
+                return res.end(JSON.stringify({ success: true, message: "Код для сброса пароля отправлен на ваш email" }));
             } catch (err) {
                 console.error("Ошибка при обработке запроса:", err);
                 res.writeHead(500, { "Content-Type": "application/json" });
@@ -396,10 +398,15 @@ function userRouters(req, res) {
                 return res.end(JSON.stringify({ success: false, message: "Все поля обязательны" }));
             }
 
+            if (!isValidPassword(newPassword)) {
+                res.writeHead(400, { "Content-Type": "application/json" });
+                return res.end(JSON.stringify({ success: false, message: "Пароль должен быть не менее 8 символов, содержать букву и цифру" }));
+            }
+
             // Проверяем код
-            const storedCode = verificationCodes.get(email);
-            if (storedCode && storedCode === code) {
+            if (isValidVerificationCode(email, code)) {
                 verificationCodes.delete(email); // Удаляем использованный код
+                clearVerificationAttempts(email);
 
                 // Хэшируем новый пароль
                 const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -412,8 +419,13 @@ function userRouters(req, res) {
                 return res.end(JSON.stringify({ success: true, message: "Пароль успешно изменен!" }));
             }
 
-            res.writeHead(400, { "Content-Type": "application/json" });
-            return res.end(JSON.stringify({ success: false, message: "Неверный код" }));
+            const attemptsRemaining = MAX_VERIFICATION_ATTEMPTS - (verificationAttempts.get(email) || 0) - 1;
+            const canRetry = registerVerificationFailure(email);
+            res.writeHead(canRetry ? 400 : 429, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({
+                success: false,
+                message: canRetry ? `Неверный код. Осталось попыток: ${attemptsRemaining}` : "Слишком много попыток. Запросите новый код."
+            }));
         });
     } else if (req.method === 'POST' && req.url === "/api/verify-reset-code") { //api/verify-reset-code
         let body = "";
@@ -428,13 +440,18 @@ function userRouters(req, res) {
             }
 
             // Проверяем код
-            const storedCode = verificationCodes.get(email);
-            if (storedCode && storedCode === code) {
+            if (isValidVerificationCode(email, code)) {
+                clearVerificationAttempts(email);
                 res.writeHead(200, { "Content-Type": "application/json" });
                 return res.end(JSON.stringify({ success: true, message: "Код подтвержден" }));
             } else {
-                res.writeHead(400, { "Content-Type": "application/json" });
-                return res.end(JSON.stringify({ success: false, message: "Неверный код" }));
+                const attemptsRemaining = MAX_VERIFICATION_ATTEMPTS - (verificationAttempts.get(email) || 0) - 1;
+                const canRetry = registerVerificationFailure(email);
+                res.writeHead(canRetry ? 400 : 429, { "Content-Type": "application/json" });
+                return res.end(JSON.stringify({
+                    success: false,
+                    message: canRetry ? `Неверный код. Осталось попыток: ${attemptsRemaining}` : "Слишком много попыток. Запросите новый код."
+                }));
             }
         });
     } else if (req.method === 'POST' && req.url === "/api/verify-code-login") { //verify-code-login
@@ -467,8 +484,7 @@ function userRouters(req, res) {
                     }
                 }
 
-                const storedCode = verificationCodes.get(email);
-                if (storedCode && storedCode === code) {
+                if (isValidVerificationCode(email, code)) {
                     // Сбрасываем счетчик неудачных попыток и удаляем код
                     verificationCodes.delete(email);
                     failedAttempts.delete(email);
@@ -506,14 +522,10 @@ function userRouters(req, res) {
                     const token = jwt.sign(
                         { userId: user.id, email: user.email },
                         SECRET_KEY,
-                        { expiresIn: "30d" }
+                        { expiresIn: JWT_EXPIRES_IN }
                     );
 
-                    // console.log("Фактический SECRET_KEY (log):", SECRET_KEY);
-                    // console.log("Длина ключа: (log)", SECRET_KEY.length);
-
-                    // console.log('токен передается с сервера:', token)
-
+                    setAuthCookie(res, token);
                     res.writeHead(200, { "Content-Type": "application/json" });
                     return res.end(JSON.stringify({
                         success: true,
@@ -557,7 +569,7 @@ function userRouters(req, res) {
             checkBlockStatus(req, res, async () => { // Затем проверяем статус блокировки
                 try {
                     const userQuery = `SELECT id, nickname, email FROM users WHERE id = $1`;
-                    const userResult = await client.query(userQuery, [req.user.userId]);
+                    const userResult = await client.query(userQuery, [req.user.id]);
 
                     if (userResult.rows.length === 0) {
                         res.writeHead(404, { "Content-Type": "application/json" });
@@ -566,7 +578,7 @@ function userRouters(req, res) {
 
                     const user = userResult.rows[0];
                     res.writeHead(200, { "Content-Type": "application/json" });
-                    res.end(JSON.stringify({ message: "Пользователь не найден." }));
+                    res.end(JSON.stringify({ user }));
                 } catch (err) {
                     console.error("Ошибка при получении профиля:", err);
                     res.writeHead(500, { "Content-Type": "application/json" });
@@ -598,17 +610,10 @@ function userRouters(req, res) {
             try {
                 const { credential } = JSON.parse(body);
 
-                console.log('Получен запрос на /auth/google');
-                console.log('Токен от Google:', credential);
-
-                // Проверка токена Google
-                console.log('Начинаем проверку токена Google...');
                 const ticket = await googleAuthClient.verifyIdToken({
                     idToken: credential,
-                    audience: '293649929067-v7prhbomfisdih5868evj6e66p6r42em.apps.googleusercontent.com',
+                    audience: process.env.GOOGLE_CLIENT_ID,
                 });
-
-                console.log('Токен успешно проверен Google');
                 const payload = ticket.getPayload();
 
                 // Проверка срока действия токена
@@ -618,25 +623,14 @@ function userRouters(req, res) {
                     return res.status(400).json({ success: false, message: 'Токен истёк' });
                 }
 
-                console.log('Данные пользователя от Google:', {
-                    email: payload.email,
-                    name: payload.name,
-                    googleId: payload.sub,
-                    avatar: payload.picture,
-                });
-
                 const { email, name, sub: googleId } = payload;
 
                 // Проверка, есть ли пользователь в базе данных
-                console.log('Проверяем, есть ли пользователь в базе данных...');
                 const userQuery = await client.query('SELECT * FROM users WHERE google_id = $1 OR email = $2', [googleId, email]);
-
-                console.log('Результат запроса к базе данных:', userQuery.rows);
                 let user;
 
                 if (userQuery.rows.length === 0) {
                     // Создаем нового пользователя
-                    console.log('Пользователь не найден. Создаем нового...');
                     const newUser = await client.query(
                         `INSERT INTO users (nickname, email, google_id, avatar, description, password_hash)
                     VALUES ($1, $2, $3, $4, $5, $6)
@@ -645,10 +639,8 @@ function userRouters(req, res) {
                     );
 
                     user = newUser.rows[0];
-                    console.log('Новый пользователь создан:', user);
                 } else {
                     // Пользователь уже существует
-                    console.log('Пользователь уже существует:', userQuery.rows[0]);
                     user = userQuery.rows[0];
                 }
 
@@ -668,11 +660,10 @@ function userRouters(req, res) {
                 const token = jwt.sign(
                     { userId: user.id, email: user.email },
                     SECRET_KEY,
-                    { expiresIn: '30d' } // Токен будет действителен 7 d
+                    { expiresIn: JWT_EXPIRES_IN }
                 );
 
-                // Возвращаем данные пользователя и токен Google
-                console.log('Отправляем ответ клиенту:', { success: true, user, token: credential });
+                setAuthCookie(res, token);
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
                     success: true,
@@ -689,6 +680,12 @@ function userRouters(req, res) {
             }
         });
     } else if (req.method === 'POST' && req.url === '/auth/vk') {
+        res.writeHead(501, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            success: false,
+            message: 'Вход через VK временно недоступен до завершения безопасной серверной верификации.'
+        }));
+        /*
         let body = '';
 
         // Собираем тело запроса
@@ -717,7 +714,6 @@ function userRouters(req, res) {
                 if (vkResponse.data.error) {
                     console.error('Ошибка проверки токена VK:', vkResponse.data.error);
                     return res.status(400).json({ success: false, message: 'Неверный токен VK' });
-                }
 
                 const vkUser = vkResponse.data.response[0];
                 console.log('Данные пользователя от VK:', {
@@ -789,6 +785,7 @@ function userRouters(req, res) {
 
                 // Возвращаем данные пользователя и токен
                 console.log('Отправляем ответ клиенту');
+                setAuthCookie(res, token);
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
                     success: true,
@@ -812,6 +809,7 @@ function userRouters(req, res) {
                 }));
             }
         });
+        */
     } else {
         serveStaticFile(req, res); // Обрабатываем статические файлы
     }  //14 маршрутов 

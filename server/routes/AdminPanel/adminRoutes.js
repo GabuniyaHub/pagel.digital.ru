@@ -4,11 +4,14 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const sendmailer = require("../../utils/adminpanel/sendmailer"); //  модуль отправки писем
 const transporter = require("./../../utils/adminpanel/sendmailer");
-const { storeCode, getCode, clearCode } = require("../../utils/adminpanel/verificationCodes"); // временное хранилище кодов
+const { storeCode, verifyCode } = require("../../utils/adminpanel/verificationCodes"); // временное хранилище кодов
+const { checkAdminInDB } = require('../../middleware/AdminPanel/adminMiddleware');
+const { requireJwtSecret } = require('../../config/auth');
+const crypto = require('crypto');
 // const { Client } = require("pg");
 
 // Разрешённые email'ы для админов
-const SECRET_KEY = process.env.JWT_SECRET || "guram";
+const SECRET_KEY = requireJwtSecret();
 // const allowedAdmins = ["fox78907864@gmail.com"];
 
 // 📩 Отправка кода
@@ -23,11 +26,11 @@ router.post("/send-admin", async (req, res) => {
             return res.status(403).json({ message: "Доступ запрещён" });
           }
 
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        const code = crypto.randomInt(100000, 1000000).toString();
         storeCode(email, code);
 
         const mailOptions = {
-            from: "bebrikivan199@gmail.com",
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
             to: email,
             subject: "Код подтверждения для входа в админ-панель",
             text: `Ваш код подтверждения: ${code}`,
@@ -52,21 +55,19 @@ router.post("/send-admin", async (req, res) => {
 router.post("/verify-admin", (req, res) => {
     const { email, code } = req.body;
   
-    console.log("Полученные данные:", { email, code });  // Логируем данные
-  
-    if (getCode(email) !== code) {
-      console.log("Неверный код");  // Логируем ошибку, если код не совпадает
-      return res.status(400).json({ message: "Неверный код" });
+    const verification = verifyCode(email, code);
+    if (!verification.valid) {
+      return res.status(verification.blocked ? 429 : 400).json({
+        message: verification.blocked ? "Слишком много попыток. Запросите новый код." : "Неверный код"
+      });
     }
-  
-    clearCode(email);
   
     const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
   
-    console.log("JWT токен выдан:", token);  // Логируем успешное создание токена
-  
     res.status(200).json({ token });
   });
+
+router.use('/admin', checkAdminInDB);
   
 // GET /api/admin/users
 router.get("/admin/users", async (req, res) => {

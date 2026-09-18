@@ -15,6 +15,8 @@ const cookieParser = require('cookie-parser');
 
 // Загрузка переменных окружения
 dotenv.config();
+const { requireJwtSecret } = require('./config/auth');
+requireJwtSecret();
 
 // Константы
 const PORT = process.env.PORT;

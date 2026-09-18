@@ -1,24 +1,26 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'bebrikivan199@gmail.com', 
-        pass: 'nqcq zhhj irek paiy'
+function getTransporter() {
+    const user = process.env.SMTP_USER;
+    const pass = process.env.SMTP_PASS;
+
+    if (!user || !pass) {
+        throw new Error('SMTP_USER and SMTP_PASS must be set');
     }
-});
+
+    return nodemailer.createTransport({ service: 'gmail', auth: { user, pass } });
+}
 
 async function sendConfirmationCode(email, confirmationCode, subject = 'Код подтверждения', text = `Ваш код подтверждения: ${confirmationCode}`) {
     try {
         const mailOptions = {
-            from: 'bebrikivan199@gmail.com',
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
             to: email,
             subject: subject,
             text: text
         };
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log("✅ Код на email отправлен:", info.response);
+        await getTransporter().sendMail(mailOptions);
         return { success: true, message: 'Код отправлен' };
     } catch (error) {
         console.error("❌ Ошибка при отправке кода.", error);

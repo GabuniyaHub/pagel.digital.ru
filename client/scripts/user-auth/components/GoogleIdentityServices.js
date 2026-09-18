@@ -24,7 +24,6 @@ async function handleCredentialResponse(response) {
           // Сохраняем токен и данные пользователя в localStorage
           localStorage.setItem('jwt', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
-          document.cookie = `jwt=${data.token}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
 
     
           // Перенаправляем пользователя
