@@ -1,10 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    fetch('/account', { credentials: 'include' })
-        .then(response => {
-            if (response.ok) window.location.replace('/account');
-        })
-        .catch(() => {});
-
     const form = document.getElementById('registerForm');
     const termsCheckbox = document.getElementById('termsCheckbox');
 

@@ -1,14 +1,3 @@
-async function redirectAuthenticatedUser() {
-    try {
-        const response = await fetch('/account', { credentials: 'include' });
-        if (response.ok) window.location.replace('/account');
-    } catch {
-        // Страница входа должна оставаться доступной при недоступном API.
-    }
-}
-
-redirectAuthenticatedUser();
-
 document.getElementById('loginForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
