@@ -2,7 +2,7 @@
 export async function getPublicData() {
   try {
     // Берём userId из URL
-    const pathParts = window.location.pathname.split("/");
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
     const userId = pathParts[pathParts.length - 1];
 
     if (!userId) throw new Error('userId не найден в URL');
@@ -18,6 +18,7 @@ export async function getPublicData() {
     return data;
   } catch (err) {
     console.error('Ошибка при получении публичных данных:', err);
+    throw err;
   }
 }
 

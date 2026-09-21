@@ -101,7 +101,7 @@ router.post('/save-settings', verifyToken, upload.single('avatar'), async (req, 
 // ROUTES PUBLIC
 // API-роут для получения публичного профиля пользователя
 router.get('/public/:userId', checkBlockStatusWithoutToken, async (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../client/pages/account/accountPublic.html'));
+  res.sendFile(path.join(__dirname, '../../../client/pages/account/pl-gl-public-profile.html'));
 });
 
 // API-роут для отображения публичного профиля пользователя (EJS) без проверки токена

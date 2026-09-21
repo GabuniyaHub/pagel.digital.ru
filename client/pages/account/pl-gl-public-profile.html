@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="icon" type="image/svg+xml" href="../../assets/images/pl-gl-logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/images/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/images/favicon-180x180.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="../../assets/styles/header/navbar.css">
+<link rel="stylesheet" href="../../assets/styles/header/search/search.css">
+<link rel="stylesheet" href="../../assets/styles/account/account.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia+Sans+Extra+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<title>PL-GL — Публичный профиль</title>
+<style>
+:root{
+  --pl-primary:#3b4d61;--pl-secondary:#65758e;--pl-dark:#1e2833;
+  --pl-bg:#f5f7fa;--pl-card:#fff;--pl-border:#e2e8f0;--pl-muted:#718096;
+  --pl-soft:#eef3f8;--pl-gradient:linear-gradient(135deg,#3b4d61,#65758e);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--pl-bg);color:#1a1a1a;font-family:Inter,Arial,sans-serif}
+a{text-decoration:none;color:inherit}
+button,input,textarea{font:inherit}
+.pl-header{position:sticky;top:0;z-index:50;height:76px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--pl-border);backdrop-filter:blur(14px)}
+.pl-header-inner{max-width:1440px;height:100%;margin:auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+.pl-logo{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:800;color:var(--pl-primary)}
+.pl-logo img{width:37px;height:37px;object-fit:contain}
+.pl-home{display:inline-flex;align-items:center;gap:9px;color:var(--pl-primary);font-weight:700;padding:10px 16px;border-radius:12px}
+.pl-home:hover{background:var(--pl-soft)}
+.pl-shell{max-width:1440px;margin:0 auto;padding:30px 32px 70px}
+.dashboard{display:grid;grid-template-columns:250px minmax(0,1fr) 300px;gap:22px}
+.card{background:var(--pl-card);border:1px solid var(--pl-border);border-radius:var(--radius);box-shadow:0 10px 30px rgba(59,77,97,.055)}
+.sidebar{padding:20px;align-self:start;position:sticky;top:98px}
+.user-mini{padding:4px 4px 20px;border-bottom:1px solid var(--pl-border);margin-bottom:14px}
+.user-mini-top{display:flex;align-items:center;gap:12px}
+.avatar{width:58px;height:58px;border-radius:50%;object-fit:cover;background:var(--pl-soft)}
+.user-mini strong{display:block;font-size:16px;color:var(--pl-primary)}
+.premium{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:999px;background:#e5eef9;color:#3b5f89;font-size:10px;font-weight:800;letter-spacing:.5px}
+.mini-role{font-size:12px;color:var(--pl-muted);margin-top:7px}
+.side-nav{display:grid;gap:5px}
+.side-nav a{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:12px;color:#52657b;font-size:14px;font-weight:600}
+.side-nav a:hover,.side-nav a.active{background:#edf4fb;color:var(--pl-primary)}
+.is-disabled{opacity:.5;cursor:not-allowed!important;pointer-events:none}
+.side-nav i{width:20px;text-align:center;font-size:16px}
+.main-column{min-width:0}
+.hero-account{position:relative;min-height:285px;overflow:hidden;padding:34px 38px;background:var(--pl-gradient);border-radius:var(--radius);color:#fff;box-shadow:0 16px 38px rgba(59,77,97,.18)}
+.hero-account:after{content:"▶";position:absolute;right:60px;bottom:25px;font-size:190px;line-height:1;color:rgba(255,255,255,.07);transform:rotate(-8deg)}
+.hero-content{position:relative;z-index:2;max-width:620px}
+.profile-row{display:flex;align-items:center;gap:18px}
+.hero-avatar{width:88px;height:88px;border-radius:50%;border:5px solid rgba(255,255,255,.55);background:#fff}
+.hero-name{font-size:27px;font-weight:800}
+.hero-name .edit{font-size:15px;opacity:.8;margin-left:8px}
+.hero-sub{margin-top:5px;color:rgba(255,255,255,.72);font-size:13px}
+.hero-desc{margin:18px 0 25px;max-width:560px;color:rgba(255,255,255,.9);line-height:1.55;font-size:14px}
+.hero-stats{display:flex;gap:0}
+.hero-stat{min-width:125px;padding-right:22px;margin-right:22px;border-right:1px solid rgba(255,255,255,.2)}
+.hero-stat:last-child{border:0}
+.hero-stat strong{display:block;font-size:18px}.hero-stat span{font-size:11px;color:rgba(255,255,255,.7)}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.quick-card{padding:18px;min-height:132px}
+.quick-icon{width:39px;height:39px;border-radius:12px;background:#eaf2fb;color:var(--pl-primary);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.quick-card h3{margin:0;font-size:13px;color:#62748a;font-weight:600}.quick-value{margin-top:5px;font-size:21px;font-weight:800;color:var(--pl-primary)}
+.quick-btn{display:block;margin-top:13px;padding:8px 10px;text-align:center;border-radius:9px;background:#eaf2fb;color:var(--pl-primary);font-size:12px;font-weight:700}
+.content-card{padding:20px}
+.section-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-top h2{margin:0;font-family:"Sofia Sans Extra Condensed",sans-serif;font-size:30px;letter-spacing:.4px;color:#202a35}
+.section-top a{font-size:12px;color:var(--pl-secondary);font-weight:700}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--pl-border);padding-bottom:10px;margin-bottom:14px}
+.tab-btn{border:0;background:transparent;padding:9px 15px;border-radius:999px;color:#64748b;cursor:pointer;font-weight:700;font-size:12px}
+.tab-btn.active{background:var(--pl-gradient);color:#fff}
+.tab-content{display:none}.tab-content.active{display:block}
+.empty-state{min-height:220px;border:1px dashed #d8e0e9;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px}
+.empty-icon{width:62px;height:62px;border-radius:50%;background:#edf4fb;color:#5d7898;display:flex;align-items:center;justify-content:center;font-size:25px;margin-bottom:13px}
+.empty-state h3{margin:0 0 6px;color:var(--pl-primary);font-size:16px}.empty-state p{margin:0;max-width:450px;color:var(--pl-muted);font-size:12px;line-height:1.5}
+.public-listing{display:flex;align-items:center;gap:14px;padding:14px;margin-bottom:10px;border:1px solid var(--pl-border);border-radius:14px;background:#fff;color:var(--pl-primary);transition:.2s ease}
+.public-listing:hover{border-color:#b8c8d8;box-shadow:0 8px 20px rgba(59,77,97,.08);transform:translateY(-1px)}
+.public-listing img{width:52px;height:52px;flex:0 0 52px;border-radius:12px;object-fit:cover;background:var(--pl-soft)}
+.public-listing strong,.public-listing span{display:block}
+.public-listing span{margin-top:5px;color:var(--pl-muted);font-size:12px}
+.primary-btn{display:inline-flex;margin-top:16px;padding:11px 18px;border-radius:10px;background:var(--pl-gradient);color:#fff;font-size:12px;font-weight:700;border:0;cursor:pointer}
+.right-column{display:grid;align-content:start;gap:20px}
+.right-card{padding:20px}.right-card h2{margin:0 0 12px;color:var(--pl-primary);font-size:17px}
+.action-list{display:grid}.action{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #edf1f5;color:#52657b;font-size:13px;font-weight:600}.action:last-child{border:0}.action-icon{width:36px;height:36px;border-radius:50%;background:#edf4fb;display:flex;align-items:center;justify-content:center;color:var(--pl-primary)}.action i:last-child{margin-left:auto;color:#9aa8b7;font-size:11px}
+.message{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid #edf1f5}.message:last-child{border:0}.message-avatar{width:38px;height:38px;border-radius:50%;background:#e8f0f8;display:flex;align-items:center;justify-content:center;color:var(--pl-primary);flex-shrink:0}.message strong{display:block;color:var(--pl-primary);font-size:12px}.message p{margin:4px 0 0;color:var(--pl-muted);font-size:11px}.message time{display:block;color:#9aa8b7;font-size:9px;margin-top:3px}
+.promo{padding:20px;color:#fff;background:var(--pl-gradient);overflow:hidden;position:relative}.promo:after{content:"▶";position:absolute;right:-12px;bottom:-30px;font-size:120px;color:rgba(255,255,255,.08)}.promo h3{position:relative;z-index:1;margin:0;font-size:16px;max-width:180px}.promo p{position:relative;z-index:1;color:rgba(255,255,255,.75);font-size:11px;line-height:1.5;max-width:190px}.promo a{position:relative;z-index:1;display:inline-flex;padding:9px 13px;border-radius:9px;background:#fff;color:var(--pl-primary);font-size:11px;font-weight:800}
+.settings-panel{padding:20px}.settings-panel label{display:block;margin:0 0 7px;color:var(--pl-primary);font-size:12px;font-weight:700}.settings-panel input,.settings-panel textarea{width:100%;padding:11px 12px;margin-bottom:15px;border:1px solid var(--pl-border);border-radius:10px;outline:none}.settings-panel input:focus,.settings-panel textarea:focus{box-shadow:0 0 0 3px #eaf1f8;border-color:#aebdce}
+.pl-footer{background:#1e2833;color:#aeb8c5;padding:28px 32px;text-align:center}.pl-footer a{color:#d6dde5;margin:0 9px;font-size:12px}
+@media(max-width:1150px){.dashboard{grid-template-columns:220px minmax(0,1fr)}.right-column{grid-column:1/-1;grid-template-columns:1fr 1fr}.hero-account:after{right:10px}.quick-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.pl-header-inner{padding:0 16px}.pl-shell{padding:18px 14px 50px}.dashboard{display:block}.sidebar{position:static;margin-bottom:16px}.side-nav{grid-template-columns:repeat(2,1fr)}.right-column{display:grid;grid-template-columns:1fr}.hero-account{padding:24px;min-height:320px}.hero-stats{flex-wrap:wrap;gap:12px}.hero-stat{min-width:90px;margin:0;padding:0 12px 0 0}.quick-grid{grid-template-columns:1fr 1fr}.pl-logo span{display:none}}
+@media(max-width:480px){.side-nav{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.hero-account{padding:20px}.profile-row{align-items:flex-start}.hero-avatar{width:70px;height:70px}.hero-name{font-size:22px}.tabs{overflow:auto}.tab-btn{white-space:nowrap}}
+</style>
+</head>
+<body>
+<header class="pl-header">
+  <div class="pl-header-inner">
+    <a href="/pages/index.html" class="pl-logo" aria-label="PL-GL — Каталог">
+      <img src="../../assets/images/pl-gl-logo.svg" alt="PL-GL"><span>PL-GL</span>
+    </a>
+    <a href="/pages/index.html" class="pl-home"><i class="fas fa-store"></i> Каталог</a>
+  </div>
+</header>
+
+<div class="pl-shell">
+  <div class="dashboard">
+    <aside class="sidebar card">
+      <div class="user-mini">
+        <div class="user-mini-top">
+          <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Аватар" class="avatar profile-img">
+          <div>
+            <strong class="profile-name">Пользователь</strong>
+            <span class="premium">PREMIUM</span>
+            <div class="mini-role">Пользователь PL-GL</div>
+          </div>
+        </div>
+      </div>
+      <nav class="side-nav">
+        <a href="/pages/index.html" class="active"><i class="fas fa-store"></i> Каталог</a>
+        <a href="#profile"><i class="fas fa-user"></i> Профиль</a>
+        <a href="#ads"><i class="fas fa-briefcase"></i> Объявления</a>
+        <a href="#" class="is-disabled" aria-disabled="true"><i class="far fa-heart"></i> Избранное</a>
+        <a href="#" class="is-disabled" aria-disabled="true"><i class="far fa-comment-dots"></i> Сообщения</a>
+        <a href="#" class="is-disabled" aria-disabled="true"><i class="fas fa-wallet"></i> Платежи</a>
+        <a href="#" class="is-disabled" aria-disabled="true"><i class="fas fa-gear"></i> Настройки</a>
+      </nav>
+    </aside>
+
+    <main class="main-column">
+      <section class="hero-account" id="profile">
+        <div class="hero-content">
+          <div class="profile-row">
+            <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Profile" class="hero-avatar profile-img">
+            <div>
+              <div class="hero-name profile-name">Пользователь <span class="edit">✎</span></div>
+              <div class="hero-sub">Пользователь PL-GL · <span class="badge-verified">VERIFIED</span></div>
+            </div>
+          </div>
+          <p class="hero-desc profile-desc">Рады видеть вас в вашем кабинете! Здесь вы можете управлять объявлениями, следить за заказами и развивать свой профиль.</p>
+          <div class="hero-stats">
+            <div class="hero-stat">⭐ <strong>0,0</strong><span>Рейтинг</span></div>
+            <div class="hero-stat">◉ <strong>0</strong><span>Сделок</span></div>
+            <div class="hero-stat">💬 <strong>0</strong><span>Сообщения</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-grid">
+        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-briefcase"></i></div><h3>Объявления</h3><div class="quick-value">0</div><a class="quick-btn" href="#ads">Открыть</a></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-star"></i></div><h3>Отзывы</h3><div class="quick-value">0</div><a class="quick-btn" href="#reviews">Открыть</a></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-wallet"></i></div><h3>Платежи</h3><div class="quick-value">Скоро</div><span class="quick-btn is-disabled">Недоступно</span></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-comment-dots"></i></div><h3>Связь</h3><div class="quick-value">Скоро</div><span class="quick-btn is-disabled">Недоступно</span></article>
+      </section>
+
+      <section class="content-card card">
+        <div class="section-top"><h2>Активность</h2><a href="#ads">Все объявления →</a></div>
+        <div class="tabs">
+<button class="tab-btn active" onclick="openTab(event,'reviews')">Отзывы</button>
+<button class="tab-btn" onclick="openTab(event,'deals')">Сделки</button>
+<button class="tab-btn" onclick="openTab(event,'ads')">Объявления</button>
+<button class="tab-btn" onclick="openTab(event,'contacts')">Контакты</button>
+</div>
+        <div id="reviews" class="tab-content active"><div class="empty-state"><div class="empty-icon"><i class="far fa-star"></i></div><h3>Пока нет отзывов</h3><p>После завершения сделок здесь появятся отзывы пользователей.</p></div></div>
+        <div id="deals" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-handshake"></i></div><h3>Пока нет сделок</h3><p>Здесь будет отображаться история ваших сделок.</p></div></div>
+        <div id="ads" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-file-circle-plus"></i></div><h3>Активных объявлений пока нет</h3><p>Когда пользователь разместит объявление, оно появится здесь.</p></div></div>
+        <div id="contacts" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-address-book"></i></div><h3>Контакты</h3><p>Контактная информация пользователя будет отображаться здесь.</p></div></div>
+        
+      </section>
+    </main>
+
+    <aside class="right-column">
+      <section class="right-card card">
+        <h2>Быстрые действия</h2>
+        <div class="action-list">
+          <a class="action" href="#ads"><span class="action-icon"><i class="fas fa-briefcase"></i></span>Мои объявления <i class="fas fa-chevron-right"></i></a>
+          <a class="action is-disabled" href="#" aria-disabled="true"><span class="action-icon"><i class="far fa-heart"></i></span>Избранное <i class="fas fa-lock"></i></a>
+          <a class="action is-disabled" href="#" aria-disabled="true"><span class="action-icon"><i class="far fa-comment"></i></span>Сообщения <i class="fas fa-lock"></i></a>
+          <a class="action is-disabled" href="#" aria-disabled="true"><span class="action-icon"><i class="fas fa-gear"></i></span>Настройки <i class="fas fa-lock"></i></a>
+        </div>
+      </section>
+
+      <section class="right-card card" id="messages">
+        <div class="section-top"><h2>Связь с пользователем</h2></div>
+        <div class="empty-state"><div class="empty-icon"><i class="fas fa-comment-slash"></i></div><h3>Сообщения временно недоступны</h3><p>Связь между пользователями будет добавлена позже.</p></div>
+      </section>
+
+      <section class="promo card">
+        <h3>Развивайте свой YouTube-канал вместе с PL-GL</h3>
+        <p>Каналы, монтаж, дизайн, продвижение и другие услуги в одном месте.</p>
+        <a href="/pages/index.html">Перейти в каталог →</a>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<footer class="pl-footer">
+  <div style="font-size:20px;font-weight:800;margin-bottom:10px;color:#fff">▷ PL-GL</div>
+  <p>© 2025 PL-GL | Все права защищены</p>
+  <nav><a href="/lending/policy">Политика конфиденциальности</a><a href="/lending/terms">Условия использования</a><a href="/lending/contacts">Контакты</a></nav>
+</footer>
+
+<script src="../../scripts/account/public/openTab.js"></script>
+<script type="module" src="../../scripts/account/public/publicProfile.js"></script>
+
+</body>
+</html>
