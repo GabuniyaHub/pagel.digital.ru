@@ -32,7 +32,7 @@ router.post('/logout', (req, res) => {
 // ROUTES PRIVATE
 // API-роут для получения страницы аккаунта
 router.get('/', verifyToken, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/pages/account/account.html'));
+  res.sendFile(path.join(__dirname, '../../../client/pages/account/account.html'));
 });
 
 // API-роут для получения данных аккаунта
@@ -101,7 +101,7 @@ router.post('/save-settings', verifyToken, upload.single('avatar'), async (req, 
 // ROUTES PUBLIC
 // API-роут для получения публичного профиля пользователя
 router.get('/public/:userId', checkBlockStatusWithoutToken, async (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/pages/account/accountPublic.html'));
+  res.sendFile(path.join(__dirname, '../../../client/pages/account/accountPublic.html'));
 });
 
 // API-роут для отображения публичного профиля пользователя (EJS) без проверки токена
