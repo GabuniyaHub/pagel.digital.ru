@@ -1,23 +1,12 @@
 export async function fetchUserSettings() {
     const token = localStorage.getItem("jwt") || sessionStorage.getItem("jwt");
     
-    if (!token) {
-        // throw new Error("Пользователь не авторизован");
-        Swal.fire({
-            icon: 'error',
-            title: 'Ошибка',
-            text: 'Пожалуйста, авторизуйтесь для доступа к настройкам.'
-        });
-        window.location.href = '/pages/login/login.html';
-        return;
-    }
-
     try {
     const res = await fetch("/settings/get", { 
         method: "GET", 
         headers: { 
             "Content-Type": "application/json", 
-            'Authorization': `Bearer ${token}`
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
         },
         // credentials: "include" 
     });
@@ -36,7 +25,7 @@ export async function confirmAction(route, payload) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
       },
       body: JSON.stringify(payload)
     });

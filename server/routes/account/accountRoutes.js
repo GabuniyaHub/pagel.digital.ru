@@ -16,7 +16,7 @@ const optionalAuth = require('../../middleware/MarketMiddleware/optionalAuth'); 
 const upload = require('../../config/multer/multer'); // Импорт multer для загрузки файлов
 const { Client } = require('pg');
 const uploadProfileAvatar = require('../../config/multer/profileAvatar');
-router.post('/upload', upload.single('file'), (req, res) => {
+router.post('/upload', verifyToken, upload.single('file'), (req, res) => {
   res.json({ filename: req.file.filename });
 });
 
@@ -31,6 +31,18 @@ router.post('/logout', (req, res) => {
 
 
 // ROUTES PRIVATE
+router.get('/session', optionalAuth, async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    if (!req.user) return res.json({ user: null });
+    try {
+        const { rows } = await client.query('SELECT id, nickname, avatar, is_premium, verified, is_blocked FROM users WHERE id=$1', [req.user.id]);
+        const user = rows[0];
+        if (user && !user.is_blocked && req.headers.authorization?.startsWith('Bearer ')) {
+            res.cookie('jwt', req.headers.authorization.slice(7), { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/' });
+        }
+        res.json({ user: user && !user.is_blocked ? user : null });
+    } catch { res.status(503).json({ error: 'Не удалось проверить вход. Попробуйте позже.' }); }
+});
 // API-роут для получения страницы аккаунта
 // JWT из localStorage нельзя приложить к обычной навигации браузера. Сам шаблон
 // не содержит приватных данных: их защищает /get/data ниже.
@@ -116,6 +128,9 @@ router.post('/save-settings', verifyToken, uploadProfileAvatar, async (req, res)
             [nickname, description, avatar, JSON.stringify(contacts), req.user.id]
         );
         if (!result.rows[0]) { await cleanup(); return res.status(404).json({ error: 'Профиль не найден.' }); }
+        await require('../../services/notifications').create(req.user.id, {
+            title: 'Профиль обновлён', message: 'Изменения профиля и контактов сохранены.', url: '/account#settings'
+        }).catch(error => console.error('Profile notification:', error));
         res.json({ message: 'Настройки сохранены', user: result.rows[0] });
     } catch (err) {
         await cleanup();
@@ -131,7 +146,7 @@ router.get('/public/:userId', checkBlockStatusWithoutToken, async (req, res) => 
 });
 
 // API-роут для отображения публичного профиля пользователя (EJS) без проверки токена
-router.get('/public/get/:userId', checkBlockStatusWithoutToken, async (req, res) => {
+router.get('/public/get/:userId', verifyToken, checkBlockStatusWithoutToken, async (req, res) => {
     try {
         const userId = req.params.userId;
 

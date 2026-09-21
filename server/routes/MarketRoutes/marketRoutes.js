@@ -1329,6 +1329,18 @@ router.post('/add/comments', verifyToken, checkBlockStatusWithoutToken, async (r
     `;
     const result = await client.query(insertQuery, [listingId, userId, message]);
 
+    // Notification failures must not turn an already saved comment into an error.
+    try {
+      const owner = await client.query('SELECT user_id, name FROM listings WHERE id=$1', [listingId]);
+      if (owner.rows[0] && String(owner.rows[0].user_id) !== String(userId)) {
+        await require('../../services/notifications').create(owner.rows[0].user_id, {
+          title: 'Новый комментарий',
+          message: 'К вашему объявлению «' + (owner.rows[0].name || 'Без названия') + '» добавлен комментарий.',
+          url: '/account#ads'
+        });
+      }
+    } catch (error) { console.error('Comment notification:', error); }
+
     // Получаем ник и аватар
     const userQuery = await client.query(
       'SELECT nickname AS author_name, avatar AS author_avatar FROM users WHERE id = $1',

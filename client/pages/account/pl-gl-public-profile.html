@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<script src="/scripts/common/app.js?v=1"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -96,7 +97,7 @@ button,input,textarea{font:inherit}
 @media(max-width:760px){.pl-header-inner{padding:0 16px}.pl-shell{padding:18px 14px 50px}.dashboard{display:block}.sidebar{position:static;margin-bottom:16px}.side-nav{grid-template-columns:repeat(2,1fr)}.right-column{display:grid;grid-template-columns:1fr}.hero-account{padding:24px;min-height:320px}.hero-stats{flex-wrap:wrap;gap:12px}.hero-stat{min-width:90px;margin:0;padding:0 12px 0 0}.quick-grid{grid-template-columns:1fr 1fr}.pl-logo span{display:none}}
 @media(max-width:480px){.side-nav{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.hero-account{padding:20px}.profile-row{align-items:flex-start}.hero-avatar{width:70px;height:70px}.hero-name{font-size:22px}.tabs{overflow:auto}.tab-btn{white-space:nowrap}}
 </style>
-<link rel="stylesheet" href="/assets/styles/account/profile-ui.css?v=2">
+<link rel="stylesheet" href="/assets/styles/account/profile-ui.css?v=4">
 </head>
 <body>
 <header class="pl-header">
@@ -113,22 +114,22 @@ button,input,textarea{font:inherit}
     <aside class="sidebar card">
       <div class="user-mini">
         <div class="user-mini-top">
-          <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Аватар" class="avatar profile-img">
+          <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Аватар" class="avatar" data-viewer-avatar>
           <div>
-            <strong class="profile-name">Пользователь</strong>
-            <span class="premium" hidden>PREMIUM</span>
+            <strong data-viewer-name>Пользователь</strong>
+            <span class="viewer-premium" data-viewer-premium hidden>PREMIUM</span>
             <div class="mini-role">Пользователь PL-GL</div>
           </div>
         </div>
       </div>
       <nav class="side-nav">
         <a href="/pages/index.html" class="active"><i class="fas fa-store"></i> Каталог</a>
-        <a href="#profile"><i class="fas fa-user"></i> Профиль</a>
-        <a href="#ads"><i class="fas fa-briefcase"></i> Объявления</a>
-        <a href="#" class="is-disabled" aria-disabled="true"><i class="far fa-heart"></i> Избранное</a>
+        <a href="/account"><i class="fas fa-user"></i> Мой профиль</a>
+        <a href="/account#ads"><i class="fas fa-briefcase"></i> Мои объявления</a>
+        <a href="#favorites" class="select-favorites"><i class="far fa-heart"></i> Избранное</a>
         <a href="#" class="is-disabled" aria-disabled="true"><i class="far fa-comment-dots"></i> Сообщения</a>
         <a href="#" class="is-disabled" aria-disabled="true"><i class="fas fa-wallet"></i> Платежи</a>
-        <a href="#" class="is-disabled" aria-disabled="true"><i class="fas fa-gear"></i> Настройки</a>
+        <a href="/account#settings"><i class="fas fa-gear"></i> Настройки</a>
       </nav>
     </aside>
 
@@ -208,5 +209,6 @@ button,input,textarea{font:inherit}
 <script src="../../scripts/account/public/openTab.js?v=profile-3"></script>
 <script type="module" src="../../scripts/account/public/publicProfile.js?v=profile-3"></script>
 
+<script type="module" src="/scripts/favoritesModal/favoritesMain.js?v=profile-3"></script>
 </body>
 </html>

@@ -21,6 +21,19 @@ async function createTables() {
             );
         `);
 
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS notifications (
+                id BIGSERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                title VARCHAR(160) NOT NULL,
+                message TEXT NOT NULL,
+                url TEXT NOT NULL DEFAULT '/account',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                read_at TIMESTAMPTZ
+            );
+            CREATE INDEX IF NOT EXISTS notifications_user_id_idx ON notifications(user_id, id DESC);
+        `);
+
         // Создание таблицы медиа сетей
         await client.query(`
             CREATE TABLE IF NOT EXISTS platforms (

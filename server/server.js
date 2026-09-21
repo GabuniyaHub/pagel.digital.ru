@@ -45,6 +45,8 @@ createTables();
 const app = express();
 app.use(cookieParser());
 app.use(express.json({ limit: '5mb', type: 'application/json' }));
+app.use(require('./middleware/pageAuth'));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../client/pages/index.html')));
 app.use(express.static(path.join(__dirname, "../client")));
 app.use('/pages', express.static(path.join(__dirname, 'client', 'pages')));
 app.use('/assets', express.static(path.join(__dirname, 'client', 'assets')));
@@ -71,9 +73,14 @@ app.use((req, res, next) => {
 });
 
 // Подключение маршрутов
+app.use(['/market', '/settings', '/chat'], (req, res, next) => {
+  if (['/uploads/', '/assets/', '/scripts/', '/static/'].some(prefix => req.path.startsWith(prefix))) return next();
+  require('./middleware/authMiddleware').verifyToken(req, res, next);
+});
 app.use("/admin", adminRoutes); // Маршруты для админ-панели
 app.use("/market", marketRoutes); // Маршруты для медиа-сетей
 app.use("/account", accountRoutes); // Маршруты для аккаунта
+app.use("/account/notifications", require('./routes/notificationRoutes'));
 app.use("/settings", settingsRoutes); // Маршруты для настроек
 app.use("/chat", chatRoutes); // Маршруты для чата
 app.use("/lending", lendingRoutes); //Лендинг
@@ -105,7 +112,6 @@ const server = http.createServer((req, res) => {
     req.url.startsWith("/api/verify-reset-code") ||
     req.url.startsWith("/api/verify-code-login") ||
     req.url.startsWith("/api/profile") ||
-    req.url === "/" ||
     req.url.startsWith("/auth/google") ||
     req.url.startsWith("/auth/vk")
   ) {
