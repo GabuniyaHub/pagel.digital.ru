@@ -21,6 +21,3 @@ export async function getPublicData() {
     throw err;
   }
 }
-
-// Запуск сразу
-getPublicData();

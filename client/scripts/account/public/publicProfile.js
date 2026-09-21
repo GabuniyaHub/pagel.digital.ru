@@ -88,6 +88,49 @@ function renderListings(listings, categories, platforms) {
     });
 }
 
+function contactLink(type, value) {
+    const contact = String(value).trim();
+    if (type === 'email') return `mailto:${contact}`;
+    if (type === 'telegram') return `https://t.me/${contact.replace(/^@/, '')}`;
+    if (type === 'whatsapp') return `https://wa.me/${contact.replace(/\D/g, '')}`;
+    if (type === 'instagram') return `https://instagram.com/${contact.replace(/^@/, '')}`;
+    if (type === 'vk') return /^https?:\/\//i.test(contact) ? contact : `https://${contact}`;
+    return null;
+}
+
+function renderContacts(contacts) {
+    const container = document.getElementById('contacts');
+    if (!container) return;
+    container.replaceChildren();
+    const labels = {
+        telegram: ['fab fa-telegram', 'Telegram'], email: ['fas fa-envelope', 'Email'],
+        whatsapp: ['fab fa-whatsapp', 'WhatsApp'], vk: ['fab fa-vk', 'VK'], instagram: ['fab fa-instagram', 'Instagram']
+    };
+    const entries = Object.entries(contacts || {}).filter(([type, value]) => labels[type] && value);
+    if (!entries.length) {
+        container.appendChild(createEmptyState('fas fa-address-book', 'Контакты не указаны', 'Пользователь пока не добавил способы связи.'));
+        return;
+    }
+    entries.forEach(([type, value]) => {
+        const item = document.createElement('a');
+        item.className = 'public-listing';
+        item.href = contactLink(type, value) || '#';
+        item.target = '_blank';
+        item.rel = 'noopener noreferrer';
+        const icon = document.createElement('i');
+        icon.className = labels[type][0];
+        icon.style.width = '24px';
+        const content = document.createElement('div');
+        const title = document.createElement('strong');
+        title.textContent = labels[type][1];
+        const detail = document.createElement('span');
+        detail.textContent = value;
+        content.append(title, detail);
+        item.append(icon, content);
+        container.append(item);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const data = await getPublicData();
@@ -107,9 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.premium').forEach(element => {
             element.hidden = !user.is_premium;
         });
-        document.querySelectorAll('.badge-verified').forEach(element => {
-            element.hidden = !user.verified;
-        });
+        document.querySelectorAll('.badge-verified').forEach(element => { element.hidden = !(user.verified || user.is_verified); });
 
         const stats = document.querySelectorAll('.hero-stat strong');
         if (stats[0]) stats[0].textContent = Number(user.rating || 0).toFixed(1);
@@ -122,6 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         renderReviews(reviews);
         renderListings(listings, categories, platforms);
+        renderContacts(user.contacts);
     } catch (error) {
         console.error('Ошибка загрузки публичного профиля:', error);
         document.querySelector('.main-column')?.prepend(

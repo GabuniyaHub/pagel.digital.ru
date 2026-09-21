@@ -1,18 +1,21 @@
 // getData.js
-export async function getData() {
-  try {
-    const res = await fetch('/account/get/data', { method: 'GET', credentials: 'include' });
+let dataRequest;
 
-    if (!res.ok) throw new Error(`Ошибка HTTP: ${res.status}`);
+export function getData() {
+  if (dataRequest) return dataRequest;
 
-    const data = await res.json();
-    // console.log('Полученные данные:', data);
+  dataRequest = fetch('/account/get/data', { method: 'GET', credentials: 'include' })
+    .then(async res => {
 
-    return data;
-  } catch (err) {
-    console.error('Ошибка при получении данных:', err);
-  }
+      if (!res.ok) throw new Error(`Ошибка HTTP: ${res.status}`);
+
+      return res.json();
+    })
+    .catch(err => {
+      dataRequest = undefined;
+      console.error('Ошибка при получении данных:', err);
+      throw err;
+    });
+
+  return dataRequest;
 }
-
-// Запуск функции сразу при загрузке модуля
-getData();

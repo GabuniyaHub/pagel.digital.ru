@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="../../assets/styles/header/search/search.css">
 <link rel="stylesheet" href="../../assets/styles/account/account.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia+Sans+Extra+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
-<title>PL-GL — Публичный профиль</title>
+<title>PL-GL — Личный кабинет</title>
 <style>
 :root{
   --pl-primary:#3b4d61;--pl-secondary:#65758e;--pl-dark:#1e2833;
@@ -28,8 +28,8 @@ a{text-decoration:none;color:inherit}
 button,input,textarea{font:inherit}
 .pl-header{position:sticky;top:0;z-index:50;height:76px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--pl-border);backdrop-filter:blur(14px)}
 .pl-header-inner{max-width:1440px;height:100%;margin:auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
-.pl-logo{display:flex;align-items:center;color:var(--pl-primary)}
-.pl-logo img{width:58px;height:58px;object-fit:contain}
+.pl-logo{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:800;color:var(--pl-primary)}
+.pl-logo img{width:37px;height:37px;object-fit:contain}
 .pl-home{display:inline-flex;align-items:center;gap:9px;color:var(--pl-primary);font-weight:700;padding:10px 16px;border-radius:12px}
 .pl-home:hover{background:var(--pl-soft)}
 .pl-shell{max-width:1440px;margin:0 auto;padding:30px 32px 70px}
@@ -79,11 +79,6 @@ button,input,textarea{font:inherit}
 .empty-state{min-height:220px;border:1px dashed #d8e0e9;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px}
 .empty-icon{width:62px;height:62px;border-radius:50%;background:#edf4fb;color:#5d7898;display:flex;align-items:center;justify-content:center;font-size:25px;margin-bottom:13px}
 .empty-state h3{margin:0 0 6px;color:var(--pl-primary);font-size:16px}.empty-state p{margin:0;max-width:450px;color:var(--pl-muted);font-size:12px;line-height:1.5}
-.public-listing{display:flex;align-items:center;gap:14px;padding:14px;margin-bottom:10px;border:1px solid var(--pl-border);border-radius:14px;background:#fff;color:var(--pl-primary);transition:.2s ease}
-.public-listing:hover{border-color:#b8c8d8;box-shadow:0 8px 20px rgba(59,77,97,.08);transform:translateY(-1px)}
-.public-listing img{width:52px;height:52px;flex:0 0 52px;border-radius:12px;object-fit:cover;background:var(--pl-soft)}
-.public-listing strong,.public-listing span{display:block}
-.public-listing span{margin-top:5px;color:var(--pl-muted);font-size:12px}
 .primary-btn{display:inline-flex;margin-top:16px;padding:11px 18px;border-radius:10px;background:var(--pl-gradient);color:#fff;font-size:12px;font-weight:700;border:0;cursor:pointer}
 .right-column{display:grid;align-content:start;gap:20px}
 .right-card{padding:20px}.right-card h2{margin:0 0 12px;color:var(--pl-primary);font-size:17px}
@@ -91,6 +86,7 @@ button,input,textarea{font:inherit}
 .message{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid #edf1f5}.message:last-child{border:0}.message-avatar{width:38px;height:38px;border-radius:50%;background:#e8f0f8;display:flex;align-items:center;justify-content:center;color:var(--pl-primary);flex-shrink:0}.message strong{display:block;color:var(--pl-primary);font-size:12px}.message p{margin:4px 0 0;color:var(--pl-muted);font-size:11px}.message time{display:block;color:#9aa8b7;font-size:9px;margin-top:3px}
 .promo{padding:20px;color:#fff;background:var(--pl-gradient);overflow:hidden;position:relative}.promo:after{content:"▶";position:absolute;right:-12px;bottom:-30px;font-size:120px;color:rgba(255,255,255,.08)}.promo h3{position:relative;z-index:1;margin:0;font-size:16px;max-width:180px}.promo p{position:relative;z-index:1;color:rgba(255,255,255,.75);font-size:11px;line-height:1.5;max-width:190px}.promo a{position:relative;z-index:1;display:inline-flex;padding:9px 13px;border-radius:9px;background:#fff;color:var(--pl-primary);font-size:11px;font-weight:800}
 .settings-panel{padding:20px}.settings-panel label{display:block;margin:0 0 7px;color:var(--pl-primary);font-size:12px;font-weight:700}.settings-panel input,.settings-panel textarea{width:100%;padding:11px 12px;margin-bottom:15px;border:1px solid var(--pl-border);border-radius:10px;outline:none}.settings-panel input:focus,.settings-panel textarea:focus{box-shadow:0 0 0 3px #eaf1f8;border-color:#aebdce}
+.activity-item{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid #edf1f5;color:#52657b;font-size:13px}.activity-item:last-child{border:0}.activity-item strong{display:block;color:var(--pl-primary);margin-bottom:4px}.activity-item small{color:var(--pl-muted)}.listing-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.listing-action{border:0;border-radius:8px;padding:7px 9px;background:#eaf2fb;color:var(--pl-primary);font-size:11px;font-weight:700;cursor:pointer}.listing-action.danger{background:#fff0f0;color:#af4c4c}.avatar-picker{display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:0;border:0;background:transparent;cursor:pointer;text-align:left}.avatar-picker span{font-size:12px;color:var(--pl-secondary);font-weight:600}
 .pl-footer{background:#1e2833;color:#aeb8c5;padding:28px 32px;text-align:center}.pl-footer a{color:#d6dde5;margin:0 9px;font-size:12px}
 @media(max-width:1150px){.dashboard{grid-template-columns:220px minmax(0,1fr)}.right-column{grid-column:1/-1;grid-template-columns:1fr 1fr}.hero-account:after{right:10px}.quick-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.pl-header-inner{padding:0 16px}.pl-shell{padding:18px 14px 50px}.dashboard{display:block}.sidebar{position:static;margin-bottom:16px}.side-nav{grid-template-columns:repeat(2,1fr)}.right-column{display:grid;grid-template-columns:1fr}.hero-account{padding:24px;min-height:320px}.hero-stats{flex-wrap:wrap;gap:12px}.hero-stat{min-width:90px;margin:0;padding:0 12px 0 0}.quick-grid{grid-template-columns:1fr 1fr}.pl-logo span{display:none}}
@@ -100,10 +96,10 @@ button,input,textarea{font:inherit}
 <body>
 <header class="pl-header">
   <div class="pl-header-inner">
-    <a href="/pages/index.html" class="pl-logo" aria-label="PL-GL — Каталог">
-      <img src="../../assets/images/pl-gl-logo.svg" alt="PL-GL">
+    <a href="../../pages/index.html" class="pl-logo" aria-label="PL-GL — Главная">
+      <img src="../../assets/images/pl-gl-logo.svg" alt="PL-GL"><span>PL-GL</span>
     </a>
-    <a href="/pages/index.html" class="pl-home"><i class="fas fa-store"></i> Каталог</a>
+    <a href="../../pages/index.html" class="pl-home"><i class="fas fa-house"></i> Главная</a>
   </div>
 </header>
 
@@ -121,13 +117,13 @@ button,input,textarea{font:inherit}
         </div>
       </div>
       <nav class="side-nav">
-        <a href="/pages/index.html" class="active"><i class="fas fa-store"></i> Каталог</a>
+        <a href="../../pages/index.html" class="active"><i class="fas fa-house"></i> Главная</a>
         <a href="#profile"><i class="fas fa-user"></i> Профиль</a>
-        <a href="#ads"><i class="fas fa-briefcase"></i> Объявления</a>
-        <a href="#" class="is-disabled" aria-disabled="true"><i class="far fa-heart"></i> Избранное</a>
-        <a href="#" class="is-disabled" aria-disabled="true"><i class="far fa-comment-dots"></i> Сообщения</a>
-        <a href="#" class="is-disabled" aria-disabled="true"><i class="fas fa-wallet"></i> Платежи</a>
-        <a href="#" class="is-disabled" aria-disabled="true"><i class="fas fa-gear"></i> Настройки</a>
+        <a href="#ads"><i class="fas fa-briefcase"></i> Мои объявления</a>
+        <a href="#favorites" class="select-favorites"><i class="far fa-heart"></i> Избранное</a>
+        <a href="#messages"><i class="far fa-comment-dots"></i> Сообщения</a>
+        <a href="#payments" class="is-disabled" aria-disabled="true"><i class="fas fa-wallet"></i> Платежи</a>
+        <a href="#settings"><i class="fas fa-gear"></i> Настройки</a>
       </nav>
     </aside>
 
@@ -137,24 +133,24 @@ button,input,textarea{font:inherit}
           <div class="profile-row">
             <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Profile" class="hero-avatar profile-img">
             <div>
-              <div class="hero-name profile-name">Пользователь</div>
+              <div class="hero-name profile-name">Пользователь <span class="edit">✎</span></div>
               <div class="hero-sub">Пользователь PL-GL · <span class="badge-verified">VERIFIED</span></div>
             </div>
           </div>
           <p class="hero-desc profile-desc">Рады видеть вас в вашем кабинете! Здесь вы можете управлять объявлениями, следить за заказами и развивать свой профиль.</p>
           <div class="hero-stats">
             <div class="hero-stat">⭐ <strong>0,0</strong><span>Рейтинг</span></div>
-            <div class="hero-stat">◉ <strong>0</strong><span>Объявления</span></div>
+            <div class="hero-stat">◉ <strong>0</strong><span>Сделок</span></div>
             <div class="hero-stat">💬 <strong>0</strong><span>Отзывы</span></div>
           </div>
         </div>
       </section>
 
       <section class="quick-grid">
-        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-briefcase"></i></div><h3>Объявления</h3><div class="quick-value">0</div><a class="quick-btn" href="#ads">Открыть</a></article>
-        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-star"></i></div><h3>Отзывы</h3><div class="quick-value">0</div><a class="quick-btn" href="#reviews">Открыть</a></article>
-        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-wallet"></i></div><h3>Платежи</h3><div class="quick-value">Скоро</div><span class="quick-btn is-disabled">Недоступно</span></article>
-        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-comment-dots"></i></div><h3>Связь</h3><div class="quick-value">Скоро</div><span class="quick-btn is-disabled">Недоступно</span></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-wallet"></i></div><h3>Баланс</h3><div class="quick-value">0,00 ₽</div><a class="quick-btn" href="#payments">Пополнить</a></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="fas fa-briefcase"></i></div><h3>Мои объявления</h3><div class="quick-value">0</div><a class="quick-btn" href="#ads">Перейти</a></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="far fa-heart"></i></div><h3>Избранное</h3><div class="quick-value">0</div><a class="quick-btn select-favorites" href="#favorites">Перейти</a></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="far fa-comment-dots"></i></div><h3>Сообщения</h3><div class="quick-value">0</div><span class="quick-btn is-disabled">Скоро</span></article>
       </section>
 
       <section class="content-card card">
@@ -163,13 +159,32 @@ button,input,textarea{font:inherit}
 <button class="tab-btn active" onclick="openTab(event,'reviews')">Отзывы</button>
 <button class="tab-btn" onclick="openTab(event,'deals')">Сделки</button>
 <button class="tab-btn" onclick="openTab(event,'ads')">Объявления</button>
-<button class="tab-btn" onclick="openTab(event,'contacts')">Контакты</button>
+<button class="tab-btn" onclick="openTab(event,'settings')">Настройки</button>
 </div>
         <div id="reviews" class="tab-content active"><div class="empty-state"><div class="empty-icon"><i class="far fa-star"></i></div><h3>Пока нет отзывов</h3><p>После завершения сделок здесь появятся отзывы пользователей.</p></div></div>
         <div id="deals" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-handshake"></i></div><h3>Пока нет сделок</h3><p>Здесь будет отображаться история ваших сделок.</p></div></div>
-        <div id="ads" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-file-circle-plus"></i></div><h3>Активных объявлений пока нет</h3><p>Когда пользователь разместит объявление, оно появится здесь.</p></div></div>
+        <div id="ads" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-file-circle-plus"></i></div><h3>У вас пока нет активных объявлений</h3><p>Разместите первое объявление и начните работать с YouTube-проектами.</p><a class="primary-btn" href="../../pages/market/sell.html">Разместить объявление →</a></div></div>
         <div id="contacts" class="tab-content"><div class="empty-state"><div class="empty-icon"><i class="fas fa-address-book"></i></div><h3>Контакты</h3><p>Контактная информация пользователя будет отображаться здесь.</p></div></div>
         
+<div id="settings" class="tab-content">
+  <form class="settings-panel settings-form">
+    <label>Имя</label><input name="nickname" maxlength="50" type="text" value="Имя пользователя">
+    <label>Описание</label><textarea name="description" maxlength="125" rows="3">Опытный продавец цифровых товаров</textarea>
+    <label>Аватар</label>
+    <button type="button" class="avatar-picker" id="avatar-picker">
+      <img id="avatar-image" src="../../assets/images/pl-gl-default-avatar.svg" alt="Аватар" class="avatar" style="width:72px;height:72px">
+      <span>Нажмите, чтобы выбрать изображение</span>
+    </button>
+    <input type="file" id="avatar-file" accept="image/*" style="display:none">
+    <label>Telegram</label><input type="text" name="telegram" placeholder="@username">
+    <label>Email</label><input type="text" name="email" placeholder="example@mail.com">
+    <label>WhatsApp</label><input type="text" name="whatsapp" placeholder="+71234567890">
+    <label>VK</label><input type="text" name="vk" placeholder="vk.com/username">
+    <label>Instagram</label><input type="text" name="instagram" placeholder="@username">
+    <button type="submit" class="primary-btn">Сохранить изменения</button>
+  </form>
+</div>
+
       </section>
     </main>
 
@@ -177,22 +192,25 @@ button,input,textarea{font:inherit}
       <section class="right-card card">
         <h2>Быстрые действия</h2>
         <div class="action-list">
-          <a class="action" href="#ads"><span class="action-icon"><i class="fas fa-briefcase"></i></span>Объявления пользователя <i class="fas fa-chevron-right"></i></a>
-          <a class="action is-disabled" href="#" aria-disabled="true"><span class="action-icon"><i class="far fa-heart"></i></span>Избранное <i class="fas fa-lock"></i></a>
-          <a class="action is-disabled" href="#" aria-disabled="true"><span class="action-icon"><i class="far fa-comment"></i></span>Сообщения <i class="fas fa-lock"></i></a>
-          <a class="action is-disabled" href="#" aria-disabled="true"><span class="action-icon"><i class="fas fa-gear"></i></span>Настройки <i class="fas fa-lock"></i></a>
+          <a class="action" href="#ads"><span class="action-icon"><i class="fas fa-briefcase"></i></span>Мои объявления <i class="fas fa-chevron-right"></i></a>
+          <a class="action select-favorites" href="#favorites"><span class="action-icon"><i class="far fa-heart"></i></span>Избранное <i class="fas fa-chevron-right"></i></a>
+          <span class="action is-disabled"><span class="action-icon"><i class="far fa-comment"></i></span>Сообщения <i class="fas fa-lock"></i></span>
+          <a class="action" href="#settings"><span class="action-icon"><i class="fas fa-gear"></i></span>Редактировать профиль <i class="fas fa-chevron-right"></i></a>
+          <a class="action settings-link" href="#"><span class="action-icon"><i class="fas fa-shield-halved"></i></span>Безопасность аккаунта <i class="fas fa-chevron-right"></i></a>
         </div>
       </section>
 
       <section class="right-card card" id="messages">
-        <div class="section-top"><h2>Связь с пользователем</h2></div>
-        <div class="empty-state"><div class="empty-icon"><i class="fas fa-comment-slash"></i></div><h3>Сообщения временно недоступны</h3><p>Связь между пользователями будет добавлена позже.</p></div>
+        <div class="section-top"><h2>Последние сообщения</h2><a href="#messages">Все →</a></div>
+        <div class="message"><div class="message-avatar"><i class="fas fa-play"></i></div><div><strong>PL-GL Support</strong><p>Спасибо за ваш интерес!</p><time>2 ч назад</time></div></div>
+        <div class="message"><div class="message-avatar"><i class="fab fa-youtube"></i></div><div><strong>YouTube Marketplace</strong><p>Новый отклик на ваше объявление</p><time>5 ч назад</time></div></div>
+        <div class="message"><div class="message-avatar"><i class="fas fa-user"></i></div><div><strong>Пользователь</strong><p>Отличная работа!</p><time>1 д назад</time></div></div>
       </section>
 
       <section class="promo card">
         <h3>Развивайте свой YouTube-канал вместе с PL-GL</h3>
         <p>Каналы, монтаж, дизайн, продвижение и другие услуги в одном месте.</p>
-        <a href="/pages/index.html">Перейти в каталог →</a>
+        <a href="/market/youtube">Перейти в каталог →</a>
       </section>
     </aside>
   </div>
@@ -201,11 +219,15 @@ button,input,textarea{font:inherit}
 <footer class="pl-footer">
   <div style="font-size:20px;font-weight:800;margin-bottom:10px;color:#fff">▷ PL-GL</div>
   <p>© 2025 PL-GL | Все права защищены</p>
-  <nav><a href="/lending/policy">Политика конфиденциальности</a><a href="/lending/terms">Условия использования</a><a href="/lending/contacts">Контакты</a></nav>
+  <nav><a href="#">Политика конфиденциальности</a><a href="#">Условия использования</a><a href="#">Контакты</a></nav>
 </footer>
 
-<script src="../../scripts/account/public/openTab.js"></script>
-<script type="module" src="../../scripts/account/public/publicProfile.js"></script>
+<script src="../../scripts/account/private/openTab.js"></script>
+<script type="module" src="../../scripts/account/private/getData.js"></script>
+<script type="module" src="../../scripts/account/private/insertData.js"></script>
+<script type="module" src="../../scripts/account/private/formSettings.js"></script>
+<script type="module" src="../../scripts/settingsModal/main.js"></script>
+<script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script>
 
 </body>
 </html>

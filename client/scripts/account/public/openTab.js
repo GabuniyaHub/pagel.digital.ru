@@ -1,9 +1,14 @@
 function openTab(evt, tabName) {
-    let i, tabcontent, tabbuttons;
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
-    tabbuttons = document.getElementsByTagName("button");
-    for (i = 0; i < tabbuttons.length; i++) { tabbuttons[i].classList.remove("active"); }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.classList.add("active");
+    const tab = document.getElementById(tabName);
+    if (!tab) return;
+    document.querySelectorAll('.tab-content').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(button => button.classList.remove('active'));
+    tab.classList.add('active');
+    evt?.currentTarget?.classList.add('active');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href="#ads"], a[href="#reviews"], a[href="#deals"], a[href="#contacts"]').forEach(link => {
+        link.addEventListener('click', () => openTab(null, link.getAttribute('href').slice(1)));
+    });
+});

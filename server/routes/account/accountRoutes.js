@@ -32,7 +32,7 @@ router.post('/logout', (req, res) => {
 // ROUTES PRIVATE
 // API-роут для получения страницы аккаунта
 router.get('/', verifyToken, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../client/pages/account/account.html'));
+  res.sendFile(path.join(__dirname, '../../../client/pages/account/pl-gl-personal-account.html'));
 });
 
 // API-роут для получения данных аккаунта
@@ -87,7 +87,7 @@ router.post('/save-settings', verifyToken, upload.single('avatar'), async (req, 
         // Обновление данных пользователя
         await client.query(
             'UPDATE users SET nickname = $1, description = $2, avatar = $3, contacts = $4 WHERE id = $5',
-            [nickname, description, avatar, contacts, userId]
+            [nickname, description, avatar, parsedContacts, userId]
         );
 
         res.json({ message: 'Настройки успешно сохранены' });
