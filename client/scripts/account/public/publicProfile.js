@@ -1,6 +1,22 @@
 import { getPublicData } from './getDataPublic.js';
 
-const fallbackAvatar = '../../assets/images/pl-gl-default-avatar.svg';
+const fallbackAvatar = '/assets/images/pl-gl-default-avatar.svg';
+
+function getAvatarUrl(value) {
+    if (!value || value.startsWith('../../') || value.startsWith('../')) {
+        return fallbackAvatar;
+    }
+
+    if (value.startsWith('/')) {
+        return value;
+    }
+
+    try {
+        return new URL(value, window.location.origin).toString();
+    } catch {
+        return fallbackAvatar;
+    }
+}
 
 function setText(selector, value) {
     document.querySelectorAll(selector).forEach(element => {
@@ -79,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const { user, listings = [], reviews = [], categories = [], platforms = [] } = data;
         const displayName = user.nickname || 'Пользователь PL-GL';
-        const avatar = user.avatar || fallbackAvatar;
+        const avatar = getAvatarUrl(user.avatar);
 
         document.title = `${displayName} — публичный профиль PL-GL`;
         setText('.profile-name', displayName);
