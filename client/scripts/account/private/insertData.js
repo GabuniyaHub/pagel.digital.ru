@@ -1,4 +1,5 @@
-import { getData } from './getData.js';
+import { applyBadges, renderProfileContacts } from '../profileShared.js?v=profile-3';
+import { getData } from './getData.js?v=profile-3';
 
 const fallbackAvatar = '/assets/images/pl-gl-default-avatar.svg';
 
@@ -169,8 +170,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         setText('.profile-name', name);
         setText('.profile-desc', user.description || 'Начинающий продавец');
         document.querySelectorAll('.profile-img').forEach(image => { image.src = avatar; image.alt = `Аватар ${name}`; });
-        document.querySelectorAll('.premium').forEach(element => { element.hidden = !user.is_premium; });
-        document.querySelectorAll('.badge-verified').forEach(element => { element.hidden = !(user.verified || user.is_verified); });
+        applyBadges(user);
+        renderProfileContacts(user.contacts);
         const stats = document.querySelectorAll('.hero-stat strong');
         if (stats[0]) stats[0].textContent = Number(user.rating || 0).toFixed(1);
         if (stats[1]) stats[1].textContent = deals.length;

@@ -1,30 +1,18 @@
-export async function getFavorites() {
-  const token = localStorage.getItem("jwt") || sessionStorage.getItem("jwt");
-
-  if (!token) {
-    throw new Error("Необходима авторизация для получения избранного");
-  }
-
-  const res = await fetch("/market/get/favorites", {
-    headers: {
-      "Authorization": `Bearer ${token}`
-    }
-  });
-
-  if (!res.ok) {
-    throw new Error(`Ошибка получения избранного: ${res.status}`);
-  }
-
-  return res.json();
+function authHeaders() {
+    const token = localStorage.getItem('jwt') || sessionStorage.getItem('jwt');
+    return token ? { Authorization: 'Bearer ' + token } : {};
 }
-
+async function readResponse(response) {
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(response.status === 401 ? 'Войдите в аккаунт, чтобы открыть избранное.' : result.error || result.message || 'Не удалось обновить избранное.');
+    return result;
+}
+export async function getFavorites() {
+    return readResponse(await fetch('/market/get/favorites', { credentials: 'include', headers: authHeaders() }));
+}
 export async function removeFavorite(listingId) {
-  return fetch("/market/favorites/remove", {
-    method: "POST",
-    headers: { 
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("jwt") || sessionStorage.getItem("jwt")}` },
-    body: JSON.stringify({ listingId }),
-  });
-  
+    return readResponse(await fetch('/market/favorites/remove', {
+        method: 'POST', credentials: 'include', headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listingId })
+    }));
 }

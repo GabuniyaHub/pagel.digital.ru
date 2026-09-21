@@ -1,150 +1,106 @@
 export function initFavoritesLogic({ overlay, listContainer, closeBtn, getFavorites, removeFavorite }) {
-  document.querySelector(".select-favorites").addEventListener("click", async (e) => {
-    e.preventDefault();
-    overlay.classList.remove("hidden");
-
-    listContainer.innerHTML = "<p>Загрузка...</p>";
-    const data = await getFavorites();
-
-    if (!data.favorites?.length) {
-      listContainer.innerHTML = "<p>Нет избранных товаров</p>";
-      return;
-    }
-
-    const items = await Promise.all(data.favorites.map(async (fav) => {
-      let parsingData = null;
-
-      if (fav.link) {
-        try {
-          const res = await fetch(`/market/avatar?url=${encodeURIComponent(fav.link)}&platform=${encodeURIComponent(fav.platform_slug)}`);
-          if (res.ok) {
-            parsingData = await res.json();
-          }
-        } catch (err) {
-          console.error("Ошибка получения avatar:", err);
-        }
-      }
-
-      const themeMap = {
-        1: "Авто",
-        2: "Бизнес",
-        3: "Дизайн",
-        4: "Животные",
-        5: "ЖЦА 30+",
-        6: "Здоровье",
-        7: "Знакомство и общение",
-        8: "Игры",
-        9: "IT",
-        10: "Культура",
-        11: "Кино",
-        12: "Кулинария",
-        13: "Литература",
-        14: "Мода и красота",
-        15: "Молодежные до 18",
-        16: "МЦА 30+",
-        17: "Наука и факты",
-        18: "Недвижимость",
-        19: "Новости и сми",
-        20: "Образование",
-        21: "Объявления",
-        22: "Политика",
-        23: "Природа",
-        24: "Психология",
-        25: "Развлечения",
-        26: "Регион. порталы",
-        27: "Религия",
-        28: "Ремонт",
-        29: "Работа",
-        30: "Семья",
-        31: "Спорт",
-        32: "Товары и услуги",
-        33: "Туризм",
-        34: "Фото",
-        35: "Хобби",
-        36: "Эзотерика",
-        37: "Эротика",
-        38: "Юмор",
-        39: "Другое",
-        40: "Фан группы",
-        41: "Крипта/NFT"
+    let opener;
+    let previousOverflow;
+    let generation = 0;
+    let favorites = [];
+    const empty = text => {
+        const el = document.createElement('div');
+        el.className = 'favorites-state';
+        el.textContent = text;
+        listContainer.replaceChildren(el);
     };
-
-      const subscribers = fav.subscribers
-        ? `👥 ${fav.subscribers} подписчиков`
-        : parsingData?.subscribers
-        ? `👥 ${parsingData.subscribers} подписчиков`
-        : "";
-
-      const avatar = fav.cover 
-        ? `/market/uploads/${fav.cover}`
-        : parsingData?.avatar || "/img/no-image.png";
-
-
-      return `
-        <div class="favorite-item">
-            <img src="${avatar}" alt="ava" class="ad-avatar">
-            <div class="ad-info">
-            <strong>${fav.name || parsingData?.title || "Без названия"}</strong>
-            <div>${fav.platform_name}</div>
-            <div>${fav.theme && themeMap[fav.theme] ? `Тема: ${themeMap[fav.theme]}` : ''}</div>
-            <span>${subscribers}</span>
-            <div>
-                <span>${fav.price ? fav.price + " $" : "Цена не указана"}</span>
-                <span>👁 ${fav.views || 0}</span>
-            </div>
-            </div>
-            <div class="ad-actions">
-                <a href="/market/${fav.platform_slug}/${fav.category_name}/items/${fav.listing_id}" class="go-to-listing-btn">Перейти</a>
-                <button class="remove-favorite" data-id="${fav.listing_id}">Удалить</button>
-            </div>
-        </div>
-        `;
-    }));
-
-    listContainer.innerHTML = items.join("");
-  });
-
-  // Закрытие
-  closeBtn.addEventListener("click", () => overlay.classList.add("hidden"));
-  overlay.addEventListener("click", (ev) => {
-    if (ev.target === overlay) overlay.classList.add("hidden");
-  });
-
-  // Удаление
-  listContainer.addEventListener("click", async (e) => {
-    if (e.target.classList.contains("remove-favorite")) {
-        const id = e.target.dataset.id;
-        
-        // Show SweetAlert2 confirmation dialog
-        const result = await Swal.fire({
-        title: 'Вы уверены?',
-        text: "Вы не сможете отменить это!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Да, удалить!',
-        customClass: {
-            popup: 'my-swal-popup'
-        },
-        zIndex: 11
+    const render = () => {
+        listContainer.replaceChildren();
+        document.querySelectorAll('[data-favorites-count]').forEach(el => { el.textContent = favorites.length; });
+        if (!favorites.length) { empty('Пока здесь пусто. Нажмите на сердечко у понравившегося объявления, чтобы сохранить его.'); return; }
+        favorites.forEach(fav => {
+            const item = document.createElement('article');
+            item.className = 'favorite-item';
+            const img = document.createElement('img');
+            img.src = fav.cover ? '/market/uploads/' + fav.cover : '/assets/images/pl-gl-default-avatar.svg';
+            img.alt = '';
+            img.addEventListener('error', () => { img.src = '/assets/images/pl-gl-default-avatar.svg'; }, { once: true });
+            const detail = document.createElement('div');
+            detail.className = 'favorite-detail';
+            const title = document.createElement('strong');
+            title.textContent = fav.name || 'Объявление';
+            const meta = document.createElement('p');
+            meta.textContent = [fav.platform_name, fav.subscribers != null ? fav.subscribers + ' подписчиков' : ''].filter(Boolean).join(' · ');
+            const price = document.createElement('strong');
+            price.textContent = fav.price != null ? fav.price + ' $' : 'Цена не указана';
+            detail.append(title, meta, price);
+            const actions = document.createElement('div');
+            actions.className = 'favorite-actions';
+            const link = document.createElement('a');
+            link.href = '/market/' + [fav.platform_slug, fav.category_name, 'items', fav.listing_id].map(encodeURIComponent).join('/');
+            link.textContent = 'Открыть';
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.textContent = 'Убрать';
+            remove.addEventListener('click', async () => {
+                remove.disabled = true;
+                try {
+                    await removeFavorite(fav.listing_id);
+                    favorites = favorites.filter(item => String(item.listing_id) !== String(fav.listing_id));
+                    render();
+                    closeBtn.focus();
+                } catch (error) {
+                    remove.disabled = false;
+                    const message = document.createElement('p');
+                    message.setAttribute('role', 'alert');
+                    message.textContent = error.message;
+                    detail.append(message);
+                }
+            });
+            actions.append(link, remove);
+            item.append(img, detail, actions);
+            listContainer.append(item);
         });
-        
-        // Check if the user confirmed the action
-        if (result.isConfirmed) {
-        // Call the API function to remove the item
-        await removeFavorite(id);
-        
-        // Remove the item from the DOM
-        e.target.closest(".favorite-item").remove();
-        
-        // Show a success message
-        Swal.fire(
-            'Удалено!',
-            'Товар был удален из избранного.',
-            'success'
-        );
+    };
+    async function load() {
+        const current = ++generation;
+        empty('Загружаем избранное…');
+        try {
+            const data = await getFavorites();
+            if (current !== generation) return;
+            favorites = Array.isArray(data.favorites) ? data.favorites : [];
+            render();
+        } catch (error) {
+            if (current !== generation) return;
+            empty(error.message);
+            const retry = document.createElement('button');
+            retry.className = 'favorites-retry';
+            retry.textContent = 'Повторить';
+            retry.addEventListener('click', load);
+            listContainer.append(retry);
         }
     }
-  });
+    const close = () => {
+        overlay.hidden = true;
+        generation++;
+        document.body.style.overflow = previousOverflow;
+        opener?.focus();
+    };
+    document.addEventListener('click', event => {
+        const trigger = event.target.closest('.select-favorites');
+        if (!trigger) return;
+        event.preventDefault();
+        opener = trigger;
+        previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        overlay.hidden = false;
+        closeBtn.focus();
+        load();
+    });
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+    overlay.addEventListener('keydown', event => {
+        if (event.key === 'Escape') { event.preventDefault(); close(); }
+        if (event.key === 'Tab') {
+            const nodes = [...overlay.querySelectorAll('a[href],button:not(:disabled)')];
+            const first = nodes[0], last = nodes[nodes.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+    });
 }

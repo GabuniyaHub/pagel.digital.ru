@@ -15,6 +15,7 @@ const optionalAuth = require('../../middleware/MarketMiddleware/optionalAuth'); 
 // MULTER  
 const upload = require('../../config/multer/multer'); // Импорт multer для загрузки файлов
 const { Client } = require('pg');
+const uploadProfileAvatar = require('../../config/multer/profileAvatar');
 router.post('/upload', upload.single('file'), (req, res) => {
   res.json({ filename: req.file.filename });
 });
@@ -89,36 +90,37 @@ router.get('/get/data', verifyToken, async (req, res) => {
 });
 
 // API-роут для сохранения настроек аккаунта
-router.post('/save-settings', verifyToken, upload.single('avatar'), async (req, res) => {
+router.post('/save-settings', verifyToken, uploadProfileAvatar, async (req, res) => {
+    const cleanup = async () => { if (req.file) await fs.promises.unlink(req.file.path).catch(() => {}); };
     try {
-        const userId = req.user.id;
-        const { nickname, description, contacts } = req.body;
-        let avatar = req.file ? `/market/uploads/avatars/custom/${req.file.filename}` : req.body.avatar; // путь к файлу
-
-        if (!nickname || !description || !contacts) {
-            return res.status(400).json({ error: 'Пожалуйста, заполните все поля' });
+        const nickname = typeof req.body.nickname === 'string' ? req.body.nickname.trim() : '';
+        const description = typeof req.body.description === 'string' ? req.body.description.trim() : '';
+        let contacts;
+        try { contacts = JSON.parse(req.body.contacts); } catch { contacts = null; }
+        if (!nickname || nickname.length > 50 || description.length > 125 || !contacts || typeof contacts !== 'object' || Array.isArray(contacts)) {
+            await cleanup();
+            return res.status(400).json({ error: 'Проверьте имя, описание и контакты.' });
         }
-
-        // Проверка контактов
-        let parsedContacts = {};
-        try {
-          parsedContacts = JSON.parse(contacts);
-        } catch (e) {
-          console.warn('Ошибка парсинга контактов', e);
-          return res.status(400).json({ message: 'Неверный формат контактов' });
+        contacts = Object.fromEntries(['telegram', 'email', 'whatsapp'].map(name => [name, typeof contacts[name] === 'string' ? contacts[name].trim() : '']));
+        contacts.telegram = contacts.telegram.replace(/^https?:\/\/(?:www\.)?t\.me\//i, '').replace(/^@/, '');
+        if (!Object.values(contacts).some(Boolean)
+            || (contacts.telegram && !/^[a-zA-Z0-9_]{5,32}$/.test(contacts.telegram))
+            || (contacts.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contacts.email))
+            || (contacts.whatsapp && !/^\+?[0-9\s\-()]{7,20}$/.test(contacts.whatsapp))) {
+            await cleanup();
+            return res.status(400).json({ error: 'Укажите корректный Telegram, email или WhatsApp.' });
         }
-
-        // Обновление данных пользователя
-        await client.query(
-            'UPDATE users SET nickname = $1, description = $2, avatar = $3, contacts = $4 WHERE id = $5',
-            [nickname, description, avatar, parsedContacts, userId]
+        const avatar = req.file ? '/market/uploads/avatars/custom/' + req.file.filename : null;
+        const result = await client.query(
+            'UPDATE users SET nickname = $1, description = $2, avatar = COALESCE($3, avatar), contacts = $4::jsonb WHERE id = $5 RETURNING id, nickname, description, avatar, contacts, verified, is_premium',
+            [nickname, description, avatar, JSON.stringify(contacts), req.user.id]
         );
-
-        res.json({ message: 'Настройки успешно сохранены' });
-
+        if (!result.rows[0]) { await cleanup(); return res.status(404).json({ error: 'Профиль не найден.' }); }
+        res.json({ message: 'Настройки сохранены', user: result.rows[0] });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Ошибка сервера' });
+        await cleanup();
+        console.error('Ошибка сохранения профиля:', err);
+        res.status(err.code === '23505' ? 409 : 500).json({ error: err.code === '23505' ? 'Это имя уже занято.' : 'Не удалось сохранить профиль.' });
     }
 });
 

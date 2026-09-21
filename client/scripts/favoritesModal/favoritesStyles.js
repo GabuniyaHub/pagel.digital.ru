@@ -1,135 +1,30 @@
 export function injectFavoritesStyles() {
-  const style = document.createElement("style");
-  style.textContent = `
-  .favorites-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    backdrop-filter: blur(4px);
-    transition: opacity 0.3s ease;
-  }
-  .favorites-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .favorites-modal {
-    background: #1e1e1e;
-    color: #f0f0f0;
-    padding: 25px;
-    border-radius: 16px;
-    max-width: 650px;
-    width: 90%;
-    max-height: 85vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease;
-  }
-
-  .favorites-modal h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: 600;
-    color: #ffd700;
-    text-align: center;
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    cursor: pointer;
-    font-size: 24px;
-    color: #ff4c4c;
-    transition: transform 0.2s ease, color 0.2s ease;
-  }
-  .close-btn:hover {
-    transform: rotate(90deg);
-    color: #ff0000;
-  }
-
-  .favorite-item {
-    display: flex;
-    align-items: center;
-    background: linear-gradient(145deg, #2a2a2a, #1b1b1b);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .favorite-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-  }
-
-  .favorite-item img {
-    width: 100px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-right: 20px;
-    flex-shrink: 0;
-    border: 2px solid #ffd700;
-    transition: transform 0.2s ease;
-  }
-  .favorite-item img:hover {
-    transform: scale(1.05);
-  }
-
-  .favorite-item .ad-info {
-    flex: 1;
-  }
-  .favorite-item .ad-info strong {
-    display: block;
-    font-size: 18px;
-    margin-bottom: 5px;
-    color: #ffd700;
-  }
-  .favorite-item .ad-info div, .favorite-item .ad-info span {
-    font-size: 14px;
-    margin-bottom: 3px;
-    color: #ccc;
-  }
-
-  .favorite-item .ad-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-left: 15px;
-  }
-  .favorite-item .go-to-listing-btn {
-    background: #ffd700;
-    color: #1e1e1e;
-    padding: 8px 14px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    text-align: center;
-    transition: background 0.3s ease;
-  }
-  .favorite-item .go-to-listing-btn:hover {
-    background: #ffb700;
-  }
-  .favorite-item button.remove-favorite {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 8px;
-    background: #ff4c4c;
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  .favorite-item button.remove-favorite:hover {
-    background: #ff0000;
-    transform: scale(1.05);
-  }
-  `;
-  document.head.appendChild(style);
+    if (document.getElementById('plgl-favorites-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'plgl-favorites-styles';
+    style.textContent = `
+      .favorites-overlay[hidden]{display:none!important}
+      .favorites-overlay{position:fixed;inset:0;z-index:1000;background:rgba(30,40,51,.48);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Inter,Arial,sans-serif;color:#3b4d61}
+      .favorites-overlay *{box-sizing:border-box}
+      .favorites-modal{width:780px;max-width:100%;max-height:88vh;overflow:auto;border-radius:22px;background:#f5f7fa;box-shadow:0 24px 80px #1e283333;border:1px solid #e2e8f0}
+      .favorites-heading{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:24px;background:#fff;border-bottom:1px solid #e2e8f0}
+      .favorites-heading h2{font-family:'Sofia Sans Extra Condensed',Inter,sans-serif;font-size:34px;color:#1e2833;margin:0;text-align:left}
+      .favorites-heading p{margin:5px 0 0;font-size:13px;color:#65758e}
+      .favorites-close{border:0;border-radius:12px;background:#eef3f8;color:#3b4d61;width:40px;height:40px;flex:none;font-size:27px;cursor:pointer}
+      .favorites-list{padding:24px;display:grid;gap:12px}
+      .favorite-item{display:flex;align-items:center;gap:16px;padding:18px;border-radius:16px;border:1px solid #e2e8f0;background:#fff;box-shadow:0 4px 16px #3b4d6108}
+      .favorite-item:hover{border-color:#bac7d5}
+      .favorite-item img{width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none}
+      .favorite-detail{flex:1;min-width:0;overflow-wrap:anywhere}
+      .favorite-detail strong{display:block;font-size:14px;color:#1e2833}
+      .favorite-detail p{font-size:12px;color:#65758e;margin:6px 0}
+      .favorite-actions{display:grid;gap:8px}
+      .favorite-actions a,.favorite-actions button,.favorites-retry{padding:10px 14px;font:600 12px Inter,Arial,sans-serif;border:0;border-radius:10px;cursor:pointer;text-align:center;text-decoration:none;background:linear-gradient(135deg,#3b4d61,#65758e);color:#fff}
+      .favorite-actions button{background:#eef3f8;color:#3b4d61}
+      .favorite-actions button:disabled{opacity:.5;cursor:wait}
+      .favorites-state{text-align:center;padding:45px 12px;color:#65758e;font-size:14px;line-height:1.7}
+      .favorites-overlay :focus-visible{outline:3px solid #aebdce;outline-offset:3px}
+      @media(max-width:560px){.favorites-overlay{padding:10px}.favorites-list,.favorites-heading{padding:16px}.favorite-item{flex-wrap:wrap}.favorite-actions{width:100%;grid-template-columns:1fr 1fr}.favorites-heading h2{font-size:30px}}
+    `;
+    document.head.append(style);
 }

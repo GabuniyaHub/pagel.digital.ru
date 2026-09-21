@@ -92,12 +92,13 @@ button,input,textarea{font:inherit}
 @media(max-width:760px){.pl-header-inner{padding:0 16px}.pl-shell{padding:18px 14px 50px}.dashboard{display:block}.sidebar{position:static;margin-bottom:16px}.side-nav{grid-template-columns:repeat(2,1fr)}.right-column{display:grid;grid-template-columns:1fr}.hero-account{padding:24px;min-height:320px}.hero-stats{flex-wrap:wrap;gap:12px}.hero-stat{min-width:90px;margin:0;padding:0 12px 0 0}.quick-grid{grid-template-columns:1fr 1fr}.pl-logo span{display:none}}
 @media(max-width:480px){.side-nav{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.hero-account{padding:20px}.profile-row{align-items:flex-start}.hero-avatar{width:70px;height:70px}.hero-name{font-size:22px}.tabs{overflow:auto}.tab-btn{white-space:nowrap}}
 </style>
+<link rel="stylesheet" href="/assets/styles/account/profile-ui.css?v=2">
 </head>
 <body>
 <header class="pl-header">
   <div class="pl-header-inner">
     <a href="../../pages/index.html" class="pl-logo" aria-label="PL-GL — Главная">
-      <img src="../../assets/images/pl-gl-logo.svg" alt="PL-GL"><span>PL-GL</span>
+      <img src="../../assets/images/pl-gl-logo.svg" alt="PL-GL">
     </a>
     <a href="../../pages/index.html" class="pl-home"><i class="fas fa-house"></i> Главная</a>
   </div>
@@ -111,7 +112,7 @@ button,input,textarea{font:inherit}
           <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Аватар" class="avatar profile-img">
           <div>
             <strong class="profile-name">Пользователь</strong>
-            <span class="premium">PREMIUM</span>
+            <span class="premium" hidden>PREMIUM</span>
             <div class="mini-role">Пользователь PL-GL</div>
           </div>
         </div>
@@ -134,7 +135,7 @@ button,input,textarea{font:inherit}
             <img src="../../assets/images/pl-gl-default-avatar.svg" alt="Profile" class="hero-avatar profile-img">
             <div>
               <div class="hero-name profile-name">Пользователь <span class="edit">✎</span></div>
-              <div class="hero-sub">Пользователь PL-GL · <span class="badge-verified">VERIFIED</span></div>
+              <div class="hero-sub">Пользователь PL-GL · <span class="badge-verified" hidden>VERIFIED</span></div>
             </div>
           </div>
           <p class="hero-desc profile-desc">Рады видеть вас в вашем кабинете! Здесь вы можете управлять объявлениями, следить за заказами и развивать свой профиль.</p>
@@ -149,7 +150,7 @@ button,input,textarea{font:inherit}
       <section class="quick-grid">
         <article class="quick-card card"><div class="quick-icon"><i class="fas fa-wallet"></i></div><h3>Баланс</h3><div class="quick-value">—</div><span class="quick-btn is-disabled">Скоро</span></article>
         <article class="quick-card card"><div class="quick-icon"><i class="fas fa-briefcase"></i></div><h3>Мои объявления</h3><div class="quick-value">0</div><a class="quick-btn" href="#ads">Перейти</a></article>
-        <article class="quick-card card"><div class="quick-icon"><i class="far fa-heart"></i></div><h3>Избранное</h3><div class="quick-value">0</div><a class="quick-btn select-favorites" href="#favorites">Перейти</a></article>
+        <article class="quick-card card"><div class="quick-icon"><i class="far fa-heart"></i></div><h3>Избранное</h3><div class="quick-value" data-favorites-count>0</div><a class="quick-btn select-favorites" href="#favorites">Перейти</a></article>
         <article class="quick-card card"><div class="quick-icon"><i class="far fa-comment-dots"></i></div><h3>Сообщения</h3><div class="quick-value">—</div><span class="quick-btn is-disabled">Скоро</span></article>
       </section>
 
@@ -159,6 +160,7 @@ button,input,textarea{font:inherit}
 <button class="tab-btn active" onclick="openTab(event,'reviews')">Отзывы</button>
 <button class="tab-btn" onclick="openTab(event,'deals')">Сделки</button>
 <button class="tab-btn" onclick="openTab(event,'ads')">Объявления</button>
+<button class="tab-btn" onclick="openTab(event,'contacts')">Контакты</button>
 <button class="tab-btn" onclick="openTab(event,'settings')">Настройки</button>
 </div>
         <div id="reviews" class="tab-content active"><div class="empty-state"><div class="empty-icon"><i class="far fa-star"></i></div><h3>Пока нет отзывов</h3><p>После завершения сделок здесь появятся отзывы пользователей.</p></div></div>
@@ -168,20 +170,23 @@ button,input,textarea{font:inherit}
         
 <div id="settings" class="tab-content">
   <form class="settings-panel settings-form">
-    <label>Имя</label><input name="nickname" maxlength="50" type="text" value="Имя пользователя">
-    <label>Описание</label><textarea name="description" maxlength="125" rows="3">Опытный продавец цифровых товаров</textarea>
-    <label>Аватар</label>
-    <button type="button" class="avatar-picker" id="avatar-picker">
-      <img id="avatar-image" src="../../assets/images/pl-gl-default-avatar.svg" alt="Аватар" class="avatar" style="width:72px;height:72px">
-      <span>Нажмите, чтобы выбрать изображение</span>
-    </button>
-    <input type="file" id="avatar-file" accept="image/*" style="display:none">
-    <label>Telegram</label><input type="text" name="telegram" placeholder="@username">
-    <label>Email</label><input type="text" name="email" placeholder="example@mail.com">
-    <label>WhatsApp</label><input type="text" name="whatsapp" placeholder="+71234567890">
-    <label>VK</label><input type="text" name="vk" placeholder="vk.com/username">
-    <label>Instagram</label><input type="text" name="instagram" placeholder="@username">
-    <button type="submit" class="primary-btn">Сохранить изменения</button>
+    <div class="settings-intro"><h2>Редактирование профиля</h2><p>Расскажите о себе и укажите, как с вами связаться.</p></div>
+    <fieldset><legend>Фото профиля</legend>
+      <button type="button" class="avatar-picker" id="avatar-picker"><img id="avatar-image" src="/assets/images/pl-gl-default-avatar.svg" alt="Предпросмотр аватара"><span>Выбрать фотографию</span></button>
+      <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp" hidden>
+      <p class="settings-hint">JPG, PNG или WebP, до 5 МБ. Фото сохранится вместе с профилем.</p>
+    </fieldset>
+    <fieldset><legend>О себе</legend>
+      <label for="profile-nickname">Имя в профиле</label><input id="profile-nickname" name="nickname" maxlength="50" required placeholder="Как к вам обращаться">
+      <label for="profile-description">Описание</label><textarea id="profile-description" name="description" maxlength="125" rows="3" placeholder="Ваш опыт и услуги"></textarea>
+    </fieldset>
+    <fieldset><legend>Контакты</legend><p class="settings-hint">Эти контакты будут видны в публичном профиле. Достаточно одного способа связи.</p>
+      <label for="profile-telegram">Telegram</label><input id="profile-telegram" name="telegram" placeholder="@username или https://t.me/username">
+      <label for="profile-email">Email для связи</label><input id="profile-email" name="email" type="email" placeholder="example@mail.com">
+      <label for="profile-whatsapp">WhatsApp</label><input id="profile-whatsapp" name="whatsapp" type="tel" placeholder="+7 999 123-45-67">
+    </fieldset>
+    <p id="profile-save-status" role="status" aria-live="polite"></p>
+    <button type="submit" class="primary-btn" disabled>Сохранить изменения</button>
   </form>
 </div>
 
@@ -220,12 +225,12 @@ button,input,textarea{font:inherit}
   <nav><a href="#">Политика конфиденциальности</a><a href="#">Условия использования</a><a href="#">Контакты</a></nav>
 </footer>
 
-<script src="../../scripts/account/private/openTab.js"></script>
-<script type="module" src="../../scripts/account/private/getData.js"></script>
-<script type="module" src="../../scripts/account/private/insertData.js"></script>
-<script type="module" src="../../scripts/account/private/formSettings.js"></script>
+<script src="../../scripts/account/private/openTab.js?v=profile-3"></script>
+<script type="module" src="../../scripts/account/private/getData.js?v=profile-3"></script>
+<script type="module" src="../../scripts/account/private/insertData.js?v=profile-3"></script>
+<script type="module" src="../../scripts/account/private/formSettings.js?v=profile-3"></script>
 <script type="module" src="../../scripts/settingsModal/main.js"></script>
-<script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script>
+<script type="module" src="../../scripts/favoritesModal/favoritesMain.js?v=profile-3"></script>
 
 </body>
 </html>
