@@ -31,7 +31,9 @@ router.post('/logout', (req, res) => {
 
 // ROUTES PRIVATE
 // API-роут для получения страницы аккаунта
-router.get('/', verifyToken, (req, res) => {
+// JWT из localStorage нельзя приложить к обычной навигации браузера. Сам шаблон
+// не содержит приватных данных: их защищает /get/data ниже.
+router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../../client/pages/account/pl-gl-personal-account.html'));
 });
 
