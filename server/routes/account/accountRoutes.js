@@ -45,9 +45,30 @@ router.get('/get/data', verifyToken, async (req, res) => {
             return res.status(401).json({ error: 'Пользователь не авторизован' });
         }
         const userResult = await client.query('SELECT * FROM users WHERE id = $1', [userId]);
-        const listingsResult = await client.query('SELECT * FROM listings WHERE user_id = $1', [userId]);
-        const reviewsResult = await client.query('SELECT * FROM reviews WHERE user_id = $1', [userId]);
+        const listingsResult = await client.query(
+            `SELECT * FROM listings
+             WHERE user_id = $1
+             ORDER BY is_pinned DESC, position DESC, COALESCE(up_date, created_at) DESC`,
+            [userId]
+        );
+        const reviewsResult = await client.query(
+            `SELECT reviews.*, authors.nickname AS author_name
+             FROM reviews
+             LEFT JOIN users AS authors ON authors.id = reviews.author_id
+             WHERE reviews.user_id = $1
+             ORDER BY reviews.review_date DESC`,
+            [userId]
+        );
         const favoritesResult = await client.query('SELECT * FROM favorites WHERE user_id = $1', [userId]);
+        const dealsResult = await client.query(
+            `SELECT deals.*, listings.name AS listing_name,
+                    CASE WHEN deals.seller_id = $1 THEN 'seller' ELSE 'buyer' END AS user_role
+             FROM deals
+             LEFT JOIN listings ON listings.id = deals.listing_id
+             WHERE deals.buyer_id = $1 OR deals.seller_id = $1
+             ORDER BY deals.created_at DESC`,
+            [userId]
+        );
         const categoriesResult = await client.query('SELECT * FROM categories');
         const platformsResult = await client.query('SELECT * FROM platforms');
 
@@ -55,10 +76,11 @@ router.get('/get/data', verifyToken, async (req, res) => {
         const listings = listingsResult.rows;
         const reviews = reviewsResult.rows;
         const favorites = favoritesResult.rows;
+        const deals = dealsResult.rows;
         const categories = categoriesResult.rows;
         const platforms = platformsResult.rows;
 
-        res.json({ user, listings, reviews, favorites, categories, platforms });
+        res.json({ user, listings, reviews, favorites, deals, categories, platforms });
 
     } catch (err) {
         console.error(err);

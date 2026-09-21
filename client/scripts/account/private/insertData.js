@@ -55,9 +55,10 @@ function renderReviews(reviews) {
         item.className = 'activity-item';
         const content = document.createElement('div');
         const author = document.createElement('strong');
-        author.textContent = review.author || 'Пользователь';
+        author.textContent = review.author_name || review.author || 'Пользователь';
         const text = document.createElement('span');
-        text.textContent = review.text || 'Отзыв без текста';
+        const rating = Number.isFinite(Number(review.rating)) ? `Оценка: ${review.rating}/5 · ` : '';
+        text.textContent = `${rating}${review.comment || review.text || 'Отзыв без текста'}`;
         content.append(author, text);
         item.append(content);
         container.append(item);
@@ -75,7 +76,9 @@ function renderDeals(deals) {
     deals.forEach(deal => {
         const item = document.createElement('article');
         item.className = 'activity-item';
-        item.textContent = `${deal.title || 'Сделка'} · ${deal.amount ?? '—'} ₽ · ${deal.status || 'В обработке'}`;
+        const role = deal.user_role === 'seller' ? 'Продажа' : 'Покупка';
+        const price = deal.price ?? deal.amount ?? '—';
+        item.textContent = `${role}: ${deal.listing_name || deal.title || 'Объявление'} · ${price} $ · ${deal.status || 'В обработке'}`;
         container.append(item);
     });
 }
@@ -99,7 +102,9 @@ function renderListings(listings, categories, platforms) {
         const title = document.createElement('strong');
         title.textContent = listing.name || 'Без названия';
         const details = document.createElement('small');
-        details.textContent = `Цена: ${listing.price ?? 'не указана'} $`;
+        const subscribers = listing.subscribers ? ` · ${listing.subscribers} подписчиков` : '';
+        const views = Number.isFinite(Number(listing.views)) ? ` · ${listing.views} просмотров` : '';
+        details.textContent = `Цена: ${listing.price ?? 'не указана'} $${subscribers}${views}`;
         content.append(title, details);
         const actions = document.createElement('div');
         actions.className = 'listing-actions';
