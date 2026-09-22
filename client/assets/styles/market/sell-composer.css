@@ -21,3 +21,26 @@
 @media(max-width:1150px){.sell-layout{grid-template-columns:155px minmax(0,1fr) 260px;gap:16px}.sell-intro{margin-left:171px}.composer-steps button{padding:12px 4px;gap:8px}.composer-steps button small{display:none}}
 @media(max-width:950px){.sell-layout{grid-template-columns:minmax(0,1fr) 270px}.sell-intro{margin-left:0}.composer-steps{position:static;grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;padding:0}.composer-steps>.eyebrow{display:none}.composer-steps button{flex:1;width:auto;white-space:nowrap}.composer-steps #composer-progress{flex-basis:100%;margin:0;padding:0 8px 8px}.sell-preview{grid-row:auto}}
 @media(max-width:800px){.sell-layout{display:flex;flex-direction:column;gap:18px}.sell-layout>main,.sell-preview,.composer-steps{width:100%}.composer-steps{order:0}.sell-preview{order:1;position:static}.sell-layout>main{order:2}.composer-steps button{flex-basis:calc(50% - 6px);margin:0}.composer-steps button small{display:none}.composer-body{padding:0 16px 18px}.composer-section>summary{padding:18px 16px;font-size:13px}.composer-section>summary small{font-size:10px}.sell-intro h1{font-size:42px}}
+
+/* Keep both side panels alongside the editor while the center form scrolls. */
+@media(min-width:1051px){
+ .sell-layout{align-items:start;grid-template-columns:190px minmax(460px,1fr) 300px}
+ .composer-steps,.sell-preview{position:sticky;top:98px;align-self:start;max-height:calc(100vh - 116px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+ .sell-layout>main{min-width:0}
+}
+@media(min-width:801px) and (max-width:1050px){
+ .sell-layout{grid-template-columns:minmax(0,1fr) 285px;align-items:start}
+ .composer-steps{position:sticky;top:84px;grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:0}
+ .composer-steps>.eyebrow{display:none}.composer-steps button{flex:1;min-width:120px;width:auto;margin:0;padding:10px}
+ .composer-steps button small{display:none}.composer-steps #composer-progress{flex-basis:100%;padding:0 8px}
+ .sell-preview{position:sticky;top:84px;grid-column:2;grid-row:2;align-self:start;max-height:calc(100vh - 100px);overflow-y:auto}
+ .sell-layout>main{grid-column:1;grid-row:2;min-width:0}
+}
+.selection-card .selection-fields{grid-template-columns:minmax(120px,.45fr) minmax(240px,1fr);align-items:end;gap:16px}
+.platform-chip{min-height:65px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.platform-chip span{font-size:11px;color:var(--muted)}.platform-chip strong{font-size:14px;color:var(--ink)}
+.offer-types{margin:10px 0 20px}.offer-type{min-height:90px}.offer-type.selected{box-shadow:0 0 0 3px #65758e12}
+.composer-section{transition:border-color .16s ease,box-shadow .16s ease}.composer-section[open]{border-color:#c5cfdb;box-shadow:0 8px 24px #1e28330b}
+.composer-section>summary{min-height:64px}.composer-body input:not([type=checkbox]):not([type=radio]),.composer-body textarea,.composer-body select{margin-bottom:16px}
+.composer-body textarea{min-height:140px}.composer-next:hover{background:#e5ebf2}
+.sell-preview details[open]>summary{margin-bottom:14px}

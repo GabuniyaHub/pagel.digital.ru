@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/styles/market/sell-plgl.css?v=1">
-<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=1">
+<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="sell-page">
@@ -33,8 +33,9 @@
 </nav><main>
 <section class="selection-card" aria-labelledby="selection-title"><p class="eyebrow">01 / ВАШЕ ПРЕДЛОЖЕНИЕ</p><h2 id="selection-title">Что вы хотите разместить?</h2>
 <div class="offer-types"><button type="button" class="offer-type selected" data-offer-type="2" aria-pressed="true"><span>Услуга</span><small>Работа для заказчика или готовый цифровой продукт</small></button><button type="button" class="offer-type" data-offer-type="1" aria-pressed="false"><span>Канал</span><small>Канал, сообщество или аккаунт с аудиторией</small></button></div>
-<div class="selection-fields"><label>Платформа<select id="listing-platform" disabled><option>Загрузка платформ…</option></select></label>
-<label>Категория<select id="listing-category" disabled><option>Сначала выберите платформу</option></select></label></div>
+<label class="platform-fixed-label" hidden><select id="listing-platform" disabled><option>YouTube</option></select></label>
+<div class="selection-fields"><div class="platform-chip"><span>Платформа</span><strong>YouTube</strong></div>
+<label>Категория<select id="listing-category" disabled><option>Загрузка категорий…</option></select></label></div>
 <p id="selection-status" role="status">Загружаем доступные категории каталога.</p><button type="button" id="reload-categories" hidden>Попробовать снова</button>
 </section>
         <section class="form" style="display:none;">
@@ -378,5 +379,5 @@
 <script src="/scripts/market/v3/form1.js?v=sell-1"></script>
 <script src="/scripts/market/v3/form2.js?v=sell-1"></script>
 <script src="/scripts/market/v3/sellMedia.js?v=sell-3"></script>
-<script src="/scripts/market/sell-plgl.js?v=3"></script>
+<script src="/scripts/market/sell-plgl.js?v=4"></script>
 </body></html>

@@ -83,11 +83,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const response = await fetch('/market/platforms');
             if (!response.ok) throw new Error('Не удалось загрузить категории.');
-            platforms = await response.json();
-            if (!Array.isArray(platforms) || !platforms.length) throw new Error('Платформы пока не добавлены.');
-            platformSelect.replaceChildren(...platforms.map(p => option(p.name, p.id)));
-            const requested = new URLSearchParams(location.search).get('platform') || 'youtube';
-            platformSelect.value = platforms.some(p => p.id === requested) ? requested : platforms[0].id;
+            const catalog = await response.json();
+            platforms = Array.isArray(catalog) ? catalog.filter(platform => platform.id === 'youtube') : [];
+            if (!platforms.length) throw new Error('Каталог YouTube временно недоступен.');
+            platformSelect.replaceChildren(option('YouTube', 'youtube'));
+            platformSelect.value = 'youtube';
             platformSelect.disabled = false;
             selectPlatform();
             if (type === 1 && categorySelect.options.length === 2) {
