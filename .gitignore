@@ -85,3 +85,4 @@ Thumbs.db
 # Uploaded profile photos (keep the directory in Git).
 server/routes/uploads/avatars/custom/*
 !server/routes/uploads/avatars/custom/.gitkeep
+package-lock.json
