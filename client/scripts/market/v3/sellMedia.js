@@ -621,10 +621,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const response = await fetch('/market/create-listings', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'X-User-ID': user.id,
-                        'X-User-Email': user.email,
-                        'X-Categories-ID': categories_id
+                        'Authorization': `Bearer ${token}`
                     },
                     body: formData
                 });

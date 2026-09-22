@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const status = document.getElementById('selection-status');
     const retry = document.getElementById('reload-categories');
     const preview = document.getElementById('listing-preview');
+    const subscriberPreview = document.createElement('p');
+    subscriberPreview.id = 'live-subscribers';
+    subscriberPreview.hidden = true;
+    document.getElementById('live-price').before(subscriberPreview);
     if (matchMedia('(max-width:800px)').matches) preview.open = false;
     let platforms = [], type = new URLSearchParams(location.search).get('type') === 'channel' ? 1 : 2, coverUrl = null;
     const channel = document.querySelector('.form');
@@ -179,6 +183,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             parts.description.body.append(form.querySelector('.header-form-listing'), form.querySelector('.body-form-listing'));
             parts.contacts.body.append(form.querySelector('.footer-form-listing'));
+            // Reattach fields before resolving them by document ID.
+            for (const part of Object.values(parts)) form.append(part.details);
             const priceRow = document.getElementById('price').closest('.form-row');
             parts.terms.body.append(priceRow);
             for (const selector of ['.income-expense-row','.monetization-block']) parts.terms.body.append(form.querySelector(selector) || parts.description.body.querySelector(selector));

@@ -1,0 +1,23 @@
+/* Accordion composer: navigation, working form, live marketplace card. */
+.sell-shell{max-width:1440px}.sell-layout{grid-template-columns:190px minmax(0,1fr) 300px;gap:24px}
+.sell-intro{margin-left:214px}.sell-intro h1{font-size:clamp(38px,4vw,58px)}
+.composer-steps{position:sticky;top:104px;min-width:0;padding-top:8px}
+.composer-steps button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-radius:12px;padding:16px 10px;margin:4px 0;color:var(--muted)}
+.composer-steps button>span{display:grid;place-items:center;flex:none;width:32px;height:32px;border:1px solid var(--line);border-radius:50%;font-size:11px}
+.composer-steps button strong{font-size:13px;font-weight:600}.composer-steps button small{display:block;font-size:10px;font-weight:400;margin-top:4px}
+.composer-steps button[aria-current]{background:#e8eef5;color:var(--ink)}.composer-steps button[aria-current]>span,.composer-steps button.complete>span{background:var(--accent);color:#fff;border-color:var(--accent)}
+#composer-progress{font-size:11px;color:var(--muted);padding:12px}
+.composer-section{border:1px solid var(--line);border-radius:16px;background:#fff;margin-bottom:16px;box-shadow:0 4px 18px #1e283304;scroll-margin-top:100px}
+.composer-section>summary{list-style:none;display:flex;align-items:center;gap:14px;padding:20px 22px;font-weight:600}
+.composer-section>summary::-webkit-details-marker{display:none}.composer-section>summary:after{content:"⌄";margin-left:auto;flex:none}.composer-section[open]>summary:after{content:"⌃"}
+.composer-section>summary small{color:var(--muted);font-size:10px;font-weight:400;margin-left:auto;max-width:40%;text-align:right}
+.composer-body{padding:0 22px 22px}.composer-body .selection-card{border:0;padding:0;box-shadow:none;margin:0}.selection-card>.eyebrow{display:none}.selection-card h2{font-size:18px}
+.form,.create-listing-simple{padding:0;border:0;background:none;box-shadow:none;margin:0}.form-headlines,.create-listing-simple>h2,.create-listing-simple>.step-indicator{display:none}
+.composer-next{display:block;width:100%;border:1px solid var(--line);border-radius:10px;padding:13px;background:#eef2f7;color:var(--accent);font-weight:600;margin-top:20px}
+.parser-status{font-size:12px;color:var(--muted);line-height:1.6}.preview-art .channel-cover{width:108px;height:108px;border-radius:50%;object-fit:cover}
+.profile-display-row{background:var(--soft);padding:16px;border-radius:12px}.profile-display-row>div{min-width:0;overflow-wrap:anywhere}
+.composer-body .contacts-section{border-top:0;margin-top:0}.composer-body .ownership-confirm-block{border-top:0;margin-top:0}
+.sell-preview{top:104px}.sell-preview .preview-art{aspect-ratio:16/10}.preview-art img{min-height:0}.composer-body .profile-avatar-label{display:block;margin-bottom:6px}
+@media(max-width:1150px){.sell-layout{grid-template-columns:155px minmax(0,1fr) 260px;gap:16px}.sell-intro{margin-left:171px}.composer-steps button{padding:12px 4px;gap:8px}.composer-steps button small{display:none}}
+@media(max-width:950px){.sell-layout{grid-template-columns:minmax(0,1fr) 270px}.sell-intro{margin-left:0}.composer-steps{position:static;grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;padding:0}.composer-steps>.eyebrow{display:none}.composer-steps button{flex:1;width:auto;white-space:nowrap}.composer-steps #composer-progress{flex-basis:100%;margin:0;padding:0 8px 8px}.sell-preview{grid-row:auto}}
+@media(max-width:800px){.sell-layout{display:flex;flex-direction:column;gap:18px}.sell-layout>main,.sell-preview,.composer-steps{width:100%}.composer-steps{order:0}.sell-preview{order:1;position:static}.sell-layout>main{order:2}.composer-steps button{flex-basis:calc(50% - 6px);margin:0}.composer-steps button small{display:none}.composer-body{padding:0 16px 18px}.composer-section>summary{padding:18px 16px;font-size:13px}.composer-section>summary small{font-size:10px}.sell-intro h1{font-size:42px}}
