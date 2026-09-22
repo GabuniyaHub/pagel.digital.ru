@@ -86,3 +86,5 @@ Thumbs.db
 server/routes/uploads/avatars/custom/*
 !server/routes/uploads/avatars/custom/.gitkeep
 package-lock.json
+client/package-lock.json
+react-app/package-lock.json
