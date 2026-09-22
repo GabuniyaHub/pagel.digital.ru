@@ -8,6 +8,6 @@ module.exports = (req, res, next) => {
     optionalAuth(req, res, () => {
         res.set('Cache-Control', 'no-store');
         if (req.user) return next();
-        res.type('html').send('<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Вход в PL-GL</title><script>window.plglAuthShell=true;</script><script src="/scripts/common/app.js?v=1"></script></head><body><p>Проверяем вход…</p><noscript>Для входа включите JavaScript.</noscript></body></html>');
+        res.type('html').send('<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Вход в PL-GL</title><script>window.plglAuthShell=true;</script><script src="/scripts/common/app.js?v=2"></script></head><body><p>Проверяем вход…</p><noscript>Для входа включите JavaScript.</noscript></body></html>');
     });
 };

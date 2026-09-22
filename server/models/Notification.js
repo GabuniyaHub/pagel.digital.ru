@@ -6,6 +6,7 @@ class Notification {
         this.url = row.url;
         this.createdAt = row.created_at;
         this.readAt = row.read_at;
+        this.eventKey = row.event_key;
     }
 }
 module.exports = Notification;

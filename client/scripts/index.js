@@ -2,9 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const menuIcon = document.getElementById('menu-icon');
     const navLinks = document.getElementById('nav-links');
 
-    menuIcon.addEventListener('click', function () {
+    menuIcon?.addEventListener('click', function () {
         menuIcon.classList.toggle('active');
         navLinks.classList.toggle('active');
+        menuIcon.setAttribute('aria-expanded', String(navLinks.classList.contains('active')));
     });    
     
     //JS для service 
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     //JS для all-platforms
-    document.getElementById("toggle-all-platforms").addEventListener("click", function () {
+    document.getElementById("toggle-all-platforms")?.addEventListener("click", function () {
         const allPlatformsContent = document.querySelector(".all-platforms-content");
         allPlatformsContent.classList.toggle("hidden");
     
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     //JS для technical-section
-    document.getElementById("toggle-technical-section").addEventListener("click", function() {
+    document.getElementById("toggle-technical-section")?.addEventListener("click", function() {
         const technicalSectionContent = document.querySelector(".technical-section-content");
         technicalSectionContent.classList.toggle("hidden");
 

@@ -39,6 +39,7 @@ async function handleCredentialResponse(response) {
     }
   
   window.onload = function () {
+    if (!window.google?.accounts?.id) return;
     google.accounts.id.initialize({
       client_id: '293649929067-v7prhbomfisdih5868evj6e66p6r42em.apps.googleusercontent.com', // Ваш Client ID
       callback: handleCredentialResponse,

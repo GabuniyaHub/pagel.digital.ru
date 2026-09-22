@@ -2,9 +2,13 @@
 .plgl-toasts{position:fixed;top:90px;right:20px;z-index:10020;display:grid;gap:10px;max-width:min(400px,calc(100vw - 32px))}
 .plgl-toast{font:14px/1.5 Inter,Arial,sans-serif;background:#fff;border:1px solid #dbe3ec;border-left:4px solid #65758e;border-radius:14px;padding:18px;box-shadow:0 10px 35px #1e283326;color:#1e2833}
 .plgl-toast.error{border-left-color:#9c5656}
-.plgl-notification-toggle{position:fixed;bottom:20px;right:20px;z-index:800;border:1px solid #e2e8f0;border-radius:14px;padding:13px 18px;background:#3b4d61;color:#fff;font:600 13px Inter,Arial,sans-serif;cursor:pointer;box-shadow:0 8px 28px #1e283326}
+.plgl-notification-slot{display:inline-flex;flex:none;align-items:center;margin-left:auto}
+.plgl-notification-toggle{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:5px;width:42px;height:42px;flex:none;border:1px solid #e2e8f0;border-radius:12px;padding:9px;background:#eef3f8;color:#3b4d61;font:600 11px Inter,Arial,sans-serif;cursor:pointer}
+.plgl-notification-count{position:absolute;right:-6px;top:-6px;border-radius:20px;padding:2px 5px;color:#fff;background:#65758e}
+.plgl-notification-count[hidden]{display:none}
+.plgl-navigation-bar{display:flex;align-items:center;gap:16px;padding:16px 24px;background:#fff;border-bottom:1px solid #e2e8f0}
 .plgl-notification-panel[hidden]{display:none!important}
-.plgl-notification-panel{position:fixed;bottom:78px;right:20px;z-index:810;width:min(400px,calc(100vw - 32px));max-height:70vh;overflow:auto;padding:22px;background:#f5f7fa;border:1px solid #e2e8f0;border-radius:20px;box-shadow:0 14px 50px #1e283333;color:#3b4d61;font:14px/1.5 Inter,Arial,sans-serif}
+.plgl-notification-panel{position:fixed;top:85px;right:16px;z-index:810;width:min(400px,calc(100vw - 32px));max-height:calc(100dvh - 140px);overflow:auto;padding:22px;background:#f5f7fa;border:1px solid #e2e8f0;border-radius:20px;box-shadow:0 14px 50px #1e283333;color:#3b4d61;font:14px/1.5 Inter,Arial,sans-serif}
 .plgl-notification-panel h2{font-family:'Sofia Sans Extra Condensed',Inter,sans-serif;font-size:28px;margin:0 0 12px;color:#1e2833}
 .plgl-notification-panel button,.plgl-session-error button{padding:9px 12px;border:1px solid #dbe3ec;border-radius:10px;background:#fff;color:#3b4d61;cursor:pointer;margin:4px}
 .plgl-notice{margin-top:12px;padding:16px;border:1px solid #e2e8f0;border-radius:14px;background:#fff}

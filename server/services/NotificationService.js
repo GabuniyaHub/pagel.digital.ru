@@ -1,6 +1,16 @@
 const Notification = require('../models/Notification');
 class NotificationService {
     constructor(db) { this.db = db; }
+    async welcome(userId) {
+        await this.db.query(
+            `INSERT INTO notifications (user_id, title, message, url, event_key)
+             VALUES ($1, $2, $3, $4, 'welcome')
+             ON CONFLICT (user_id, event_key) WHERE event_key IS NOT NULL DO NOTHING`,
+            [userId, 'Добро пожаловать в PL-GL!',
+             'PL-GL объединяет две стороны рынка: здесь можно найти нужного специалиста или предложить собственные услуги для YouTube.',
+             '/pages/index.html']
+        );
+    }
     async create(userId, { title, message, url = '/account' }) {
         if (!Number.isInteger(Number(userId)) || Number(userId) < 1) throw new Error('Invalid notification recipient');
         if (!title || !message || !url.startsWith('/') || url.startsWith('//')) throw new Error('Invalid notification');

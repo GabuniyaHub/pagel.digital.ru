@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script src="/scripts/common/app.js?v=1"></script>
+<script src="/scripts/common/app.js?v=2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -123,7 +123,7 @@ button,input,textarea{font:inherit}
         <a href="#profile"><i class="fas fa-user"></i> Профиль</a>
         <a href="#ads"><i class="fas fa-briefcase"></i> Мои объявления</a>
         <a href="#favorites" class="select-favorites"><i class="far fa-heart"></i> Избранное</a>
-        <a href="#messages"><i class="far fa-comment-dots"></i> Сообщения</a>
+        <a href="#messages" class="is-disabled" aria-disabled="true" tabindex="-1"><i class="far fa-comment-dots"></i> Сообщения</a>
         <a href="#payments" class="is-disabled" aria-disabled="true"><i class="fas fa-wallet"></i> Платежи</a>
         <a href="#settings"><i class="fas fa-gear"></i> Настройки</a>
       </nav>
@@ -214,7 +214,7 @@ button,input,textarea{font:inherit}
       <section class="promo card">
         <h3>Развивайте свой YouTube-канал вместе с PL-GL</h3>
         <p>Каналы, монтаж, дизайн, продвижение и другие услуги в одном месте.</p>
-        <a href="/market/youtube">Перейти в каталог →</a>
+        <a href="/pages/index.html">Перейти в каталог →</a>
       </section>
     </aside>
   </div>
@@ -223,14 +223,14 @@ button,input,textarea{font:inherit}
 <footer class="pl-footer">
   <div style="font-size:20px;font-weight:800;margin-bottom:10px;color:#fff">▷ PL-GL</div>
   <p>© 2025 PL-GL | Все права защищены</p>
-  <nav><a href="#">Политика конфиденциальности</a><a href="#">Условия использования</a><a href="#">Контакты</a></nav>
+  <nav><a href="/pages/lending/policy.html">Политика конфиденциальности</a><a href="/pages/lending/termsOfService.html">Условия использования</a><a href="/pages/lending/contacts.html">Контакты</a></nav>
 </footer>
 
 <script src="../../scripts/account/private/openTab.js?v=profile-3"></script>
 <script type="module" src="../../scripts/account/private/getData.js?v=profile-3"></script>
 <script type="module" src="../../scripts/account/private/insertData.js?v=profile-3"></script>
 <script type="module" src="../../scripts/account/private/formSettings.js?v=profile-3"></script>
-<script type="module" src="../../scripts/settingsModal/main.js"></script>
+<script type="module" src="../../scripts/settingsModal/main.js?v=security-2"></script>
 <script type="module" src="../../scripts/favoritesModal/favoritesMain.js?v=profile-3"></script>
 
 </body>

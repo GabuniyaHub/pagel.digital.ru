@@ -13,6 +13,24 @@ function validatePassword(password) {
 
 
 export function initLogic(modal) {
+    const securityDialog = options => Swal.fire({
+        confirmButtonColor: '#3b4d61', cancelButtonColor: '#65758e',
+        color: '#1e2833', background: '#fff', customClass: { popup: 'plgl-security-dialog' },
+        ...options
+    });
+    const opener = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const close = () => { modal.remove(); document.body.style.overflow = previousOverflow; opener?.focus(); };
+    modal.addEventListener('keydown', event => {
+        if (event.key === 'Escape') close();
+        if (event.key === 'Tab') {
+            const buttons = [...modal.querySelectorAll('button')].filter(el => el.offsetParent !== null);
+            const first = buttons[0], last = buttons[buttons.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+    });
     const overlay = modal;
     const closeBtn = modal.querySelector(".close-btn");
     const emailSpan = modal.querySelector("#user-email");
@@ -24,9 +42,10 @@ export function initLogic(modal) {
     const deleteAccountBtn = modal.querySelector("#delete-account-btn");
 
     // Закрытие модалки
-    closeBtn.addEventListener("click", () => overlay.remove());
+    closeBtn.focus();
+    closeBtn.addEventListener("click", close);
     overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) overlay.remove();
+        if (e.target === overlay) close();
     });
 
 
@@ -53,7 +72,7 @@ export function initLogic(modal) {
         errorBox.textContent = "";
 
         // 1. Ввод текущего пароля
-        const { value: currentPassword, isDismissed } = await Swal.fire({
+        const { value: currentPassword, isDismissed } = await securityDialog({
             title: 'Введите текущий пароль',
             input: 'password',
             inputPlaceholder: 'Ваш текущий пароль',
@@ -67,7 +86,7 @@ export function initLogic(modal) {
         const req = await confirmAction("/settings/request-confirmation", { action, currentPassword, ...extraData });
 
         if (req.error) {
-            Swal.fire({
+            securityDialog({
                 icon: 'error',
                 title: 'Ошибка',
                 text: req.error
@@ -75,14 +94,14 @@ export function initLogic(modal) {
             return;
         }
 
-        Swal.fire({
+        securityDialog({
             icon: 'success',
             title: 'Успешно!',
             text: 'Код подтверждения отправлен на вашу почту.'
         });
 
         // 2. Ввод кода подтверждения
-        const { value: code, isDismissed: codeDismissed } = await Swal.fire({
+        const { value: code, isDismissed: codeDismissed } = await securityDialog({
             title: 'Введите код',
             input: 'text',
             inputPlaceholder: 'Код из письма',
@@ -94,7 +113,7 @@ export function initLogic(modal) {
         // 3. Условный запрос нового пароля, если действие - смена пароля
         let newPassword = null;
         if (action === 'changePassword') {
-            const { value: newPass, isDismissed: newPassDismissed } = await Swal.fire({
+            const { value: newPass, isDismissed: newPassDismissed } = await securityDialog({
                 title: 'Введите новый пароль',
                 input: 'password',
                 inputPlaceholder: 'Новый пароль',
@@ -110,7 +129,7 @@ export function initLogic(modal) {
             });
             if (newPassDismissed || !newPass) {
                 // Если пользователь отменил или не ввел пароль
-                Swal.fire({
+                securityDialog({
                     icon: 'warning',
                     title: 'Отменено',
                     text: 'Смена пароля отменена.'
@@ -135,13 +154,13 @@ export function initLogic(modal) {
         const confirm = await confirmAction("/settings/confirm", confirmPayload);
 
         if (confirm.error) {
-            Swal.fire({
+            securityDialog({
                 icon: 'error',
                 title: 'Ошибка',
                 text: confirm.error
             });
         } else {
-            Swal.fire({
+            securityDialog({
                 icon: 'success',
                 title: 'Успешно!',
                 text: confirm.message || "Действие выполнено успешно"
@@ -160,7 +179,7 @@ export function initLogic(modal) {
     changePasswordBtn.addEventListener("click", () => handleAction("changePassword"));
 
     changeEmailBtn.addEventListener("click", async () => {
-        const { value: newEmail, isDismissed } = await Swal.fire({
+        const { value: newEmail, isDismissed } = await securityDialog({
             title: 'Введите новый email',
             input: 'text',
             inputPlaceholder: 'Новый email',
@@ -180,13 +199,13 @@ export function initLogic(modal) {
     });
 
     deleteAccountBtn.addEventListener("click", async () => {
-        const result = await Swal.fire({
+        const result = await securityDialog({
             title: 'Вы уверены?',
             text: "Это действие необратимо!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            confirmButtonColor: '#3b4d61',
+            cancelButtonColor: '#65758e',
             confirmButtonText: 'Да, удалить аккаунт'
         });
 

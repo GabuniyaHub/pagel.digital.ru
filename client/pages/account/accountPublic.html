@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-<script src="/scripts/common/app.js?v=1"></script>
+<script src="/scripts/common/app.js?v=2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -50,7 +50,7 @@
                     </li>
                     <!-- <li><a href="#">Отзывы</a></li> -->
                     <!-- <li><a href="#">О нас</a></li> -->
-                    <!-- <li><a href="#">Контакты</a></li> -->
+                    <!-- <li><a href="/pages/lending/contacts.html">Контакты</a></li> -->
                     <!-- Кнопки для неавторизованных пользователей -->
                     <li id="login-item"><a href="/pages/user-auth/login.html">Вход</a></li>
                     <li id="register-item"><a href="/pages/user-auth/register.html">Регистрация</a></li>
@@ -155,8 +155,8 @@
         <p>&copy; 2025 Покупка и продажа аккаунтов. Все права защищены.</p>
         <nav>
             <ul>
-                <li><a href="#">Политика конфиденциальности</a></li>
-                <li><a href="#">Условия использования</a></li>
+                <li><a href="/pages/lending/policy.html">Политика конфиденциальности</a></li>
+                <li><a href="/pages/lending/termsOfService.html">Условия использования</a></li>
                 <li><a href="#">Контакты</a></li>
             </ul>
         </nav>
@@ -170,7 +170,7 @@
 <!-- подключаем JS файл и получаем все данные для профиля из бд -->
 <script type="module" src="../../scripts/account/public/insertDataPublic.js"></script>
 <!-- подключаем JS файл для вставки данных в профиль -->
-<script type="module" src="../../scripts/settingsModal/main.js"></script>
+<script type="module" src="../../scripts/settingsModal/main.js?v=security-2"></script>
 <!-- подключаем JS файл для модального окна настроек -->
 <script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script>
 <!-- подключаем JS файл для избранного -->

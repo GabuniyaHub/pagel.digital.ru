@@ -1,85 +1,23 @@
 export function injectStyles() {
-  if (document.getElementById("settings-modal-styles")) return;
-
-  const style = document.createElement("style");
-  style.id = "settings-modal-styles";
-  style.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-    body.blurred > *:not(.settings-modal-overlay) {
-      filter: blur(6px);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .settings-modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(6px);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 1000;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .settings-modal {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-radius: 16px;
-      padding: 28px;
-      width: 420px; max-width: 90%;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-      animation: fadeIn .3s ease;
-      color: #fff;
-    }
-
-    .settings-modal h2 {
-      margin-top: 0;
-      font-weight: 600;
-      font-size: 1.4rem;
-      text-align: center;
-      color: #fff;
-    }
-
-    .settings-modal button {
-      margin: 10px 0;
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-      font-weight: 500;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all .3s ease;
-    }
-
-    .settings-modal button:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateY(-2px);
-    }
-
-    .settings-modal button:active {
-      transform: translateY(0);
-    }
-
-    .close-btn {
-      float: right; cursor: pointer;
-      font-size: 22px; font-weight: bold;
-      color: rgba(255,255,255,0.7);
-      transition: color .2s ease;
-    }
-
-    .close-btn:hover {
-      color: #fff;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-  `;
-
-  document.head.appendChild(style);
+ if (document.getElementById('settings-modal-styles')) return;
+ const style = document.createElement('style'); style.id = 'settings-modal-styles';
+ style.textContent = `
+ .settings-modal-overlay{position:fixed;inset:0;z-index:1100;padding:18px;background:rgba(30,40,51,.48);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-family:Inter,Arial,sans-serif}
+ .settings-modal-overlay *{box-sizing:border-box}
+ .swal2-container{z-index:1200!important}
+ .plgl-security-dialog{font-family:Inter,Arial,sans-serif;border-radius:20px;border:1px solid #e2e8f0}
+ .settings-modal{position:relative;width:510px;max-width:100%;max-height:90dvh;overflow:auto;padding:30px;border:1px solid #e2e8f0;border-radius:22px;background:#fff;color:#3b4d61;box-shadow:0 24px 70px #1e283333}
+ .settings-modal h2{font-family:'Sofia Sans Extra Condensed',Inter,sans-serif;font-size:32px;line-height:1.1;margin:0 42px 14px 0;color:#1e2833;text-align:left}
+ .settings-modal .security-description{font-size:13px;line-height:1.7;color:#65758e}
+ .settings-modal .user-data{padding:18px;border:1px solid #e2e8f0;border-radius:14px;background:#f5f7fa;margin:20px 0;font-size:13px;overflow-wrap:anywhere}
+ .settings-modal .actions{display:grid;gap:10px}
+ .settings-modal .actions button{padding:18px;text-align:left;font-family:Inter,Arial,sans-serif;border:1px solid #e2e8f0;border-radius:14px;background:#fff;color:#3b4d61;cursor:pointer}
+ .settings-modal .actions button:hover{background:#eef3f8;border-color:#b9c7d6}
+ .settings-modal .actions strong,.settings-modal .actions span{display:block}
+ .settings-modal .actions span{font-size:12px;margin-top:6px;color:#65758e;line-height:1.5}
+ .settings-modal .close-btn{position:absolute;top:20px;right:20px;width:34px;height:34px;background:#eef3f8;border:0;border-radius:10px;color:#3b4d61;font-size:24px;cursor:pointer}
+ .settings-modal #settings-error{margin-top:12px;color:#8b4d4d;font-size:13px}
+ .settings-modal :focus-visible{outline:3px solid #aebdce;outline-offset:3px}
+ @media(max-width:500px){.settings-modal{padding:22px}.settings-modal h2{font-size:28px}}
+ `; document.head.append(style);
 }

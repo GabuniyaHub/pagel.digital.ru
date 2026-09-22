@@ -2,7 +2,7 @@
 <html lang="ru">
 
 <head>
-<script src="/scripts/common/app.js?v=1"></script>
+<script src="/scripts/common/app.js?v=2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#3b4d61">
@@ -595,6 +595,7 @@
             .technical-card { min-height:190px; }
         }
     </style>
+<link rel="stylesheet" href="/assets/styles/header/catalog-nav.css?v=2">
 </head>
 
 <body>
@@ -620,23 +621,13 @@
                         </div>
                     </li>
 
-                    <li class="notification-center">
-                        <button type="button" class="notification-toggle" id="notification-toggle" aria-label="Центр уведомлений" aria-expanded="false">
-                            <i class="fas fa-bell"></i>
-                        </button>
-                        <div class="notification-panel" id="notification-panel" role="status">
-                            <h3>PL-GL</h3>
-                            <p><strong>PL-GL объединяет две стороны рынка:</strong> здесь можно найти нужного специалиста или предложить собственные услуги для YouTube.</p>
-                        </div>
-                    </li>
-
                     <li id="login-item"><a href="../pages/user-auth/login.html">Вход</a></li>
                     <li id="register-item"><a href="../pages/user-auth/register.html">Регистрация</a></li>
 
                     <li id="account-item" style="display:none;">
                         <div class="account-dropdown">
                             <a href="/account" class="account-circle" aria-label="Личный кабинет">
-                                <i class="material-icons account-circle">account_circle</i>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>
                             </a>
                             <div class="dropdown-content">
                                 <a href="/account"><i class="fas fa-user"></i> Личный кабинет</a>
@@ -873,30 +864,12 @@
     </footer>
 </div>
 
-<script src="../scripts/index.js"></script>
+<script src="../scripts/index.js?v=nav-2"></script>
 <script src="../scripts/header/search/search.js"></script>
-<script type="module" src="../scripts/settingsModal/main.js"></script>
+<script type="module" src="../scripts/settingsModal/main.js?v=security-2"></script>
 <script type="module" src="../scripts/favoritesModal/favoritesMain.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const notificationToggle = document.getElementById('notification-toggle');
-        const notificationPanel = document.getElementById('notification-panel');
-
-        if (!notificationToggle || !notificationPanel) return;
-
-        notificationToggle.addEventListener('click', function (event) {
-            event.stopPropagation();
-            const isOpen = notificationPanel.classList.toggle('show');
-            notificationToggle.setAttribute('aria-expanded', String(isOpen));
-        });
-
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.notification-center')) {
-                notificationPanel.classList.remove('show');
-                notificationToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-
         document.querySelectorAll('.group-toggle').forEach(function (toggle) {
             toggle.addEventListener('click', function () {
                 const group = document.getElementById(toggle.dataset.target);

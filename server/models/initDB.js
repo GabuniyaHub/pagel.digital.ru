@@ -32,6 +32,8 @@ async function createTables() {
                 read_at TIMESTAMPTZ
             );
             CREATE INDEX IF NOT EXISTS notifications_user_id_idx ON notifications(user_id, id DESC);
+            ALTER TABLE notifications ADD COLUMN IF NOT EXISTS event_key VARCHAR(80);
+            CREATE UNIQUE INDEX IF NOT EXISTS notifications_event_key_idx ON notifications(user_id, event_key) WHERE event_key IS NOT NULL;
         `);
 
         // Создание таблицы медиа сетей

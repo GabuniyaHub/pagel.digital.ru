@@ -132,6 +132,7 @@ function userRouters(req, res) {
                 const result = await client.query(query, [name, email, hashedPassword]);
                 console.log("Пользователь успешно зарегистрирован:", result.rows[0]);
                 verifiedEmails.delete(email);
+                await require('../services/notifications').welcome(result.rows[0].id).catch(error => console.error('Welcome notification:', error));
 
                 // Проверка блокировки пользователя администратором (из базы данных)
                 // const checkBlockedQuery = `SELECT is_blocked FROM users WHERE id = $1`;
@@ -639,6 +640,7 @@ function userRouters(req, res) {
                     );
 
                     user = newUser.rows[0];
+                    await require('../services/notifications').welcome(user.id).catch(error => console.error('Welcome notification:', error));
                 } else {
                     // Пользователь уже существует
                     user = userQuery.rows[0];
@@ -747,6 +749,7 @@ function userRouters(req, res) {
                     );
 
                     user = newUser.rows[0];
+                    await require('../services/notifications').welcome(user.id).catch(error => console.error('Welcome notification:', error));
                     console.log('Новый пользователь создан:', user);
                 } else {
                     // Пользователь уже существует

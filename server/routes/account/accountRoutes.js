@@ -33,7 +33,7 @@ router.post('/logout', (req, res) => {
 // ROUTES PRIVATE
 router.get('/session', optionalAuth, async (req, res) => {
     res.set('Cache-Control', 'no-store');
-    if (!req.user) return res.json({ user: null });
+    if (!req.headers.authorization?.startsWith('Bearer ') || !req.user) return res.json({ user: null });
     try {
         const { rows } = await client.query('SELECT id, nickname, avatar, is_premium, verified, is_blocked FROM users WHERE id=$1', [req.user.id]);
         const user = rows[0];
