@@ -392,6 +392,8 @@ router.post('/create-listings', verifyToken, upload.fields([
 // API-роут для создания простого объявления (JSON)
 router.post('/simple-listing', verifyToken, checkBlockStatusWithoutToken, upload.single('cover'), async (req, res) => {
   let { user_id, name, description, contacts, price, category_name, category_description, platform_id, form_type, allow_comments } = req.body;
+  // Listing ownership comes from the verified session, never from form input.
+  user_id = req.user.id;
   const cover = req.file ? req.file.filename : null;
 
   // console.log(user_id, name, description, contacts, price, category_name, category_description, platform_id, form_type, allow_comments);

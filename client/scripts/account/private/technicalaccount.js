@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Закрытие меню при клике вне его области
     window.addEventListener("click", function (e) {
-        if (!e.target.matches(".account-circle") && !e.target.closest(".dropdown-content")) {
+        if (!accountCircle.contains(e.target) && !dropdownContent.contains(e.target)) {
             if (dropdownContent.classList.contains("show")) {
                 dropdownContent.classList.remove("show");
             }

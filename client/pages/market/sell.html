@@ -1,163 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Разместить объявление — PL-GL</title>
 <script src="/scripts/common/app.js?v=2"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/styles/market/v3/sellV3.css">
-    <!-- подключаем стили для страницы создания объявления -->
-    <link rel="stylesheet" href="../../assets/styles/header/search/search.css"> <!-- подключаем стили для поиска -->
-    <link rel="icon" href="https://img.icons8.com/color/96/000000/planet.png" type="image/png"> <!-- иконка сайта -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <!-- подключаем Material Icons -->
-    <link rel="stylesheet" href="../../assets/styles/header/navbar.css">
-    <!-- подключаем стили для навигационной панели -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- подключаем Font Awesome для иконок -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- подключаем SweetAlert2 для всплывающих уведомлений -->
-    <title>Создание объявления</title>
+<link rel="icon" href="/assets/images/pl-gl-logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles/market/sell-plgl.css?v=1">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
-<body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <a href="/pages/index.html" style="text-decoration: none; color: inherit;">
-                    <div class="logo">
-                        <img src="https://img.icons8.com/color/96/000000/planet.png" alt="Planet Icon">
-                        <span>PL-GL</span>
-                    </div>
-                </a>
-                <div class="menu-icon" id="menu-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="/pages/index.html">Главная</a></li>
-                    <li><a href="#">Услуги</a></li>
-                    <li><a href="#">Справка</a></li>
-                    <li id="search" class="search-dropdown">
-                        <a href="#" id="search-toggle">Поиск</a>
-                        <div id="search-menu" class="search-panel">
-                            <input type="text" id="search-input" placeholder="Найти платформу...">
-                            <ul id="search-results"></ul>
-                        </div>
-                    </li>
-                    <li><a href="#">Отзывы</a></li>
-                    <li><a href="#">О нас</a></li>
-                    <li><a href="#">Контакты</a></li>
-                    <!-- Кнопки для неавторизованных пользователей -->
-                    <li id="login-item"><a href="/pages/user-auth/login.html">Вход</a></li>
-                    <li id="register-item"><a href="../../../client/pages/user-auth/register.html">Регистрация</a></li>
-                    <!-- Кнопки для авторизованных пользователей (изначально скрыты) -->
-                    <li id="account-item" style="display: none;">
-                        <div class="account-dropdown">
-                            <a href="/account" class="account-circle">
-                                <i class="material-icons account-circle">account_circle</i>
-                            </a>
-                            <div class="dropdown-content">
-                                <a href="/account"><i class="fas fa-user"></i> Личный кабинет</a>
-                                <a class="settings-link"><i class="fas fa-cog"></i> Настройки</a>
-                                <a class="select-favorites"><i class="fas fa-heart"></i> Избранное</a>
-                                <!-- <a href="/balance"><i class="fas fa-wallet"></i> Баланс</a> -->
-                                <a href="/logout" id="logout-button"><i class="fas fa-sign-out-alt"></i> Выход</a>
-                            </div>
-                        </div>
-                    </li>
-                    <a href="" class="btn-link" style="text-decoration: none;">
-                        <li id="sell-item" style="display: none;">
-                            <button>Продать</button>
-                        </li>
-                    </a>
-                </ul>
-            </div>
-        </nav>
-        <!-- <script src="../market/scripts/utils/dropdownMenu.js"></script> -->
-
-    </header>
-
-    <section class="preview-container"> <!-- превью -->
-        <div class="preview-banner">
-            <div class="preview-text">
-                <h1>Создание объявления</h1>
-                <p class="preview-desc">Заполните форму ниже, чтобы разместить товар или услугу на выбранной
-                    платформе.<br>Это бесплатно и просто!</p>
-                <ol class="preview-steps">
-                    <li><strong>Выберите платформу</strong> – выберите, где вы хотите разместить товар.</li>
-                    <li><strong>Заполните детали</strong> – добавьте описание, цену и фото.</li>
-                    <li><strong>Опубликуйте</strong> – нажмите «Создать», и объявление появится в каталоге.</li>
-                </ol>
-            </div>
-            <div class="preview-icon">
-                <img src="../../assets/images/market/sell/shop-icon-highres.png" alt="Магазин">
-            </div>
-        </div>
-    </section>
-
-    <main>
-
-        <section class="media"> <!-- секция для выбора медиа -->
-            <div class="step-indicator"> <!-- индикатор шагов -->
-                <div class="step-block">
-                    <span class="step active">1</span>
-                    <span class="step-label">Платформа</span>
-                </div>
-                <div class="step-block">
-                    <span class="step">2</span>
-                    <span class="step-label">Категория</span>
-                </div>
-                <div class="step-block">
-                    <span class="step">3</span>
-                    <span class="step-label">Объявление</span>
-                </div>
-            </div>
-            <div class="platform-search-container"> <!-- поле поиска -->
-                <span class="search-icon"><i class="fas fa-search"></i></span>
-                <input type="text" id="platform-search-input" placeholder="Найти платформу..." autocomplete="off" />
-            </div>
-            <ul id="platform-list" class="platform-list"> <!-- список платформ -->
-                <!-- загрузка медиа-сетей -->
-            </ul>
-            <div class="media-footer"> <!-- футер-медиа -->
-                <p>Если вы не нашли нужную платформу, напишите нам в <a href="#">поддержку</a>.</p>
-                <p>Мы постоянно обновляем список платформ.</p>
-            </div>
-        </section>
-
-        <section class="catalog"> <!-- каталог -->
-            <div class="choose-product" style="display: none;">
-                <div class="product-header">
-                    <div class="step-indicator"> <!-- индикатор шагов -->
-                        <div class="step-block">
-                            <span class="step active">1</span>
-                            <span class="step-label">Платформа</span>
-                        </div>
-                        <div class="step-block">
-                            <span class="step active">2</span>
-                            <span class="step-label">Категория</span>
-                        </div>
-                        <div class="step-block">
-                            <span class="step">3</span>
-                            <span class="step-label">Объявление</span>
-                        </div>
-                    </div>
-                    <h2>Выберите тип объявления</h2>
-                </div>
-                <div class="product-body">
-                    <ul class="product-list" id="product-list">
-                        <!-- Продукты будут добавлены динамически -->
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section class="form"> <!-- форма-1 -->
+<body class="sell-page">
+<header class="pl-header"><nav class="pl-header-inner" aria-label="Основная навигация">
+<a class="brand" href="/pages/index.html"><img src="/assets/images/pl-gl-logo.svg" alt="PL-GL"></a>
+<a class="catalog-link" href="/pages/index.html">Каталог</a>
+<a class="profile-link" href="/account" aria-label="Личный кабинет"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></a>
+</nav></header>
+<div class="sell-shell">
+<section class="sell-intro"><a href="/pages/index.html" class="back-link">← Вернуться в каталог</a>
+<p class="eyebrow">PL-GL / ДЛЯ ПРОДАВЦОВ</p><h1>Разместить объявление</h1>
+<p>Ваши навыки и цифровые проекты — для тех, кто их ищет.<br> Расскажите о предложении, а мы поможем показать его в каталоге.</p></section>
+<div class="sell-layout"><main>
+<section class="selection-card" aria-labelledby="selection-title"><p class="eyebrow">01 / ВАШЕ ПРЕДЛОЖЕНИЕ</p><h2 id="selection-title">Что вы хотите разместить?</h2>
+<div class="offer-types"><button type="button" class="offer-type selected" data-offer-type="2" aria-pressed="true"><span>Услуга</span><small>Работа для заказчика или готовый цифровой продукт</small></button><button type="button" class="offer-type" data-offer-type="1" aria-pressed="false"><span>Канал</span><small>Канал, сообщество или аккаунт с аудиторией</small></button></div>
+<div class="selection-fields"><label>Платформа<select id="listing-platform" disabled><option>Загрузка платформ…</option></select></label>
+<label>Категория<select id="listing-category" disabled><option>Сначала выберите платформу</option></select></label></div>
+<p id="selection-status" role="status">Загружаем доступные категории каталога.</p><button type="button" id="reload-categories" hidden>Попробовать снова</button>
+</section>
+        <section class="form" style="display:none;">
             <div class="form-headlines">
-                <div class="step-indicator"> <!-- индикатор шагов -->
+                <div class="step-indicator">
                     <div class="step-block">
                         <span class="step active">1</span>
                         <span class="step-label">Платформа</span>
@@ -171,12 +44,12 @@
                         <span class="step-label">Объявление</span>
                     </div>
                 </div>
-                <h2>Заполните форму</h2>
+                <h2>Детали объявления</h2>
             </div>
             <div class="create-listing">
                 <form id="listing-form" class="listing-form" enctype="multipart/form-data" method="POST">
                     <div class="header-form-listing">
-                        <!-- Ссылка + чекбокс -->
+
                         <div class="form-row">
                             <input type="url" id="link" name="link"
                                 placeholder="Вставьте ссылку на аккаунт/канал/группу/страницу, выставляемую на продажу"
@@ -188,7 +61,7 @@
                             </label>
                         </div>
 
-                        <!-- канал/группа/пользователь заполняем аватарку, название, подписчиков -->
+
                         <div class="profile-form-row" id="profile-edit-block">
                             <input id="profile-name" type="text" class="profile-name" name="name"
                                 placeholder="Название канала/группы/пользователя"
@@ -203,13 +76,13 @@
                             <input id="profile-avatar-input" type="file" class="profile-avatar-input" name="avatar" accept="image/*">
 
                             <label for="profile-avatar-input" class="profile-avatar-label">
-                                <i class="fas fa-image"></i> Загрузить аватарку
+                                <i class="fas fa-image"></i> Загрузить изображение канала
                             </label>
 
                             <img id="avatar-preview" style="display:none; max-width:100px; border-radius:8px;" alt="Превью аватарки">
                         </div>
 
-                        <!-- Блок отображения -->
+
                         <div class="profile-display-row" id="profile-view-block" style="display:none;">
                             <img id="display-avatar" alt="Аватарка канала">
                             <div>
@@ -217,8 +90,8 @@
                                 <div id="display-subscribers"></div>
                             </div>
                         </div>
-            
-                        <!-- Тематика -->
+
+
                         <div class="form-row">
                             <select id="theme" name="groupTheme" required>
                                 <option value="" disabled selected hidden>Выберите тематику...</option>
@@ -265,7 +138,7 @@
                                 <option value="41">Крипта/NFT</option>
                             </select>
                         </div>
-                        <!-- Цена + чекбокс -->
+
                         <div class="form-row">
                             <input type="number" id="price" name="price" placeholder="Введите цену ($)" min="0"
                                 step="0.01" required title="Введите только число, например: 100 или 99.99">
@@ -276,15 +149,15 @@
                         </div>
                     </div>
                     <div class="body-form-listing">
-                        <!-- Описание -->
+
                         <label for="description">Описание:</label>
                         <textarea id="description" name="description" placeholder="Введите описание" required
-                            pattern=".{10,500}" title="Описание должно содержать от 10 до 500 символов"
+                            minlength="10" title="Описание должно содержать от 10 до 500 символов"
                             maxlength="500"></textarea>
 
-                        <!-- Контент в группе -->
+
                         <div class="content-type-block">
-                            <span class="content-type-label">Укажите основной контент в группе:</span>
+                            <span class="content-type-label">Контент канала</span>
                             <div class="content-type-options">
                                 <label><input type="radio" name="content_type" value="unique" required>Уникальный
                                     контент</label>
@@ -296,7 +169,7 @@
                             </div>
                         </div>
 
-                        <!-- Доход/расход сумма -->
+
                         <div class="income-expense-row">
                             <input type="number" id="income" name="income" placeholder="Доход ($/мес)" min="0"
                                 step="0.01">
@@ -304,7 +177,7 @@
                                 step="0.01">
                         </div>
 
-                        <!-- Монетизация -->
+
                         <div class="monetization-block">
                             <span class="monetization-label">Монетизация:</span>
                             <div class="monetization-options">
@@ -319,26 +192,26 @@
                             </div>
                         </div>
 
-                        <!-- Доход/расход описание -->
+
                         <label for="income_sources">Источники дохода:</label>
                         <textarea id="income_sources" name="income_sources" placeholder="Опишите источники дохода"
-                            required pattern=".{5,500}" title="Минимум 5 символов" maxlength="500"></textarea>
+                            required minlength="5" title="Минимум 5 символов" maxlength="500"></textarea>
 
                         <label for="expense_sources">Источники расхода:</label>
                         <textarea id="expense_sources" name="expense_sources" placeholder="Опишите источники расхода"
-                            required pattern=".{5,500}" title="Минимум 5 символов" maxlength="500"></textarea>
+                            required minlength="5" title="Минимум 5 символов" maxlength="500"></textarea>
 
-                        <!-- Продвижение -->
+
                         <label for="promotion">Продвижение:</label>
                         <textarea id="promotion" name="promotion" placeholder="Опишите продвижение" required
-                            pattern=".{5,500}" title="Минимум 5 символов" maxlength="500"></textarea>
+                            minlength="5" title="Минимум 5 символов" maxlength="500"></textarea>
 
-                        <!-- Потребности в поддержке -->
+
                         <label for="support_needs">Потребности в поддержке:</label>
                         <textarea id="support_needs" name="support_needs" placeholder="Что необходимо для поддержания?"
-                            required pattern=".{5,500}" title="Минимум 5 символов" maxlength="500"></textarea>
+                            required minlength="5" title="Минимум 5 символов" maxlength="500"></textarea>
 
-                        <!-- Скриншоты -->
+
                         <div class="file-upload-block">
                             <label for="screenshots" class="file-upload-label">
                                 <b>Прикрепить скриншоты (подтверждения доходов и т.д.):</b>
@@ -354,44 +227,42 @@
                     </div>
 
                     <div class="footer-form-listing">
-                        <!-- Блок подтверждения кода владения сообществом: -->
+
                         <div class="ownership-confirm-block">
                             <div class="ownership-title">
-                                <b>Подтвердите, что вы хозяин сообщества, разместив данный код в его описании.</b>
+                                <b>Подтвердите, что вы владелец канала, разместив данный код в его описании.</b>
                             </div>
                             <div class="ownership-sub">
                                 Вы сможете удалить код после размещения Вашего объявления.
                             </div>
                             <div class="ownership-code" id="ownership-code">
-                                <!-- Код будет подставлен сервером, например: -->
-                                <!-- 71c27766f4c74e429a63 -->
+
+
                             </div>
                         </div>
 
-                        <!-- Гибкий переключатель с ссылкой -->
+
                         <div class="flex-switch-block">
                             <label class="flex-switch-label" for="flex_switch">
-                                <input type="checkbox" id="flex_switch" name="flex_switch" checked>
-                                Я соглашаюсь с <a href="/rules/community-placement" target="_blank">правилами размещения
+                                <input type="checkbox" id="flex_switch" name="flex_switch" required>
+                                Я соглашаюсь с <a href="/pages/lending/termsOfService.html" target="_blank">правилами размещения
                                     в моём сообществе</a> и обязуюсь соблюдать их.
                             </label>
                         </div>
 
-                        <!-- связь -->
+
                         <div class="contacts-section">
                             <h3>Контактные данные</h3>
                             <p style="color: #888888; font-size: medium;">
                                 Введите минимум 1 поле
                             </p>
-                            <!-- <p>необходимо указать хотя бы 1 поле</p> -->
+
                             <input type="text" name="contacts[telegram]" placeholder="Telegram, например: @username"
                                 class="contact-input" maxlength="32">
 
-                            <input type="text" name="contacts[vk]" placeholder="VK, например: https://vk.com/id123"
-                                class="contact-input" maxlength="100">
 
-                            <input type="text" name="contacts[instagram]" placeholder="Instagram, например: @my.profile"
-                                class="contact-input" maxlength="30">
+
+
 
                             <input type="text" name="contacts[whatsapp]"
                                 placeholder="WhatsApp, например: +7 900 123-45-67" class="contact-input" maxlength="20">
@@ -400,18 +271,18 @@
                                 class="contact-input" maxlength="100">
                         </div>
 
-                        <!-- Кнопка отправки -->
+
                         <button type="submit" id="submit-button">
-                            <i class="fas fa-paper-plane"></i> Создать объявление
+                            <i class="fas fa-paper-plane"></i> Разместить объявление
                         </button>
                     </div>
                 </form>
             </div>
         </section>
 
-        <section class="form2"> <!-- форма-2 -->
+        <section class="form2">
             <div class="create-listing-simple" style="display: none;">
-                <div class="step-indicator"> <!-- индикатор шагов -->
+                <div class="step-indicator">
                     <div class="step-block">
                         <span class="step active">1</span>
                         <span class="step-label">Платформа</span>
@@ -425,31 +296,31 @@
                         <span class="step-label">Объявление</span>
                     </div>
                 </div>
-                <h2>Заполните форму</h2>
+                <h2>Детали объявления</h2>
                 <form id="simple-listing-form">
-                    <!-- Название -->
+
                     <label for="simple-title">Название:</label>
-                    <input type="text" id="simple-title" name="title" placeholder="Введите название" required
+                    <input type="text" id="simple-title" name="title" placeholder="Например: создам обложку для YouTube-видео" required
                         pattern=".{5,100}" title="Название должно содержать от 5 до 100 символов" maxlength="100">
 
-                    <!-- Описание -->
+
                     <label for="simple-description">Описание:</label>
-                    <textarea id="simple-description" name="description" placeholder="Введите описание" required
-                        pattern=".{10,500}" title="Описание должно содержать от 10 до 500 символов"
+                    <textarea id="simple-description" name="description" placeholder="Что получит заказчик? Укажите объём работы, срок, количество правок и что нужно для начала." required
+                        minlength="10" title="Описание должно содержать от 10 до 500 символов"
                         maxlength="500"></textarea>
 
-                    <!-- <input type="hidden" name="platform_id" id="platform_id"> -->
-                    <!-- <input type="hidden" name="category_id" id="category_id"> -->
 
-                    <!-- Цена -->
+
+
+
                     <label for="simple-price">Цена($):</label>
                     <input type="number" id="simple-price" name="price" placeholder="Введите цену" min="0" step="0.01"
                         required maxlength="50">
 
-                    <!-- Обложка -->
+
                     <label for="simple-cover">Обложка:</label>
                     <div class="cover-upload-block">
-                        <input type="file" id="simple-cover" name="cover" accept="image/*" style="display:none;">
+                        <input type="file" id="simple-cover" name="cover" accept="image/*" required>
                         <label for="simple-cover" class="cover-upload-label">
                             <i class="fas fa-image"></i> Загрузить обложку
                         </label>
@@ -459,18 +330,16 @@
                         </div>
                     </div>
 
-                    <!-- связь -->
+
                     <div class="contacts-section">
                         <h3>Контактные данные</h3>
 
                         <input type="text" name="contacts[telegram]" placeholder="Telegram, например: @username"
                             maxlength="32">
 
-                        <input type="text" name="contacts[vk]" placeholder="VK, например: https://vk.com/id123"
-                            maxlength="100">
 
-                        <input type="text" name="contacts[instagram]" placeholder="Instagram, например: @my.profile"
-                            maxlength="30">
+
+
 
                         <input type="text" name="contacts[whatsapp]" placeholder="WhatsApp, например: +7 900 123-45-67"
                             maxlength="20">
@@ -480,39 +349,25 @@
                     </div>
 
                     <label class="form-checkbox">
-                        <input type="checkbox" id="allow_comments" name="allow_comments" checked>
+                        <input type="checkbox" id="simple-allow-comments" name="allow_comments" checked>
                         <span>Разрешить комментарии</span>
                     </label>
 
-                    <!-- Кнопка отправки -->
+
                     <button style="margin-top: 30px;" type="submit" id="simple-submit-button">
-                        <i class="fas fa-paper-plane"></i> Создать объявление
+                        <i class="fas fa-paper-plane"></i> Разместить объявление
                     </button>
                 </form>
             </div>
         </section>
 
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Покупка и продажа аккаунтов. Все права защищены.</p>
-        <nav>
-            <ul>
-                <li><a href="#">Политика конфиденциальности</a></li>
-                <li><a href="#">Условия использования</a></li>
-                <li><a href="#">Контакты</a></li>
-            </ul>
-        </nav>
-    </footer>
-
-
-    <script src="../../scripts/market/v3/form1.js"></script> <!-- подключаем скрипт для первой формы -->
-    <script src="../../scripts/market/v3/form2.js"></script> <!-- подключаем скрипт для второй формы -->
-    <script src="../../scripts/market/sell.js"></script> <!-- подключаем скрипт для страницы создания объявления -->
-    <script src="../../scripts/market/v3/sellMedia.js"></script> <!-- подключаем скрипт для загрузки платформ  -->
-    <script src="../../scripts/header/search/search.js"></script> <!-- подключаем скрипт для поиска -->
-    <script type="module" src="../../scripts/settingsModal/main.js?v=security-2"></script> <!-- подключаем JS файл для модального окна настроек -->
-    <script type="module" src="../../scripts/favoritesModal/favoritesMain.js"></script> <!-- подключаем JS файл для избранного -->
-</body>
-
-</html>
+</main>
+<aside class="sell-preview"><details open id="listing-preview"><summary>Предпросмотр объявления</summary><div class="preview-card"><div class="preview-art"><img id="live-cover" hidden alt="Обложка объявления"><span id="live-placeholder">▶</span></div><div class="preview-copy"><p id="live-category" class="eyebrow">ВАШЕ ПРЕДЛОЖЕНИЕ</p><h3 id="live-title">Здесь появится название</h3><p id="live-description">Добавьте описание: что вы предлагаете и чем это полезно покупателю.</p><strong id="live-price">Цена не указана</strong></div></div><p class="preview-note">Пример отображения карточки. Объявление появится после успешного размещения.</p></details>
+<div class="seller-tip"><p class="eyebrow">ХОРОШЕЕ ОБЪЯВЛЕНИЕ</p><h3>Конкретика вызывает доверие</h3><p>Используйте понятное название, реальные изображения и точную цену. В описании укажите результат, условия и сроки.</p><p>Не публикуйте пароли, токены или данные для входа.</p></div></aside>
+</div></div>
+<footer class="sell-footer"><span>PL-GL · Биржа цифровых предложений</span><nav aria-label="Документы"><a href="/pages/lending/policy.html">Конфиденциальность</a><a href="/pages/lending/termsOfService.html">Условия использования</a><a href="/pages/lending/contacts.html">Контакты</a></nav></footer>
+<script src="/scripts/market/v3/form1.js?v=sell-1"></script>
+<script src="/scripts/market/v3/form2.js?v=sell-1"></script>
+<script src="/scripts/market/v3/sellMedia.js?v=sell-1"></script>
+<script src="/scripts/market/sell-plgl.js?v=1"></script>
+</body></html>

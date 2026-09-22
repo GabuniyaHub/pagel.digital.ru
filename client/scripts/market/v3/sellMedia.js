@@ -157,9 +157,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const selectedPlatform2 = platforms.find(p => p.slug === window.selectedPlatformId);
 
             if (
-                selectedPlatform2.slug === 'youtube' ||
-                selectedPlatform2.slug === 'vkontakte' ||
-                selectedPlatform2.slug === 'telegram'
+                selectedPlatform2?.slug === 'youtube' ||
+                selectedPlatform2?.slug === 'vkontakte' ||
+                selectedPlatform2?.slug === 'telegram'
             ) {
                 const platformData = selectedPlatform2.slug;
                 const urlValue = encodeURIComponent(linkInput.value.trim());
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Ошибка:', error.message);
-            inputs.forEach(el => el.style.display = '');
+            editBlock.style.display = 'flex';
             viewBlock.style.display = 'none';
         }
     });
@@ -190,12 +190,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     function checkFormSubmission() {
         document.getElementById('listing-form').addEventListener('submit', async function (e) {
             e.preventDefault();
+            const submissionForm = e.currentTarget;
+            submissionForm.dispatchEvent(new CustomEvent('plgl:busy', { detail: true }));
+            try {
 
             const linkInput = document.getElementById('link');
             const linkValue = linkInput.value.trim();
 
             const token = sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
-            const user = JSON.parse(sessionStorage.getItem('user')) || JSON.parse(localStorage.getItem('user'));
+            const { user } = await window.PlglAuth.session;
 
             if (!token || !user) {
                 e.preventDefault();
@@ -205,7 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     text: 'Пожалуйста, войдите в систему.',
                     confirmButtonText: 'Ок'
                 });
-                window.location.href = "pages/user-auth/login";
+                window.PlglAuth.login();
                 return false;
             }
 
@@ -423,24 +426,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             const nameToSend = displayName && displayName.textContent.trim() 
                 ? displayName.textContent.trim() 
                 : profileNameInput.value.trim();
-            formData.append('name', nameToSend);
+            formData.set('name', nameToSend);
 
             // Для subscribers — аналогично
             const subscribersToSend = displaySubscribers && displaySubscribers.textContent.trim()
                 ? displaySubscribers.textContent.trim()
                 : profileSubscribersInput.value;
-            formData.append('subscribers', subscribersToSend);
+            formData.set('subscribers', subscribersToSend.replace(/[^0-9]/g, ''));
 
             // Для avatar — файл, если выбран в input, иначе можно взять url из displayAvatar.src (если нужно)
             if (profileAvatarInput.files.length > 0) {
-                formData.append('avatar', profileAvatarInput.files[0]);
+                formData.set('avatar', profileAvatarInput.files[0]);
             } 
 
             // Собираем контакты    
             const contacts = {
                 telegram: form.querySelector('[name="contacts[telegram]"]').value.trim() || null,
-                vk: form.querySelector('[name="contacts[vk]"]').value.trim() || null,
-                instagram: form.querySelector('[name="contacts[instagram]"]').value.trim() || null,
+                vk: form.querySelector('[name="contacts[vk]"]')?.value.trim() || null,
+                instagram: form.querySelector('[name="contacts[instagram]"]')?.value.trim() || null,
                 whatsapp: form.querySelector('[name="contacts[whatsapp]"]').value.trim() || null,
                 email: form.querySelector('[name="contacts[e-mail]"]').value.trim() || null
             };
@@ -539,7 +542,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const ownershipCodeBlock = document.getElementById('ownership-code');
             const ownershipCode = ownershipCodeBlock ? ownershipCodeBlock.textContent.trim() : '';
 
-            if (!ownershipCode) {
+            if (!ownershipCode || ownershipCode === 'Ошибка загрузки кода') {
                 Swal.fire({
                     icon: 'error',
                     title: 'Ошибка',
@@ -649,15 +652,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                     location.reload();
                 }
 
-                console.log(result);
+                if (!response.ok) throw new Error(result.message || result.error || 'Не удалось разместить объявление');
             } catch (err) {
                 console.error('Ошибка отправки:', err);
                 await Swal.fire({
                     icon: 'error',
                     title: 'Ошибка',
-                    text: 'Ошибка отправки формы. Пожалуйста, попробуйте позже.',
+                    text: err.message || 'Ошибка отправки формы. Пожалуйста, попробуйте позже.',
                     confirmButtonText: 'Понял'
                 });
+            }
+            } catch (error) {
+                window.PlglNotifications?.show(error.message || 'Не удалось разместить объявление. Попробуйте снова.', 'error');
+            } finally {
+                submissionForm.dispatchEvent(new CustomEvent('plgl:busy', { detail: false }));
             }
         });
     };
@@ -665,6 +673,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Вызов функции проверки отправки формы
     checkFormSubmission();
 
+    if (document.getElementById('listing-platform')) return;
     // Функция для отображения платформ
     function renderPlatforms(platforms) {
         platformList.innerHTML = ""; // Очищаем список

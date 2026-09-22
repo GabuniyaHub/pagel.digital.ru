@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             removeBtn.className = 'remove-btn';
             removeBtn.type = 'button';
             removeBtn.textContent = 'Удалить';
-            removeBtn.onclick = () => {
+            removeBtn.onclick = (e) => {
                 e.stopPropagation(); 
                 filesArray.splice(idx, 1);
                 updatePreview();
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Drag & Drop events
-    dropArea.addEventListener('click', () => fileInput.click());
+    dropArea.addEventListener('click', (event) => { if (event.target !== fileInput) fileInput.click(); });
     dropArea.addEventListener('dragover', e => {
         e.preventDefault();
         dropArea.classList.add('dragover');

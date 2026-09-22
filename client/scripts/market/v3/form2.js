@@ -1,22 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('simple-listing-form');
     const coverInput = document.getElementById('simple-cover');
     const coverFilename = document.getElementById('cover-filename');
     const coverPreview = document.getElementById('cover-preview');
 
     const token = sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
-    const user = JSON.parse(sessionStorage.getItem('user')) || JSON.parse(localStorage.getItem('user'));
+    const { user } = await window.PlglAuth.session;
     // console.log(user, token)
     if (!token || !user) {
-        e.preventDefault();
-        Swal.fire({
-            icon: 'warning',
-            title: 'Необходима авторизация',
-            text: 'Пожалуйста, войдите в систему.',
-            confirmButtonText: 'Ок'
-        });
-        window.location.href = "pages/user-auth/login";
-        return false;
+        window.PlglAuth.login();
+        return;
     }
     // console.log(user.id)
     // Показываем превью и имя файла при выборе
@@ -45,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = form.description.value.trim();
         const price = form.price.value.trim();
         const platform_id = window.selectedPlatformId; // строка, например 'linkedin'
+        if (!window.selectedProduct || !await window.PlglAuth.require()) return;
         const category_name = window.selectedProduct.name; // например 'LinkedIn Connections Boost'
         const category_description = window.selectedProduct.description || '';
         const allow_comments = form.allow_comments.checked;
@@ -82,8 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Собираем контакты    
         const contacts = {
             telegram: form.querySelector('[name="contacts[telegram]"]').value.trim() || null,
-            vk: form.querySelector('[name="contacts[vk]"]').value.trim() || null,
-            instagram: form.querySelector('[name="contacts[instagram]"]').value.trim() || null,
+            vk: form.querySelector('[name="contacts[vk]"]')?.value.trim() || null,
+            instagram: form.querySelector('[name="contacts[instagram]"]')?.value.trim() || null,
             whatsapp: form.querySelector('[name="contacts[whatsapp]"]').value.trim() || null,
             email: form.querySelector('[name="contacts[e-mail]"]').value.trim() || null
         };
@@ -146,14 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // Отправляем данные на сервер
+        form.dispatchEvent(new CustomEvent('plgl:busy', { detail: true }));
         try {
             const res = await fetch('/market/simple-listing', {
                 method: 'POST',
-<<<<<<< HEAD
-		headers: {
-=======
                 headers: {
->>>>>>> 7dc50892c84866fab724388b834d9f04f6e5741b
                     'Authorization': `Bearer ${token}`,
                 },
                 body: formData
@@ -186,6 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // location.reload();
         } catch (err) {
             Swal.fire('Ошибка', 'Ошибка сети. Попробуйте позже.', 'error');
+        } finally {
+            form.dispatchEvent(new CustomEvent('plgl:busy', { detail: false }));
         }
     });
 });
