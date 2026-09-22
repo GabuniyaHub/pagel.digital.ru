@@ -775,6 +775,23 @@ router.post('/verify-ownership', checkBlockStatusWithoutToken, async (req, res) 
   }
 });
 
+// Download only trusted parser image hosts, never arbitrary user URLs or redirects.
+router.get('/avatar-image', verifyToken, async (req, res) => {
+  try {
+    const url = new URL(req.query.url);
+    const allowed = ['yt3.ggpht.com', 'yt3.googleusercontent.com', 'yt4.ggpht.com', 'i.ytimg.com'];
+    if (url.protocol !== 'https:' || url.username || url.password || url.port || !allowed.includes(url.hostname)) {
+      return res.status(400).json({ error: 'Загрузите изображение канала вручную.' });
+    }
+    const image = await axios.get(url.href, { responseType: 'arraybuffer', timeout: 7000, maxRedirects: 0, maxContentLength: 5 * 1024 * 1024 });
+    const mime = String(image.headers['content-type'] || '').split(';')[0];
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(mime)) return res.sendStatus(415);
+    res.set('Content-Type', mime).set('Cache-Control', 'private, max-age=300').send(Buffer.from(image.data));
+  } catch {
+    res.status(502).json({ error: 'Не удалось загрузить аватар. Загрузите изображение вручную.' });
+  }
+});
+
 // API-роут для получения avatar/subs из url
 router.get('/avatar', async (req, res) => {
   const { url, platform } = req.query;
@@ -871,19 +888,19 @@ router.get('/avatar', async (req, res) => {
     }
 
     // Получаем id канала из ссылки
-    let channelId = '';
-    const channelMatch = url.match(/youtube\.com\/channel\/([A-Za-z0-9_\-]+)/);
-    if (channelMatch) {
-      channelId = channelMatch[1];
-    } else {
-      return res.status(400).json({ error: 'Некорректная ссылка на YouTube-канал' });
-    }
+    const channelPath = new URL(url).pathname;
+    const channelMatch = channelPath.match(/^\/channel\/([A-Za-z0-9_-]+)/);
+    const handleMatch = channelPath.match(/^\/@([^/]+)/);
+    const usernameMatch = channelPath.match(/^\/user\/([^/]+)/);
+    const identity = channelMatch ? { id: channelMatch[1] } : handleMatch ? { forHandle: decodeURIComponent(handleMatch[1]) } : usernameMatch ? { forUsername: decodeURIComponent(usernameMatch[1]) } : null;
+    if (!identity) return res.status(400).json({ error: 'Укажите ссылку youtube.com/@имя или youtube.com/channel/ID.' });
 
     // Получаем информацию о канале через API
     try {
       // Добавляем statistics в part!
-      const apiUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${YOUTUBE_API_KEY}`;
-      const ytRes = await axios.get(apiUrl);
+      const ytRes = await axios.get('https://www.googleapis.com/youtube/v3/channels', {
+        params: { part: 'snippet,statistics', ...identity, key: process.env.YOUTUBE_API_KEY || YOUTUBE_API_KEY }, timeout: 7000
+      });
       const channel = ytRes.data.items && ytRes.data.items[0];
       const avatar = channel?.snippet?.thumbnails?.high?.url || null;
       const title = channel?.snippet?.title || null;
@@ -1455,20 +1472,7 @@ router.get('/:id', (req, res) => {
   res.render('market/platform', { platform });
 });
 
-const catalogAliases = {
-  'channel-buy': 'Купить канал',
-  'channel-sell': 'Продать канал',
-  'promotion': 'Продвижение',
-  'editing': 'Монтаж',
-  'design': 'Дизайн',
-  'content': 'Контент',
-  'voiceover': 'Озвучка',
-  'other-services': 'Другие услуги',
-  'become-executor': 'Исполнитель',
-  'analytics': 'Аналитика',
-  'content-under-key': 'Контент под ключ',
-  'audience-growth': 'Рост аудитории'
-};
+const catalogAliases = Object.fromEntries(require('../../config/market/youtubeCatalog').map(category => [category.id, category.name]));
 
 async function renderCatalogPage(req, res, platformName, catalogName) {
   const search = req.query.q ? req.query.q.trim() : '';
@@ -1552,6 +1556,9 @@ async function renderCatalogPage(req, res, platformName, catalogName) {
 
 router.get('/:platformName/:catalogName', async (req, res) => {
   const { platformName, catalogName } = req.params;
+  if (platformName === 'youtube' && catalogName === 'channel-sell') {
+    return res.redirect('/pages/market/sell.html?type=channel&platform=youtube');
+  }
 
   if (!platformName || !catalogName) {
     return res.status(404).render('market/errors/404', { message: 'Каталог не найден' });

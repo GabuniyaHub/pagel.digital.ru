@@ -21,7 +21,15 @@
 <section class="sell-intro"><a href="/pages/index.html" class="back-link">← Вернуться в каталог</a>
 <p class="eyebrow">PL-GL / ДЛЯ ПРОДАВЦОВ</p><h1>Разместить объявление</h1>
 <p>Ваши навыки и цифровые проекты — для тех, кто их ищет.<br> Расскажите о предложении, а мы поможем показать его в каталоге.</p></section>
-<div class="sell-layout"><main>
+<div class="sell-layout">
+<nav class="composer-steps" aria-label="Этапы размещения">
+<p class="eyebrow">ВАШЕ ОБЪЯВЛЕНИЕ</p>
+<button type="button" data-step="category" aria-current="step"><span>01</span><strong>Категория<small>Что вы предлагаете</small></strong></button>
+<button type="button" data-step="description"><span>02</span><strong>Описание<small>Детали и изображения</small></strong></button>
+<button type="button" data-step="terms"><span>03</span><strong>Цена и условия<small>Стоимость и особенности</small></strong></button>
+<button type="button" data-step="contacts"><span>04</span><strong>Контакты<small>Связь и размещение</small></strong></button>
+<p id="composer-progress" aria-live="polite">Выберите категорию</p>
+</nav><main>
 <section class="selection-card" aria-labelledby="selection-title"><p class="eyebrow">01 / ВАШЕ ПРЕДЛОЖЕНИЕ</p><h2 id="selection-title">Что вы хотите разместить?</h2>
 <div class="offer-types"><button type="button" class="offer-type selected" data-offer-type="2" aria-pressed="true"><span>Услуга</span><small>Работа для заказчика или готовый цифровой продукт</small></button><button type="button" class="offer-type" data-offer-type="1" aria-pressed="false"><span>Канал</span><small>Канал, сообщество или аккаунт с аудиторией</small></button></div>
 <div class="selection-fields"><label>Платформа<select id="listing-platform" disabled><option>Загрузка платформ…</option></select></label>
@@ -369,5 +377,5 @@
 <script src="/scripts/market/v3/form1.js?v=sell-1"></script>
 <script src="/scripts/market/v3/form2.js?v=sell-1"></script>
 <script src="/scripts/market/v3/sellMedia.js?v=sell-1"></script>
-<script src="/scripts/market/sell-plgl.js?v=1"></script>
+<script src="/scripts/market/sell-plgl.js?v=2"></script>
 </body></html>

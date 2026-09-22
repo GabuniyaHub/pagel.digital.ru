@@ -1,3 +1,4 @@
+const youtubeCatalog = require('./youtubeCatalog');
 module.exports = [
     { //telegram
       id: "telegram",
@@ -52,24 +53,7 @@ module.exports = [
     name: "YouTube",
     icon: "https://cdn-icons-png.flaticon.com/512/174/174883.png",
     description: "Платформа для видео",
-    products: [
-        {
-            id: "product1",
-            name: "YouTube Channel Buy & Sell",
-            price: 100,
-            formType: 1,
-            description: "Канал YouTube с подписчиками и видео",
-            image: "https://example.com/youtube-channel.png"
-        },
-        {
-            id: "product2",
-            name: "YouTube Thumbnail Pack",
-            price: 15,
-            formType: 2,
-            description: "Набор миниатюр для оформления видео",
-            image: "https://example.com/youtube-thumbnails.png"
-        }
-    ]
+    products: youtubeCatalog.filter(category => !category.navigationOnly)
     },
     { //instagram
       id: "instagram",

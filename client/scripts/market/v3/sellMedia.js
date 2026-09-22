@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const linkInput = document.getElementById('link');
     // Добавляем обработчик события input для поля ввода ссылки
-    linkInput.addEventListener('input', async () => {
+    if (!document.getElementById('listing-platform')) linkInput.addEventListener('input', async () => {
         const form = document.getElementById('listing-form');
 
         const subscribers = form.querySelector('#profile-subscribers');
@@ -437,6 +437,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Для avatar — файл, если выбран в input, иначе можно взять url из displayAvatar.src (если нужно)
             if (profileAvatarInput.files.length > 0) {
                 formData.set('avatar', profileAvatarInput.files[0]);
+            } else if (window.plglParsedChannel?.avatar && window.plglParsedChannel.link === linkValue) {
+                const avatarResponse = await fetch('/market/avatar-image?url=' + encodeURIComponent(window.plglParsedChannel.avatar));
+                if (!avatarResponse.ok) {
+                    document.getElementById('profile-edit-block').style.display = 'block';
+                    throw new Error('Не удалось загрузить аватар канала. Выберите изображение вручную.');
+                }
+                const blob = await avatarResponse.blob();
+                formData.set('avatar', new File([blob], 'channel-avatar.' + (blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'), { type: blob.type }));
             } 
 
             // Собираем контакты    
