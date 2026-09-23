@@ -3,12 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categorySelect = document.getElementById('listing-category');
     const status = document.getElementById('selection-status');
     const retry = document.getElementById('reload-categories');
-    const preview = document.getElementById('listing-preview');
-    const subscriberPreview = document.createElement('p');
-    subscriberPreview.id = 'live-subscribers';
-    subscriberPreview.hidden = true;
-    document.getElementById('live-price').before(subscriberPreview);
-    if (matchMedia('(max-width:800px)').matches) preview.open = false;
     let platforms = [], type = new URLSearchParams(location.search).get('type') === 'channel' ? 1 : 2, coverUrl = null;
     const channel = document.querySelector('.form');
     const service = document.querySelector('.create-listing-simple');
@@ -27,14 +21,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         const image = document.getElementById('live-cover');
         if (coverUrl) URL.revokeObjectURL(coverUrl);
         coverUrl = file ? URL.createObjectURL(file) : null;
-        const source = coverUrl || (!simple && window.plglParsedChannel?.avatar);
+        const productArtwork = {
+            design: '/assets/images/youtube-catalog/05-youtube-design.png',
+            editing: '/assets/images/youtube-catalog/04-youtube-editing.png',
+            promotion: '/assets/images/youtube-catalog/03-youtube-promotion.png',
+            'channel-buy': '/assets/images/youtube-catalog/02-youtube-channel-sell.png',
+            'channel-sell': '/assets/images/youtube-catalog/02-youtube-channel-sell.png',
+            content: '/assets/images/youtube-catalog/06-youtube-content.png',
+            voiceover: '/assets/images/youtube-catalog/07-youtube-voiceover.png',
+            'other-services': '/assets/images/youtube-catalog/08-youtube-services.png',
+            analytics: '/assets/images/youtube-catalog/11-youtube-analytics.png',
+            'content-under-key': '/assets/images/youtube-catalog/12-youtube-content-under-key.png',
+            'audience-growth': '/assets/images/youtube-catalog/13-youtube-audience-growth.png'
+        };
+        const source = coverUrl || (!simple && window.plglParsedChannel?.avatar) || productArtwork[window.selectedProduct?.id];
         image.hidden = !source;
         document.getElementById('live-placeholder').hidden = !!source;
         if (source) image.src = source; else image.removeAttribute('src');
         image.classList.toggle('channel-cover', !simple);
         const subscribers = document.getElementById('live-subscribers');
-        subscribers.hidden = simple;
-        subscribers.textContent = !simple ? ((window.plglParsedChannel?.subscribers ?? document.getElementById('profile-subscribers').value) || '0') + ' подписчиков' : '';
+        const subscriberCount = window.plglParsedChannel?.subscribers ?? document.getElementById('profile-subscribers').value;
+        subscribers.hidden = simple || !subscriberCount;
+        subscribers.textContent = !simple && subscriberCount ? Number(subscriberCount).toLocaleString('ru-RU') + ' подписчиков' : '';
         const parsedChannel = window.plglParsedChannel;
         const channelCard = document.getElementById('channel-parsed-card');
         channelCard.hidden = simple;
@@ -49,25 +57,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             : 'Вставьте ссылку на канал. Мы попробуем получить его название, аватар и число подписчиков.';
         updateProgress();
     }
-    function selectCategory() {
+    function selectCategory(advance = true) {
         const platform = platforms.find(p => p.id === platformSelect.value);
         const product = platform?.products?.find(p => p.id === categorySelect.value && Number(p.formType) === type);
         window.selectedPlatformId = platform?.id;
         window.selectedProduct = product || null;
         channel.style.display = product && type === 1 ? 'block' : 'none';
         service.style.display = product && type === 2 ? 'block' : 'none';
+        status.hidden = Boolean(product);
         status.textContent = product ? 'Категория выбрана. Заполните детали и проверьте карточку перед размещением.' : 'Выберите доступную категорию.';
         updatePreview();
-        if (product) openStep('description', false);
+        if (product && advance) openStep('description', false);
     }
-    function selectPlatform() {
+    function selectPlatform(advance = true) {
         const platform = platforms.find(p => p.id === platformSelect.value);
         const products = (platform?.products || []).filter(p => Number(p.formType) === type);
         categorySelect.replaceChildren(option('Выберите категорию', ''));
         products.forEach(p => categorySelect.add(option(p.description || p.name, p.id)));
         categorySelect.disabled = !products.length;
+        const preferredId = type === 1 ? 'channel-buy' : 'design';
+        categorySelect.value = products.find(product => product.id === preferredId)?.id || products[0]?.id || '';
         resetParsedChannel();
-        selectCategory();
+        selectCategory(advance);
         if (!products.length) status.textContent = 'Для этого типа предложения на выбранной платформе пока нет категорий. Выберите другую платформу или тип.';
         // Never retain fetched identity belonging to the previous platform.
         document.getElementById('display-name').textContent = '';
@@ -91,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     categorySelect.addEventListener('change', selectCategory);
     async function load() {
         retry.hidden = true;
+        status.hidden = false;
         status.textContent = 'Загружаем доступные категории каталога.';
         try {
             const response = await fetch('/market/platforms');
@@ -101,11 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             platformSelect.replaceChildren(option('YouTube', 'youtube'));
             platformSelect.value = 'youtube';
             platformSelect.disabled = false;
-            selectPlatform();
-            if (type === 1 && categorySelect.options.length === 2) {
-                categorySelect.selectedIndex = 1;
-                selectCategory();
-            }
+            selectPlatform(false);
         } catch (error) {
             status.textContent = error.message + ' Попробуйте ещё раз.';
             retry.hidden = false;
@@ -151,6 +159,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         summary.append(note);
         const body = document.createElement('div');
         body.className = 'composer-body';
+        if (step !== 'category') {
+            const heading = document.createElement('h3');
+            heading.className = 'composer-heading';
+            heading.textContent = { description: 'Описание и изображения', terms: 'Цена и условия', contacts: 'Контакты' }[step];
+            body.append(heading);
+        }
         details.append(summary, body);
         details.open = true;
         summary.addEventListener('click', event => {
@@ -178,7 +192,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             item.classList.toggle('is-current', item === section);
         });
         setActiveStep(step);
-        if (scroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (scroll) {
+            const target = step === 'category' ? section.querySelector('.selection-card') : section.querySelector('.composer-body')?.firstElementChild;
+            target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
     const categoryCard = document.querySelector('.selection-card');
     const categorySection = makeSection('category', 1);
@@ -309,6 +326,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const { user } = await window.PlglAuth.session;
         if (!user) return;
+        const headerName = document.querySelector('.header-user-name');
+        if (headerName) headerName.textContent = user.nickname || user.name || 'Профиль';
         // Read contacts from the account API, not from a potentially stale storage copy.
         const response = await fetch('/account/get/data');
         if (response.ok) {

@@ -61,7 +61,7 @@
             setTimeout(() => item.remove(), 6500);
         }
         mount() {
-            this.button = document.createElement('button');
+            this.button = document.querySelector('.plgl-notification-slot .plgl-notification-toggle') || document.createElement('button');
             this.button.className = 'plgl-notification-toggle';
             this.button.type = 'button';
             this.button.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><span class="plgl-notification-count" hidden></span>';
@@ -94,12 +94,14 @@
                 nav.innerHTML = '<a href="/pages/index.html">Каталог PL-GL</a>';
                 document.body.prepend(nav);
             }
-            const slot = document.createElement('span');
+            const slot = nav.querySelector('.plgl-notification-slot') || document.createElement('span');
             slot.className = 'plgl-notification-slot';
             slot.append(this.button);
             const burger = nav.querySelector('#menu-icon');
-            if (burger && burger.parentElement === nav) nav.insertBefore(slot, burger);
-            else nav.append(slot);
+            if (!slot.isConnected) {
+                if (burger && burger.parentElement === nav) nav.insertBefore(slot, burger);
+                else nav.append(slot);
+            }
             document.body.append(this.panel);
             this.button.addEventListener('click', () => {
                 this.panel.hidden = !this.panel.hidden;
