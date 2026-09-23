@@ -35,6 +35,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const subscribers = document.getElementById('live-subscribers');
         subscribers.hidden = simple;
         subscribers.textContent = !simple ? ((window.plglParsedChannel?.subscribers ?? document.getElementById('profile-subscribers').value) || '0') + ' подписчиков' : '';
+        const parsedChannel = window.plglParsedChannel;
+        const channelCard = document.getElementById('channel-parsed-card');
+        channelCard.hidden = simple;
+        document.getElementById('parsed-channel-name').textContent = parsedChannel?.title || 'Название появится после вставки ссылки';
+        document.getElementById('parsed-channel-subscribers').textContent = parsedChannel?.subscribers ? Number(parsedChannel.subscribers).toLocaleString('ru-RU') + ' подписчиков' : 'Подписчики определятся автоматически';
+        const parsedAvatar = document.getElementById('parsed-channel-avatar');
+        parsedAvatar.hidden = !parsedChannel?.avatar;
+        if (parsedChannel?.avatar) parsedAvatar.src = parsedChannel.avatar;
+        else parsedAvatar.removeAttribute('src');
+        document.getElementById('channel-parse-hint').textContent = parsedChannel
+            ? 'Данные канала загружены. Проверьте ссылку и добавьте код подтверждения в описание канала.'
+            : 'Вставьте ссылку на канал. Мы попробуем получить его название, аватар и число подписчиков.';
         updateProgress();
     }
     function selectCategory() {
@@ -140,10 +152,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const body = document.createElement('div');
         body.className = 'composer-body';
         details.append(summary, body);
-        details.addEventListener('toggle', () => {
-            if (!details.open || details.closest('form') && details.closest('form').offsetParent === null) return;
-            document.querySelectorAll('.composer-section').forEach(other => { if (other !== details) other.open = false; });
-            setActiveStep(step);
+        details.open = true;
+        summary.addEventListener('click', event => {
+            event.preventDefault();
+            openStep(step);
         });
         return { details, body };
     }
@@ -161,7 +173,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         const section = step === 'category' ? document.querySelector('[data-section="category"]') : activeForm().querySelector('[data-section="' + step + '"]');
         if (!section) return;
-        document.querySelectorAll('.composer-section').forEach(item => { item.open = item === section; });
+        document.querySelectorAll('.composer-section').forEach(item => {
+            item.open = true;
+            item.classList.toggle('is-current', item === section);
+        });
         setActiveStep(step);
         if (scroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -255,6 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('profile-view-block').style.display = 'none';
         document.getElementById('profile-edit-block').style.display = 'block';
         parserStatus.textContent = '';
+        updatePreview();
     }
     async function parseChannel() {
         const url = link.value.trim(), platform = window.selectedPlatformId;
