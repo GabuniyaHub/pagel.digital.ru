@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/styles/market/sell-plgl.css?v=1">
-<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=2">
+<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=3">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="sell-page">
@@ -32,7 +32,7 @@
 <p id="composer-progress" aria-live="polite">Выберите категорию</p>
 </nav><main>
 <section class="selection-card" aria-labelledby="selection-title"><p class="eyebrow">01 / ВАШЕ ПРЕДЛОЖЕНИЕ</p><h2 id="selection-title">Что вы хотите разместить?</h2>
-<div class="offer-types"><button type="button" class="offer-type selected" data-offer-type="2" aria-pressed="true"><span>Услуга</span><small>Работа для заказчика или готовый цифровой продукт</small></button><button type="button" class="offer-type" data-offer-type="1" aria-pressed="false"><span>Канал</span><small>Канал, сообщество или аккаунт с аудиторией</small></button></div>
+<div class="offer-types"><button type="button" class="offer-type selected" data-offer-type="2" aria-pressed="true"><span class="offer-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3 18l3 3 5.3-5.3a5 5 0 0 0 6.4-6.4L14.5 13 11 9.5z"/></svg></span><span>Услуга</span><small>Монтаж, дизайн, продвижение и другие задачи для YouTube</small></button><button type="button" class="offer-type" data-offer-type="1" aria-pressed="false"><span class="offer-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5c0-1.4 1.2-2.5 2.6-2.5h10.8C18.8 5 20 6.1 20 7.5v9c0 1.4-1.2 2.5-2.6 2.5H6.6C5.2 19 4 17.9 4 16.5z"/><path d="m10 9 5 3-5 3z"/></svg></span><span>Канал</span><small>Канал с аудиторией, статистикой и подтверждением владения</small></button></div>
 <label class="platform-fixed-label" hidden><select id="listing-platform" disabled><option>YouTube</option></select></label>
 <div class="selection-fields"><div class="platform-chip"><span>Платформа</span><strong>YouTube</strong></div>
 <label>Категория<select id="listing-category" disabled><option>Загрузка категорий…</option></select></label></div>
@@ -161,7 +161,7 @@
                     <div class="body-form-listing">
 
                         <label for="description">Описание:</label>
-                        <textarea id="description" name="description" placeholder="Введите описание" required
+                        <textarea id="description" name="description" placeholder="Расскажите о тематике и формате канала, источниках аудитории, регулярности публикаций и причинах продажи." required
                             minlength="10" title="Описание должно содержать от 10 до 500 символов"
                             maxlength="500"></textarea>
 
