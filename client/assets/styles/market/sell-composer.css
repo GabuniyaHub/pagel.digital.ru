@@ -52,3 +52,23 @@ main{min-width:0}.selection-card,.form,.create-listing-simple{padding:0;backgrou
 .sell-footer nav a{margin:0 7px;color:#d6dde5;font-size:12px}
 @media(max-width:900px){.sell-footer.pl-footer{flex-direction:column;justify-content:center;text-align:center;padding:22px 16px}.sell-footer nav{gap:8px}}
 @media(max-width:680px){.pl-header,.pl-header-inner{height:64px}.composer-steps{top:72px}.brand img{width:116px}.profile-menu .header-user-name,.profile-menu .profile-chevron{display:none}.profile-menu .profile-link{width:38px;height:38px}.profile-menu .header-avatar{width:32px;height:32px}.composer-section.is-current>.composer-body{gap:6px}}
+.profile-menu .profile-chevron{display:block;flex:none;width:8px;height:8px;margin:0 3px 4px 7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .15s}
+.profile-menu [aria-expanded="true"] .profile-chevron{transform:rotate(225deg);margin-bottom:-4px}
+.form .channel-theme-row{grid-template-columns:minmax(0,1fr);gap:6px;margin:16px 0}
+.theme-picker{position:relative;min-width:0}
+.composer-body .theme-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:46px;padding:11px 14px;border:1px solid #cad6e4;border-radius:10px;background:#fff;color:#26374b;font:500 14px Inter,sans-serif;text-align:left;cursor:pointer}
+.theme-trigger::after{content:'';width:7px;height:7px;border-right:2px solid #65758e;border-bottom:2px solid #65758e;transform:rotate(45deg);margin:0 3px 4px 12px}
+.theme-trigger:focus-visible,.theme-trigger[aria-expanded="true"]{outline:3px solid #e7edf4;border-color:#65758e}
+.theme-popup{position:absolute;z-index:30;top:calc(100% + 6px);left:0;right:0;padding:8px;border:1px solid #dce4ee;border-radius:12px;background:#fff;box-shadow:0 12px 32px #1e28331f}
+.composer-body .theme-popup input{margin:0 0 6px;width:100%;min-height:40px;background:#f5f7fa}
+#theme-options{max-height:230px;overflow:auto;overscroll-behavior:contain}
+.composer-body #theme-options button{display:block;width:100%;padding:10px 12px;border:0;border-radius:7px;background:transparent;text-align:left;color:#3b4d61;font:500 13px Inter,sans-serif;cursor:pointer}
+.composer-body #theme-options button:hover,.composer-body #theme-options button:focus{background:#edf2f7;outline:none}
+.composer-body #theme-options button[aria-selected="true"]{background:#e6edf5;color:#1e2833;font-weight:700}
+.theme-popup p{padding:8px;color:#65758e;font-size:13px}
+.stage-error{padding:10px 12px;margin:0 0 12px;border:1px solid #e5ced0;border-radius:8px;color:#8a4146;background:#fff7f7;font-size:13px;line-height:1.5}
+.cover-upload-label:focus-visible{outline:3px solid #c7d2df;outline-offset:2px}
+.preview-art{position:relative}
+.preview-art img{position:absolute;inset:0}
+.preview-art img.channel-cover{object-fit:contain;background:#edf2f7}
+@media(max-width:680px){.profile-menu .profile-chevron{display:none}}

@@ -330,6 +330,7 @@ router.post('/create-listings', verifyToken, upload.fields([
       [
         link,
         theme,
+        normalizedPrice,
         description,
         allowCommentsBool,
         showLinkBool,

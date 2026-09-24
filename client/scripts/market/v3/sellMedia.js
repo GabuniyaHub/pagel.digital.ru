@@ -460,24 +460,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Добавляем в formData
             formData.append('contacts', JSON.stringify(contacts));
 
-            // Получить все платформы из БД и найти нужную по slug
-            const responsePlatforms = await fetch('/market/search');
-            const platforms = await responsePlatforms.json();
-            const selectedPlatform2 = platforms.find(p => p.slug === window.selectedPlatformId);
-
-            if (selectedPlatform2) {
-                formData.append('platform_id', selectedPlatform2.id); // это число!
-            } else {
-                alert('Платформа не найдена!');
+            // The server resolves the catalog slug to the database ID.
+            // /market/search returns catalog results, not a reliable platform registry.
+            const platformSlug = window.selectedPlatformId;
+            if (!platformSlug) {
+                await Swal.fire({ icon: 'error', title: 'Выберите категорию объявления' });
                 return;
             }
-
-
-
-            // console.log('Выбранная платформа:', selectedPlatform2);
+            formData.set('platform_id', platformSlug);
 
             // Проверка патерна
-            if (!validatePlatformLink(selectedPlatform2.slug, linkValue)) {
+            if (!validatePlatformLink(platformSlug, linkValue)) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Ошибка',
@@ -508,7 +501,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Отправляем код и ссылку на API для проверки
 
-            const platformNameForCode = selectedPlatform2.slug
+            const platformNameForCode = platformSlug;
 
             // console.log(linkInput, linkValue, platformNameForCode);
 

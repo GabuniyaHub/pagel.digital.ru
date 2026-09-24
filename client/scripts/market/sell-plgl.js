@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let draftDb, saveTimer, parserTimer, parserRequest, restoringDraft = false, suppressDraftSave = false, coverUrl = null;
     let currentWorkflow = [];
     const sections = new Map();
+    const validChannelUrl = value => /^https:\/\/(www\.)?youtube\.com\/channel\/[A-Za-z0-9_-]+\/?(?:[?#].*)?$/i.test(value);
 
     function openDraftDb() {
         return new Promise((resolve, reject) => {
@@ -128,6 +129,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function updatePreview() {
+        const channelUrl = valueOf(channelForm, '#link');
+        document.querySelector('.channel-link-help').hidden = currentType !== 1 || !channelUrl || validChannelUrl(channelUrl);
+        syncThemePicker();
         const simple = currentType === 2;
         const form = activeForm();
         const title = (!simple && channelParsedForCurrentLink()?.title) || valueOf(form, simple ? '#simple-title' : '#profile-name');
@@ -205,24 +209,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         terms: makeSection('terms', 'Цена и условия'),
         contacts: makeSection('contacts', 'Контакты и подтверждение')
     };
+    // Resolve fields before moving their parents into detached stage containers.
+    const channelPriceRow = channelForm.querySelector('#price').closest('.form-row');
+    channelPriceRow.classList.add('channel-price-row');
+    channelParts.terms.body.append(channelPriceRow);
     channelParts.channel.body.append(channelForm.querySelector('.header-form-listing'));
     channelParts.description.body.append(channelForm.querySelector('.body-form-listing'));
     channelParts.contacts.body.append(channelForm.querySelector('.footer-form-listing'));
-    // Older cached copies of sell.html can temporarily be served alongside this
-    // script and may not contain the channel price field. Keep initialization
-    // alive so the category chooser and remaining stages still work.
-    const channelPriceRow = channelForm.querySelector('#price, [name="price"]')?.closest('.form-row');
-    if (channelPriceRow) {
-        channelPriceRow.classList.add('channel-price-row');
-        channelParts.terms.body.append(channelPriceRow);
-    }
     Object.values(channelParts).forEach(part => channelForm.append(part.details));
 
     const serviceParts = { details: makeSection('details', 'Детали услуги'), publish: makeSection('publish', 'Цена и контакты') };
-    let serviceTarget = serviceParts.details.body;
     [...serviceForm.childNodes].forEach(node => {
-        if (node.nodeType === Node.ELEMENT_NODE && (node.matches('label[for="simple-price"], #simple-price, .contacts-section, #simple-allow-comments, #simple-submit-button'))) serviceTarget = serviceParts.publish.body;
-        serviceTarget.append(node);
+        const isDetails = node.nodeType === Node.ELEMENT_NODE && node.matches('label[for="simple-title"], #simple-title, label[for="simple-description"], #simple-description, label[for="simple-cover"], .cover-upload-block');
+        (isDetails ? serviceParts.details.body : serviceParts.publish.body).append(node);
     });
     Object.values(serviceParts).forEach(part => serviceForm.append(part.details));
 
@@ -232,6 +231,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     function renderWorkflow(type) {
         currentWorkflow = workflows[type];
+        document.querySelectorAll('[data-offer-type]').forEach(button => {
+            const selected = Number(button.dataset.offerType) === type;
+            button.classList.toggle('selected', selected);
+            button.setAttribute('aria-pressed', String(selected));
+        });
         document.querySelectorAll('[data-generated-step-control]').forEach(button => button.remove());
         stepList.replaceChildren();
         currentWorkflow.forEach((step, index) => {
@@ -278,40 +282,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     function validStep(step) {
+        return !stepError(step);
+    }
+    function stepError(step) {
         const form = activeForm();
         const parsed = channelParsedForCurrentLink();
         const contactFields = [...form.querySelectorAll('[name^="contacts["]')];
         const hasContact = contactFields.some(field => field.value.trim());
-        if (step === 'category') return Boolean(window.selectedProduct);
+        const error = (selector, message) => ({ field: form.querySelector(selector), message });
+        const textValid = selector => {
+            const field = form.querySelector(selector);
+            return field.checkValidity() && field.value.trim().length >= Math.max(1, field.minLength);
+        };
+        const priceValid = selector => {
+            const field = form.querySelector(selector);
+            return field.checkValidity() && /^\d+(\.\d{1,2})?$/.test(field.value) && Number(field.value) > 0;
+        };
+        if (step === 'category') return window.selectedProduct ? null : { field: categorySelect, message: 'Выберите категорию объявления.' };
         if (currentType === 2) {
-            if (step === 'details') return ['#simple-title', '#simple-description'].every(selector => form.querySelector(selector).checkValidity()) && Boolean(form.querySelector('#simple-cover').files.length);
-            if (step === 'publish') return form.querySelector('#simple-price').checkValidity() && Number(form.querySelector('#simple-price').value) > 0 && hasContact;
+            if (step === 'details') {
+                if (!textValid('#simple-title')) return error('#simple-title', 'Укажите название услуги: от 5 до 100 символов.');
+                if (!textValid('#simple-description')) return error('#simple-description', 'Добавьте описание услуги: от 10 до 500 символов.');
+                if (!form.querySelector('#simple-cover').files.length) return error('.cover-upload-label', 'Загрузите обложку услуги на этом этапе.');
+            }
+            if (step === 'publish' && !priceValid('#simple-price')) return error('#simple-price', 'Укажите цену услуги больше нуля (до двух знаков после точки).');
         } else {
             if (step === 'channel') {
-                const identityReady = parsed || (valueOf(form, '#profile-name').length >= 3 && valueOf(form, '#profile-subscribers') !== '' && form.querySelector('#profile-avatar-input').files.length > 0);
-                return form.querySelector('#link').checkValidity() && form.querySelector('#theme').checkValidity() && Boolean(identityReady);
+                const identityReady = parsed || (textValid('#profile-name') && valueOf(form, '#profile-name').length >= 3 &&
+                    valueOf(form, '#profile-subscribers') !== '' && form.querySelector('#profile-subscribers').checkValidity() &&
+                    form.querySelector('#profile-avatar-input').files.length > 0);
+                if (!validChannelUrl(valueOf(form, '#link'))) return error('#link', 'Вставьте ссылку вида https://www.youtube.com/channel/ID канала.');
+                if (!form.querySelector('#theme').value) return error('#theme-trigger', 'Выберите тематику канала.');
+                if (!identityReady) return error('#link', 'Дождитесь загрузки данных канала или заполните название, подписчиков и аватар вручную.');
             }
-            if (step === 'description') return form.querySelector('#description').checkValidity();
-            if (step === 'terms') {
-                const price = form.querySelector('#price, [name="price"]');
-                return Boolean(price && price.checkValidity() && Number(price.value) > 0);
-            }
-            if (step === 'contacts') return hasContact && form.querySelector('#flex_switch').checked;
+            if (step === 'description' && !textValid('#description')) return error('#description', 'Добавьте описание канала: от 10 до 500 символов.');
+            if (step === 'terms' && !priceValid('#price')) return error('#price', 'Укажите цену канала больше нуля (до двух знаков после точки).');
+            if (step === 'contacts' && !form.querySelector('#flex_switch').checked) return error('#flex_switch', 'Подтвердите согласие с правилами размещения.');
         }
-        return false;
+        if ((step === 'contacts' || step === 'publish') && !hasContact) return error('[name^="contacts["]', 'Добавьте хотя бы один контакт для связи.');
+        return null;
     }
     function showStepError(step) {
-        const form = activeForm();
-        const field = currentType === 1 && step === 'channel'
-            ? (!form.querySelector('#link').checkValidity() ? form.querySelector('#link') : !form.querySelector('#theme').checkValidity() ? form.querySelector('#theme') : null)
-            : step === 'details' ? form.querySelector('#simple-title')
-                : step === 'description' ? form.querySelector('#description')
-                    : step === 'terms' ? form.querySelector('#price')
-                        : step === 'publish' ? form.querySelector('#simple-price') : null;
-        if (field && !field.checkValidity()) field.reportValidity();
-        else if (currentType === 1 && step === 'channel' && !channelParsedForCurrentLink()) window.PlglNotifications?.show('Не удалось распознать канал. Проверьте ссылку или заполните название, подписчиков и загрузите аватар вручную.', 'error');
-        else if (step === 'contacts' || step === 'publish') window.PlglNotifications?.show('Добавьте хотя бы один контакт для связи.' + (currentType === 1 ? ' Также подтвердите владение каналом.' : ''), 'error');
-        else window.PlglNotifications?.show('Заполните обязательные поля этого этапа.', 'error');
+        const error = stepError(step);
+        if (!error) return;
+        const section = sections.get(step);
+        let message = section.querySelector('.stage-error');
+        if (!message) {
+            message = document.createElement('p');
+            message.className = 'stage-error';
+            message.setAttribute('role', 'alert');
+            section.querySelector('.composer-body').prepend(message);
+        }
+        message.textContent = error.message;
+        error.field?.focus();
     }
     function buildStepControls() {
         currentWorkflow.forEach((step, index) => {
@@ -396,11 +419,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         suppressDraftSave = true;
         currentType = type;
         localStorage.setItem('plgl-sell-type', String(type));
-        document.querySelectorAll('[data-offer-type]').forEach(button => {
-            const selected = Number(button.dataset.offerType) === type;
-            button.classList.toggle('selected', selected);
-            button.setAttribute('aria-pressed', String(selected));
-        });
         renderWorkflow(type);
         await selectPlatform(false);
         const saved = await restoreDraft(type);
@@ -423,7 +441,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         updatePreview();
     }
     const link = document.getElementById('link');
-    const canonicalYoutubeChannelUrl = /^https:\/\/(www\.)?youtube\.com\/channel\/[A-Za-z0-9_-]+\/?(?:[?#].*)?$/i;
     const parserStatus = document.createElement('p');
     parserStatus.className = 'parser-status';
     parserStatus.setAttribute('role', 'status');
@@ -431,7 +448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function parseChannel() {
         const url = link.value.trim();
         if (currentType !== 1 || !url) return;
-        if (!canonicalYoutubeChannelUrl.test(url)) {
+        if (!validChannelUrl(url)) {
             parserStatus.textContent = 'Для автоматического определения данных вставьте исходную ссылку youtube.com/channel/ID из настроек канала.';
             updatePreview();
             return;
@@ -468,11 +485,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveDraftSoon();
     });
     forms.forEach(form => {
-        form.addEventListener('input', () => { updatePreview(); saveDraftSoon(); });
-        form.addEventListener('change', () => { updatePreview(); saveDraftSoon(); });
+        // Validate the whole wizard ourselves so hidden fields never swallow submit.
+        form.noValidate = true;
+        const onEdit = () => {
+            form.querySelectorAll('.stage-error').forEach(message => message.remove());
+            updatePreview(); saveDraftSoon();
+        };
+        form.addEventListener('input', onEdit);
+        form.addEventListener('change', onEdit);
         let busy = false;
         form.addEventListener('submit', event => {
             if (busy) { event.preventDefault(); event.stopImmediatePropagation(); return; }
+            const invalid = currentWorkflow.find(step => !validStep(step.key));
+            if (invalid) {
+                event.preventDefault(); event.stopImmediatePropagation();
+                openStep(invalid.key);
+                showStepError(invalid.key);
+            }
         }, true);
         const button = form.querySelector('button[type="submit"]');
         const original = button?.textContent || 'Разместить объявление';
@@ -534,6 +563,100 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function syncThemePicker() {
+        const select = document.getElementById('theme');
+        const trigger = document.getElementById('theme-trigger');
+        if (!trigger) return;
+        trigger.textContent = select.selectedOptions[0]?.textContent || 'Выберите тематику';
+        document.querySelectorAll('#theme-options [role="option"]').forEach(item => {
+            item.setAttribute('aria-selected', String(item.dataset.value === select.value));
+        });
+    }
+    function setupThemePicker() {
+        const select = document.getElementById('theme');
+        const picker = document.createElement('div');
+        picker.className = 'theme-picker';
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.id = 'theme-trigger';
+        trigger.className = 'theme-trigger';
+        trigger.setAttribute('aria-haspopup', 'listbox');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-controls', 'theme-options');
+        trigger.setAttribute('aria-labelledby', 'theme-label theme-trigger');
+        const popup = document.createElement('div');
+        popup.className = 'theme-popup';
+        popup.hidden = true;
+        const search = document.createElement('input');
+        search.type = 'search';
+        search.placeholder = 'Найти тематику';
+        search.setAttribute('aria-label', 'Найти тематику канала');
+        const list = document.createElement('div');
+        list.id = 'theme-options';
+        list.setAttribute('role', 'listbox');
+        list.setAttribute('aria-labelledby', 'theme-label');
+        const empty = document.createElement('p');
+        empty.textContent = 'Ничего не найдено';
+        empty.hidden = true;
+        const close = (focus = false) => {
+            popup.hidden = true;
+            trigger.setAttribute('aria-expanded', 'false');
+            if (focus) trigger.focus();
+        };
+        const items = [...select.options].filter(item => item.value).map(option => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.tabIndex = -1;
+            button.textContent = option.textContent;
+            button.dataset.value = option.value;
+            button.setAttribute('role', 'option');
+            button.addEventListener('click', () => {
+                select.value = option.value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+                close(true);
+            });
+            list.append(button);
+            return button;
+        });
+        search.addEventListener('input', () => {
+            const query = search.value.trim().toLocaleLowerCase('ru');
+            items.forEach(item => { item.hidden = !item.textContent.toLocaleLowerCase('ru').includes(query); });
+            empty.hidden = items.some(item => !item.hidden);
+        });
+        const open = () => {
+            popup.hidden = false;
+            trigger.setAttribute('aria-expanded', 'true');
+            search.value = '';
+            search.dispatchEvent(new Event('input'));
+            search.focus();
+        };
+        trigger.addEventListener('click', () => popup.hidden ? open() : close());
+        picker.addEventListener('keydown', event => {
+            if (event.key === 'Escape') { event.preventDefault(); close(true); }
+            if (event.key === 'Enter' && event.target === search) {
+                event.preventDefault();
+                items.find(item => !item.hidden)?.click();
+            }
+            if (['ArrowDown', 'ArrowUp'].includes(event.key)) {
+                event.preventDefault();
+                if (popup.hidden) open();
+                const visible = items.filter(item => !item.hidden);
+                const index = visible.indexOf(document.activeElement);
+                const next = index < 0 ? (event.key === 'ArrowDown' ? 0 : visible.length - 1)
+                    : (index + (event.key === 'ArrowDown' ? 1 : -1) + visible.length) % visible.length;
+                visible[next]?.focus();
+            }
+            if (event.key === 'Tab') close();
+        });
+        document.addEventListener('click', event => { if (!picker.contains(event.target)) close(); });
+        popup.append(search, list, empty);
+        picker.append(trigger, popup);
+        select.after(picker);
+        select.hidden = true;
+        document.getElementById('theme-label').htmlFor = trigger.id;
+        select.addEventListener('change', syncThemePicker);
+        syncThemePicker();
+    }
     // Keep labels visible after placeholder text disappears.
     document.querySelectorAll('main input:not([type=hidden]):not([type=checkbox]):not([type=radio]), main textarea, main select').forEach((field, index) => {
         if (!field.id) field.id = 'sell-field-' + index;
@@ -542,6 +665,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         label.htmlFor = field.id;
         label.textContent = field.placeholder?.split(', например:')[0] || 'Значение';
         field.before(label);
+    });
+    setupThemePicker();
+    const uploadLabel = document.querySelector('.cover-upload-label');
+    uploadLabel.tabIndex = 0;
+    uploadLabel.setAttribute('role', 'button');
+    uploadLabel.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            document.getElementById('simple-cover').click();
+        }
     });
     renderWorkflow(currentType);
 
