@@ -1,0 +1,43 @@
+<%
+const formatNumber = value => Number(value || 0).toLocaleString('ru-RU');
+const formatPrice = value => Number(value || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+const artwork = { 'channel-buy': '02-youtube-channel-sell', promotion: '03-youtube-promotion', editing: '04-youtube-editing', design: '05-youtube-design', content: '06-youtube-content', voiceover: '07-youtube-voiceover', 'other-services': '08-youtube-services', analytics: '11-youtube-analytics', 'content-under-key': '12-youtube-content-under-key', 'audience-growth': '13-youtube-audience-growth' };
+const fallback = '/assets/images/youtube-catalog/' + (artwork[category.id] || '08-youtube-services') + '.png';
+%>
+<div class="catalog-grid" id="listings-container" data-catalog="<%= category.id %>">
+  <% product.listings.forEach(listing => {
+    const channel = Number(listing.form_type) === 1;
+    const detailUrl = '/market/' + encodeURIComponent(platform.id) + '/' + encodeURIComponent(product.name) + '/items/' + listing.id;
+    const cover = listing.cover ? '/market/uploads/' + encodeURIComponent(String(listing.cover).split(/[\\/]/).pop()) : fallback;
+    const theme = themes[Number(listing.theme) - 1] || 'YouTube-канал';
+  %>
+    <article class="market-card <%= channel ? 'market-card-channel' : 'market-card-service' %>" data-id="<%= listing.id %>">
+      <a class="card-image-link" href="<%= detailUrl %>" tabindex="-1" aria-hidden="true">
+        <div class="card-art <%= channel && listing.cover ? 'card-art-avatar' : '' %>">
+          <img src="<%= cover %>" alt="" loading="lazy" decoding="async" data-fallback="<%= fallback %>">
+          <% if (listing.is_pinned_active) { %><span class="card-badge">Закреплено</span><% } %>
+          <% if (channel) { %><span class="card-platform"><svg viewBox="0 0 24 16" width="20" height="14" aria-hidden="true"><rect width="24" height="16" rx="5" fill="#f01926"/><path d="m10 4 7 4-7 4" fill="#fff"/></svg> YouTube</span><% } %>
+        </div>
+      </a>
+      <div class="card-content">
+        <div class="card-category"><span><%= channel ? theme : category.description %></span><% if (channel && listing.monetization === true) { %><span class="card-monetized">Монетизация</span><% } %></div>
+        <h2><a href="<%= detailUrl %>"><%= listing.name || 'Объявление YouTube' %></a></h2>
+        <p class="card-description"><%= listing.description || 'Подробности предложения — на странице объявления.' %></p>
+        <% if (channel) { %>
+          <dl class="card-metrics"><div><dt>Подписчики</dt><dd><%= formatNumber(listing.subscribers) %></dd></div><% if (Number(listing.income) > 0) { %><div><dt>Доход / мес.</dt><dd><%= formatPrice(listing.income) %> $</dd></div><% } else { %><div><dt>Просмотры объявления</dt><dd><%= formatNumber(listing.views) %></dd></div><% } %></dl>
+        <% } %>
+        <div class="card-seller"><a href="/account/public/<%= listing.user_id %>"><span class="seller-initial" aria-hidden="true"><%= (listing.seller_name || 'П').slice(0, 1).toUpperCase() %></span><span><%= listing.seller_name || 'Продавец' %></span></a><% if (listing.verified) { %><span class="seller-verified" title="Профиль продавца подтверждён">✓ Проверен</span><% } %></div>
+        <div class="card-bottom"><div><span class="card-price-caption"><%= channel ? 'Стоимость канала' : 'Стоимость услуги' %></span><strong class="card-price"><%= formatPrice(listing.price) %> <span>$</span></strong></div><a class="card-open" href="<%= detailUrl %>" aria-label="Подробнее: <%= listing.name || 'Объявление' %>">Подробнее <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </article>
+  <% }); %>
+</div>
+<% if (!product.listings.length) { %>
+  <section class="catalog-empty"><span class="empty-icon" aria-hidden="true">⌕</span><h2><%= errors.length ? 'Проверьте параметры поиска' : 'Пока нет подходящих объявлений' %></h2><p><%= errors.length ? 'Исправьте значения в фильтрах и повторите поиск.' : 'Попробуйте изменить фильтры или загляните в другие категории.' %></p><a class="pl-button pl-button-light" href="<%= catalogPath %>">Сбросить фильтры</a><a href="<%= sellUrl %>" class="empty-create">Разместить своё объявление →</a></section>
+<% } %>
+<div class="catalog-pagination" id="catalog-pagination" data-page="<%= page %>">
+  <% if (previousPageUrl) { %><a class="previous-page" href="<%= previousPageUrl %>">← Предыдущая страница</a><% } %>
+  <% if (hasMore) { %><a class="pl-button pl-button-light" id="load-more" href="<%= nextPageUrl %>">Показать ещё <span aria-hidden="true">↓</span></a><% } %>
+  <% if (totalCount) { %><p>Показано до <%= shown %> из <%= formatNumber(totalCount) %> объявлений</p><% } %>
+  <p id="pagination-status" role="status"></p>
+</div>

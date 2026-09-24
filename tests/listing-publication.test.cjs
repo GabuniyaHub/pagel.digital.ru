@@ -42,6 +42,7 @@ function harness({ platformExists = true } = {}) {
     '../../middleware/MarketMiddleware/optionalAuth': middleware,
     '../../utils/cliner/cliner.js': middleware,
     '../../config/market/platforms': require('../server/config/market/platforms'),
+    '../../services/marketCatalog': require('../server/services/marketCatalog'),
     '../../config/market/youtubeCatalog': require('../server/config/market/youtubeCatalog')
   };
   vm.runInNewContext(fs.readFileSync(filename, 'utf8'), {

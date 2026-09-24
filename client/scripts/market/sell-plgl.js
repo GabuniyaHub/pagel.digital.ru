@@ -22,6 +22,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentWorkflow = [];
     const sections = new Map();
     const validChannelUrl = value => /^https:\/\/(www\.)?youtube\.com\/channel\/[A-Za-z0-9_-]+\/?(?:[?#].*)?$/i.test(value);
+    let previewAvatarSource = '', previewAvatarUrl = '', previewAvatarRequest;
+
+    function loadPreviewAvatar(source) {
+        if (source === previewAvatarSource) return;
+        previewAvatarSource = source;
+        previewAvatarRequest?.abort();
+        if (previewAvatarUrl) URL.revokeObjectURL(previewAvatarUrl);
+        previewAvatarUrl = '';
+        if (!source) return;
+        const controller = new AbortController();
+        previewAvatarRequest = controller;
+        // Use the same authenticated image loader as channel publication.
+        fetch('/market/avatar-image?url=' + encodeURIComponent(source), { signal: controller.signal })
+            .then(async response => {
+                if (!response.ok) throw new Error('Аватар недоступен');
+                const blob = await response.blob();
+                if (controller.signal.aborted) return;
+                previewAvatarUrl = URL.createObjectURL(blob);
+                updatePreview();
+            })
+            .catch(() => { /* The original URL remains a fallback. */ });
+    }
 
     function openDraftDb() {
         return new Promise((resolve, reject) => {
@@ -145,6 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (coverUrl) URL.revokeObjectURL(coverUrl);
         coverUrl = file ? URL.createObjectURL(file) : null;
         const parsed = channelParsedForCurrentLink();
+        loadPreviewAvatar(!simple && parsed?.avatar || '');
         const artwork = {
             design: '/assets/images/youtube-catalog/05-youtube-design.png',
             editing: '/assets/images/youtube-catalog/04-youtube-editing.png',
@@ -158,7 +181,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             'content-under-key': '/assets/images/youtube-catalog/12-youtube-content-under-key.png',
             'audience-growth': '/assets/images/youtube-catalog/13-youtube-audience-growth.png'
         };
-        const source = coverUrl || (!simple && parsed?.avatar) || artwork[window.selectedProduct?.id];
+        const source = (!simple && parsed?.avatar && (previewAvatarUrl || parsed.avatar)) || coverUrl || artwork[window.selectedProduct?.id];
+        image.referrerPolicy = 'no-referrer';
         image.hidden = !source;
         document.getElementById('live-placeholder').hidden = !!source;
         if (source) image.src = source; else image.removeAttribute('src');
@@ -173,7 +197,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('parsed-channel-subscribers').textContent = parsed?.subscribers ? Number(parsed.subscribers).toLocaleString('ru-RU') + ' подписчиков' : 'Подписчики определятся автоматически';
         const parsedAvatar = document.getElementById('parsed-channel-avatar');
         parsedAvatar.hidden = !parsed?.avatar;
-        if (parsed?.avatar) parsedAvatar.src = parsed.avatar; else parsedAvatar.removeAttribute('src');
+        parsedAvatar.referrerPolicy = 'no-referrer';
+        if (parsed?.avatar) parsedAvatar.src = previewAvatarUrl || parsed.avatar; else parsedAvatar.removeAttribute('src');
         document.getElementById('channel-parse-hint').textContent = parsed
             ? 'Данные канала загружены автоматически. Проверьте их перед публикацией.'
             : 'Вставьте ссылку на YouTube-канал — название, аватар и аудитория загрузятся автоматически.';

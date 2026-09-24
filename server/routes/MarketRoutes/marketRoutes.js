@@ -1491,85 +1491,46 @@ router.get('/:id', (req, res) => {
   res.render('market/platform', { platform });
 });
 
-const catalogAliases = Object.fromEntries(require('../../config/market/youtubeCatalog').map(category => [category.id, category.name]));
+const { catalogQuery, themes: channelThemes } = require('../../services/marketCatalog');
 
 async function renderCatalogPage(req, res, platformName, catalogName) {
-  const search = req.query.q ? req.query.q.trim() : '';
-  const page = parseInt(req.query.page) || 1;
-  const pageSize = 30;
-  const offset = (page - 1) * pageSize;
-
+  const platform = platforms.find(item => item.id === platformName);
+  const category = platform?.products.find(item => item.name === catalogName);
+  if (!category) return res.status(404).render('market/errors/404', { message: 'Каталог не найден' });
+  const isChannel = Number(category.formType) === 1;
+  const state = catalogQuery(req.query, platformName, catalogName, isChannel);
+  const catalogPath = '/market/' + encodeURIComponent(platformName) + '/' + encodeURIComponent(category.id);
   try {
-    let query = `
-      SELECT
-        l.*,
-        p.slug AS platform_slug,
-        u.is_premium,
-        u.verified,
-        (l.is_pinned AND l.pin_expiration_date > NOW()) AS is_pinned_active
-      FROM listings l
-      JOIN categories c ON l.category_id = c.id
-      JOIN platforms p ON c.platform_id = p.id
-      JOIN users u ON l.user_id = u.id
-      WHERE p.slug = $1 AND c.name = $2
-    `;
-
-    let params = [platformName, catalogName];
-
-    if (search) {
-      query += `
-        AND (
-          l.link ILIKE $3 OR
-          l.name ILIKE $3 OR
-          l.theme ILIKE $3 OR
-          CAST(l.price AS TEXT) ILIKE $3 OR
-          CAST(l.income AS TEXT) ILIKE $3 OR
-          CAST(l.expense AS TEXT) ILIKE $3 OR
-          CAST(l.monetization AS TEXT) ILIKE $3
-        )
-      `;
-      params.push(`%${search}%`);
-    }
-
-    query += `
-      ORDER BY 
-        u.is_premium DESC,
-        CASE WHEN l.is_pinned = true AND l.pin_expiration_date > NOW() THEN 1 ELSE 0 END DESC,
-        l.position ASC
-      LIMIT $${params.length + 1} OFFSET $${params.length + 2}
-    `;
-
-    params.push(pageSize, offset);
-
-    const totalCountQuery = `
-      SELECT COUNT(*)
-      FROM listings l
-      JOIN categories c ON l.category_id = c.id
-      JOIN platforms p ON c.platform_id = p.id
-      WHERE p.slug = $1 AND c.name = $2
-    `;
-
-    const result = await client.query(query, params);
-    const totalCountResult = await client.query(totalCountQuery, [platformName, catalogName]);
-    const totalCount = parseInt(totalCountResult.rows[0].count);
-    const hasMore = offset + result.rows.length < totalCount;
-
-    const product = {
-      name: catalogName,
-      description: search
-        ? `Результаты поиска по "${search}"`
-        : `Листинги для ${catalogName}`,
-      listings: result.rows
+    const [result, count] = state.errors.length ? [{ rows: [] }, { rows: [{ count: 0 }] }] : await Promise.all([
+      client.query(state.sql, state.params),
+      client.query(state.countSql, state.countParams)
+    ]);
+    const totalCount = Number(count.rows[0].count);
+    const hasMore = state.page * state.pageSize < totalCount;
+    const pageUrl = page => {
+      const query = new URLSearchParams(Object.entries(state.filters).filter(([, value]) => value !== ''));
+      query.set('page', String(page));
+      return catalogPath + '?' + query.toString();
     };
-
-    if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-      return res.render('market/item', { product, hasMore, layout: false });
-    }
-
-    res.render('market/item', { product, hasMore });
+    const view = {
+      product: { name: catalogName, listings: result.rows },
+      category, platform, isChannel, catalogPath,
+      title: isChannel && platformName === 'youtube' ? 'YouTube-каналы' : category.description || category.name,
+      categories: platform.products,
+      themes: channelThemes,
+      filters: state.filters, errors: state.errors,
+      totalCount, hasMore, page: state.page,
+      shown: Math.min(state.page * state.pageSize, totalCount),
+      nextPageUrl: hasMore ? pageUrl(state.page + 1) : null,
+      previousPageUrl: state.page > 1 ? pageUrl(state.page - 1) : null,
+      sellUrl: '/pages/market/sell.html?type=' + (isChannel ? 'channel' : 'service')
+    };
+    if (state.errors.length) res.status(400);
+    if (req.headers['x-requested-with'] === 'XMLHttpRequest') return res.render('market/partials/catalog-results', view);
+    res.render('market/item', view);
   } catch (err) {
-    console.error('Ошибка при выполнении запроса:', err);
-    return res.status(500).render('market/errors/500', { message: 'Ошибка сервера' });
+    console.error('Ошибка загрузки каталога:', err);
+    return res.status(500).send('Не удалось загрузить каталог. Попробуйте обновить страницу.');
   }
 }
 
@@ -1583,7 +1544,7 @@ router.get('/:platformName/:catalogName', async (req, res) => {
     return res.status(404).render('market/errors/404', { message: 'Каталог не найден' });
   }
 
-  const aliasName = catalogAliases[catalogName];
+  const aliasName = platforms.find(item => item.id === platformName)?.products.find(item => item.id === catalogName)?.name;
   const resolvedCatalogName = aliasName || decodeURIComponent(catalogName).replace(/-/g, ' ');
 
   return renderCatalogPage(req, res, platformName, resolvedCatalogName);
@@ -1592,7 +1553,8 @@ router.get('/:platformName/:catalogName', async (req, res) => {
 //Маршрут для отображения листингов каталога
 router.get('/:platformName/:catalogName/items', async (req, res) => {
   const { platformName, catalogName } = req.params;
-  return renderCatalogPage(req, res, platformName, decodeURIComponent(catalogName).replace(/-/g, ' '));
+  const name = platforms.find(item => item.id === platformName)?.products.find(item => item.id === catalogName)?.name;
+  return renderCatalogPage(req, res, platformName, name || decodeURIComponent(catalogName).replace(/-/g, ' '));
 });
 
 // API-роут для увелечения счетчика литсинга
