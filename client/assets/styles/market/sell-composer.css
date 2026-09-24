@@ -22,10 +22,12 @@ main{min-width:0}.selection-card,.form,.create-listing-simple{padding:0;backgrou
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 /* One visible form stage at a time, with separate compact and channel workflows. */
-.composer-section:not(.is-current){display:none!important}
-.composer-section.is-current{display:block!important}
-.composer-section.is-current>.composer-body{display:grid!important;gap:9px;align-content:start}
-.composer-section[data-section="category"].is-current>.composer-body{display:block!important}
+/* Fail open until the staged workflow has been built; a script error must not
+   leave the category chooser hidden after it has been moved into its section. */
+.sell-page.sell-workflow-ready .composer-section:not(.is-current){display:none!important}
+.sell-page.sell-workflow-ready .composer-section.is-current{display:block!important}
+.sell-page.sell-workflow-ready .composer-section.is-current>.composer-body{display:grid!important;gap:9px;align-content:start}
+.sell-page.sell-workflow-ready .composer-section[data-section="category"].is-current>.composer-body{display:block!important}
 .composer-section[data-section="category"] .selection-card{border:0;margin:0;padding:0}
 .composer-heading{margin:0 0 4px;color:#182537;font-size:17px}
 .composer-body .composer-next{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin:10px 8px 0 0;padding:10px 16px;border:0;border-radius:8px;background:linear-gradient(110deg,#3b4d61,#65758e);color:#fff;font-weight:600;cursor:pointer}

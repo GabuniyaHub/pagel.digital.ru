@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const title = (!simple && channelParsedForCurrentLink()?.title) || valueOf(form, simple ? '#simple-title' : '#profile-name');
         document.getElementById('live-title').textContent = title || 'Здесь появится название';
         document.getElementById('live-description').textContent = form.elements.description.value || 'Добавьте описание: что вы предлагаете и чем это полезно покупателю.';
-        const price = form.elements.price.value;
+        const price = form.elements.price?.value || '';
         document.getElementById('live-price').textContent = price ? new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Number(price)) : 'Цена не указана';
         document.getElementById('live-category').textContent = window.selectedProduct ? 'YouTube / ' + categorySelect.selectedOptions[0].textContent : 'ВАШЕ ПРЕДЛОЖЕНИЕ';
         const file = form.querySelector('input[type="file"]')?.files?.[0];
@@ -208,7 +208,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     channelParts.channel.body.append(channelForm.querySelector('.header-form-listing'));
     channelParts.description.body.append(channelForm.querySelector('.body-form-listing'));
     channelParts.contacts.body.append(channelForm.querySelector('.footer-form-listing'));
-    channelParts.terms.body.append(document.getElementById('price').closest('.form-row'));
+    // Older cached copies of sell.html can temporarily be served alongside this
+    // script and may not contain the channel price field. Keep initialization
+    // alive so the category chooser and remaining stages still work.
+    const channelPriceRow = channelForm.querySelector('#price, [name="price"]')?.closest('.form-row');
+    if (channelPriceRow) channelParts.terms.body.append(channelPriceRow);
     Object.values(channelParts).forEach(part => channelForm.append(part.details));
 
     const serviceParts = { details: makeSection('details', 'Детали услуги'), publish: makeSection('publish', 'Цена и контакты') };
@@ -245,6 +249,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.composer-section').forEach(section => section.classList.remove('is-current'));
         openStep('category', false);
         updateProgress();
+        document.body.classList.add('sell-workflow-ready');
     }
     function setActiveStep(step) {
         currentSection = step;
@@ -284,7 +289,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return form.querySelector('#link').checkValidity() && form.querySelector('#theme').checkValidity() && Boolean(identityReady);
             }
             if (step === 'description') return form.querySelector('#description').checkValidity();
-            if (step === 'terms') return form.querySelector('#price').checkValidity() && Number(form.querySelector('#price').value) > 0;
+            if (step === 'terms') {
+                const price = form.querySelector('#price, [name="price"]');
+                return Boolean(price && price.checkValidity() && Number(price.value) > 0);
+            }
             if (step === 'contacts') return hasContact && form.querySelector('#flex_switch').checked;
         }
         return false;
