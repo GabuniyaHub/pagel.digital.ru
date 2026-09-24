@@ -3,25 +3,145 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categorySelect = document.getElementById('listing-category');
     const status = document.getElementById('selection-status');
     const retry = document.getElementById('reload-categories');
-    let platforms = [], type = new URLSearchParams(location.search).get('type') === 'channel' ? 1 : 2, coverUrl = null;
-    const channel = document.querySelector('.form');
-    const service = document.querySelector('.create-listing-simple');
-    const forms = [...document.querySelectorAll('main form')];
+    const stepList = document.getElementById('composer-step-list');
+    const channelForm = document.getElementById('listing-form');
+    const serviceForm = document.getElementById('simple-listing-form');
+    const channelRoot = document.querySelector('.form');
+    const serviceRoot = document.querySelector('.create-listing-simple');
+    const forms = [serviceForm, channelForm];
     const option = (text, value) => new Option(text, value);
+    const dbName = 'plgl-listing-drafts';
+    const draftKey = type => 'type-' + type;
+    let platforms = [];
+    let currentSection = 'category';
+    let currentType = localStorage.getItem('plgl-sell-type') === '1' ? 1 : 2;
+    const requestedType = new URLSearchParams(location.search).get('type');
+    if (requestedType === 'channel') currentType = 1;
+    else if (requestedType === 'service') currentType = 2;
+    let draftDb, saveTimer, parserTimer, parserRequest, restoringDraft = false, suppressDraftSave = false, coverUrl = null;
+    let currentWorkflow = [];
+    const sections = new Map();
+
+    function openDraftDb() {
+        return new Promise((resolve, reject) => {
+            if (!('indexedDB' in window)) return reject(new Error('Черновики недоступны в этом браузере.'));
+            const request = indexedDB.open(dbName, 1);
+            request.onupgradeneeded = () => request.result.createObjectStore('drafts');
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    function draftRequest(mode, callback) {
+        return new Promise((resolve, reject) => {
+            const transaction = draftDb.transaction('drafts', mode);
+            const request = callback(transaction.objectStore('drafts'));
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    const readDraft = type => draftRequest('readonly', store => store.get(draftKey(type)));
+    const writeDraft = (type, value) => draftRequest('readwrite', store => store.put(value, draftKey(type)));
+    const deleteDraft = type => draftRequest('readwrite', store => store.delete(draftKey(type)));
+
+    function activeForm() { return currentType === 1 ? channelForm : serviceForm; }
+    function valueOf(form, selector) { return form.querySelector(selector)?.value?.trim() || ''; }
+    function channelParsedForCurrentLink() {
+        return window.plglParsedChannel?.link === valueOf(channelForm, '#link') ? window.plglParsedChannel : null;
+    }
+    function saveDraftSoon() {
+        if (restoringDraft || suppressDraftSave || !draftDb) return;
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(async () => {
+            const form = activeForm();
+            const values = {};
+            const files = {};
+            for (const field of form.elements) {
+                if (!field.name) continue;
+                if (field.type === 'file') {
+                    if (field.files?.[0]) files[field.name] = { blob: field.files[0], name: field.files[0].name, type: field.files[0].type };
+                } else if (field.type === 'checkbox') values[field.name] = field.checked;
+                else if (field.type !== 'radio') values[field.name] = field.value;
+            }
+            try {
+                await writeDraft(currentType, {
+                    type: currentType,
+                    category: categorySelect.value,
+                    step: currentSection,
+                    values,
+                    files,
+                    parsedChannel: channelParsedForCurrentLink()
+                });
+                localStorage.setItem('plgl-sell-type', String(currentType));
+                document.getElementById('composer-progress').dataset.saved = 'true';
+                document.getElementById('composer-progress').title = 'Черновик сохранён на этом устройстве';
+                updateProgress();
+            } catch (error) {
+                console.warn('Черновик объявления не сохранён:', error);
+            }
+        }, 300);
+    }
+    async function restoreDraft(type) {
+        if (!draftDb) return null;
+        const draft = await readDraft(type).catch(() => null);
+        if (!draft) return null;
+        document.getElementById('composer-progress').dataset.saved = 'true';
+        restoringDraft = true;
+        try {
+            const form = type === 1 ? channelForm : serviceForm;
+            for (const [name, value] of Object.entries(draft.values || {})) {
+                const field = [...form.elements].find(item => item.name === name && item.type !== 'file');
+                if (!field) continue;
+                if (field.type === 'checkbox') field.checked = Boolean(value);
+                else field.value = value;
+            }
+            for (const [name, savedFile] of Object.entries(draft.files || {})) {
+                const input = [...form.elements].find(item => item.name === name && item.type === 'file');
+                if (!input || !savedFile?.blob) continue;
+                try {
+                    const transfer = new DataTransfer();
+                    transfer.items.add(new File([savedFile.blob], savedFile.name || 'listing-image', { type: savedFile.type || savedFile.blob.type }));
+                    input.files = transfer.files;
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                } catch { /* Some browsers do not allow restoring FileList programmatically. */ }
+            }
+            if (type === 1 && draft.parsedChannel?.link === valueOf(channelForm, '#link')) {
+                window.plglParsedChannel = draft.parsedChannel;
+                document.getElementById('display-name').textContent = draft.parsedChannel.title;
+                document.getElementById('display-subscribers').textContent = Number(draft.parsedChannel.subscribers).toLocaleString('ru-RU') + ' подписчиков';
+                document.getElementById('display-avatar').src = draft.parsedChannel.avatar;
+                document.getElementById('profile-edit-block').style.display = 'none';
+                document.getElementById('profile-view-block').style.display = 'flex';
+                document.querySelector('.parser-status').textContent = 'Данные канала восстановлены из черновика.';
+            } else if (type === 1 && valueOf(channelForm, '#link')) {
+                parserTimer = setTimeout(parseChannel, 150);
+            }
+            categorySelect.value = draft.category || '';
+            selectCategory(false);
+            renderWorkflow(type);
+            updatePreview();
+            const section = currentWorkflow.some(item => item.key === draft.step) ? draft.step : 'category';
+            openStep(section, false);
+            return draft;
+        } finally {
+            restoringDraft = false;
+        }
+    }
+
     function updatePreview() {
-        const simple = type === 2;
-        const form = document.getElementById(simple ? 'simple-listing-form' : 'listing-form');
-        const title = (!simple && window.plglParsedChannel?.title) || document.getElementById(simple ? 'simple-title' : 'profile-name').value;
+        const simple = currentType === 2;
+        const form = activeForm();
+        const title = (!simple && channelParsedForCurrentLink()?.title) || valueOf(form, simple ? '#simple-title' : '#profile-name');
         document.getElementById('live-title').textContent = title || 'Здесь появится название';
         document.getElementById('live-description').textContent = form.elements.description.value || 'Добавьте описание: что вы предлагаете и чем это полезно покупателю.';
         const price = form.elements.price.value;
-        document.getElementById('live-price').textContent = price !== '' ? new Intl.NumberFormat('ru-RU', {style:'currency',currency:'USD',maximumFractionDigits:2}).format(Number(price)) : 'Цена не указана';
-        document.getElementById('live-category').textContent = window.selectedProduct ? platformSelect.selectedOptions[0].textContent + ' / ' + categorySelect.selectedOptions[0].textContent : 'ВАШЕ ПРЕДЛОЖЕНИЕ';
-        const file = document.getElementById(simple ? 'simple-cover' : 'profile-avatar-input').files[0];
+        document.getElementById('live-price').textContent = price ? new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Number(price)) : 'Цена не указана';
+        document.getElementById('live-category').textContent = window.selectedProduct ? 'YouTube / ' + categorySelect.selectedOptions[0].textContent : 'ВАШЕ ПРЕДЛОЖЕНИЕ';
+        const file = form.querySelector('input[type="file"]')?.files?.[0];
         const image = document.getElementById('live-cover');
         if (coverUrl) URL.revokeObjectURL(coverUrl);
         coverUrl = file ? URL.createObjectURL(file) : null;
-        const productArtwork = {
+        const parsed = channelParsedForCurrentLink();
+        const artwork = {
             design: '/assets/images/youtube-catalog/05-youtube-design.png',
             editing: '/assets/images/youtube-catalog/04-youtube-editing.png',
             promotion: '/assets/images/youtube-catalog/03-youtube-promotion.png',
@@ -34,242 +154,250 @@ document.addEventListener('DOMContentLoaded', async () => {
             'content-under-key': '/assets/images/youtube-catalog/12-youtube-content-under-key.png',
             'audience-growth': '/assets/images/youtube-catalog/13-youtube-audience-growth.png'
         };
-        const source = coverUrl || (!simple && window.plglParsedChannel?.avatar) || productArtwork[window.selectedProduct?.id];
+        const source = coverUrl || (!simple && parsed?.avatar) || artwork[window.selectedProduct?.id];
         image.hidden = !source;
         document.getElementById('live-placeholder').hidden = !!source;
         if (source) image.src = source; else image.removeAttribute('src');
         image.classList.toggle('channel-cover', !simple);
         const subscribers = document.getElementById('live-subscribers');
-        const subscriberCount = window.plglParsedChannel?.subscribers ?? document.getElementById('profile-subscribers').value;
+        const subscriberCount = parsed?.subscribers || valueOf(channelForm, '#profile-subscribers');
         subscribers.hidden = simple || !subscriberCount;
         subscribers.textContent = !simple && subscriberCount ? Number(subscriberCount).toLocaleString('ru-RU') + ' подписчиков' : '';
-        const parsedChannel = window.plglParsedChannel;
-        const channelCard = document.getElementById('channel-parsed-card');
-        channelCard.hidden = simple;
-        document.getElementById('parsed-channel-name').textContent = parsedChannel?.title || 'Название появится после вставки ссылки';
-        document.getElementById('parsed-channel-subscribers').textContent = parsedChannel?.subscribers ? Number(parsedChannel.subscribers).toLocaleString('ru-RU') + ' подписчиков' : 'Подписчики определятся автоматически';
+        document.getElementById('channel-parsed-card').hidden = simple || currentSection !== 'channel';
+        document.getElementById('channel-example').hidden = true;
+        document.getElementById('parsed-channel-name').textContent = parsed?.title || 'Название появится после вставки ссылки';
+        document.getElementById('parsed-channel-subscribers').textContent = parsed?.subscribers ? Number(parsed.subscribers).toLocaleString('ru-RU') + ' подписчиков' : 'Подписчики определятся автоматически';
         const parsedAvatar = document.getElementById('parsed-channel-avatar');
-        parsedAvatar.hidden = !parsedChannel?.avatar;
-        if (parsedChannel?.avatar) parsedAvatar.src = parsedChannel.avatar;
-        else parsedAvatar.removeAttribute('src');
-        document.getElementById('channel-parse-hint').textContent = parsedChannel
-            ? 'Данные канала загружены. Проверьте ссылку и добавьте код подтверждения в описание канала.'
-            : 'Вставьте ссылку на канал. Мы попробуем получить его название, аватар и число подписчиков.';
+        parsedAvatar.hidden = !parsed?.avatar;
+        if (parsed?.avatar) parsedAvatar.src = parsed.avatar; else parsedAvatar.removeAttribute('src');
+        document.getElementById('channel-parse-hint').textContent = parsed
+            ? 'Данные канала загружены автоматически. Проверьте их перед публикацией.'
+            : 'Вставьте ссылку на YouTube-канал — название, аватар и аудитория загрузятся автоматически.';
         updateProgress();
     }
-    function selectCategory(advance = true) {
-        const platform = platforms.find(p => p.id === platformSelect.value);
-        const product = platform?.products?.find(p => p.id === categorySelect.value && Number(p.formType) === type);
-        window.selectedPlatformId = platform?.id;
-        window.selectedProduct = product || null;
-        channel.style.display = product && type === 1 ? 'block' : 'none';
-        service.style.display = product && type === 2 ? 'block' : 'none';
-        status.hidden = Boolean(product);
-        status.textContent = product ? 'Категория выбрана. Заполните детали и проверьте карточку перед размещением.' : 'Выберите доступную категорию.';
-        updatePreview();
-        if (product && advance) openStep('description', false);
-    }
-    function selectPlatform(advance = true) {
-        const platform = platforms.find(p => p.id === platformSelect.value);
-        const products = (platform?.products || []).filter(p => Number(p.formType) === type);
-        categorySelect.replaceChildren(option('Выберите категорию', ''));
-        products.forEach(p => categorySelect.add(option(p.description || p.name, p.id)));
-        categorySelect.disabled = !products.length;
-        const preferredId = type === 1 ? 'channel-buy' : 'design';
-        categorySelect.value = products.find(product => product.id === preferredId)?.id || products[0]?.id || '';
-        resetParsedChannel();
-        selectCategory(advance);
-        if (!products.length) status.textContent = 'Для этого типа предложения на выбранной платформе пока нет категорий. Выберите другую платформу или тип.';
-        // Never retain fetched identity belonging to the previous platform.
-        document.getElementById('display-name').textContent = '';
-        document.getElementById('display-subscribers').textContent = '';
-        document.getElementById('profile-edit-block').style.display = 'block';
-        document.getElementById('profile-view-block').style.display = 'none';
-    }
-    document.querySelectorAll('[data-offer-type]').forEach(button => {
-        button.addEventListener('click', () => {
-            if (type === Number(button.dataset.offerType)) return;
-            type = Number(button.dataset.offerType);
-            document.querySelectorAll('[data-offer-type]').forEach(item => {
-                const active = item === button;
-                item.classList.toggle('selected', active);
-                item.setAttribute('aria-pressed', String(active));
-            });
-            selectPlatform();
-        });
-    });
-    platformSelect.addEventListener('change', selectPlatform);
-    categorySelect.addEventListener('change', selectCategory);
-    async function load() {
-        retry.hidden = true;
-        status.hidden = false;
-        status.textContent = 'Загружаем доступные категории каталога.';
-        try {
-            const response = await fetch('/market/platforms');
-            if (!response.ok) throw new Error('Не удалось загрузить категории.');
-            const catalog = await response.json();
-            platforms = Array.isArray(catalog) ? catalog.filter(platform => platform.id === 'youtube') : [];
-            if (!platforms.length) throw new Error('Каталог YouTube временно недоступен.');
-            platformSelect.replaceChildren(option('YouTube', 'youtube'));
-            platformSelect.value = 'youtube';
-            platformSelect.disabled = false;
-            selectPlatform(false);
-        } catch (error) {
-            status.textContent = error.message + ' Попробуйте ещё раз.';
-            retry.hidden = false;
-        }
-    }
-    retry.addEventListener('click', load);
-    // Visible labels remain above the values, even after placeholder text disappears.
-    document.querySelectorAll('main input:not([type=hidden]):not([type=checkbox]):not([type=radio]), main textarea, main select').forEach((field, index) => {
-        if (!field.id) field.id = 'sell-field-' + index;
-        if (field.closest('label') || document.querySelector('label[for="' + field.id + '"]')) return;
-        const label = document.createElement('label');
-        label.htmlFor = field.id;
-        label.textContent = field.placeholder?.split(', например:')[0] || ({avatar:'Изображение канала',subscribers:'Количество подписчиков',groupTheme:'Тематика канала'})[field.name] || 'Значение';
-        field.before(label);
-    });
-    forms.forEach(form => {
-        form.addEventListener('input', updatePreview);
-        form.addEventListener('change', updatePreview);
-        // Capture duplicate submits without replacing the existing validation and API handlers.
-        let busy = false;
-        form.addEventListener('submit', event => {
-            if (busy) { event.preventDefault(); event.stopImmediatePropagation(); return; }
-        }, true);
-        const button = form.querySelector('button[type=submit]');
-        const original = button.textContent;
-        form.addEventListener('plgl:busy', event => {
-            busy = event.detail;
-            button.disabled = busy;
-            button.textContent = busy ? 'Размещаем…' : original;
-        });
-    });
 
-    const stepLabels = { category: 'Категория', description: 'Описание и изображения', terms: 'Цена и условия', contacts: 'Контакты и размещение' };
-    function makeSection(step, index) {
+    function makeSection(key, title) {
         const details = document.createElement('details');
         details.className = 'composer-section';
-        details.dataset.section = step;
+        details.dataset.section = key;
         const summary = document.createElement('summary');
-        const title = document.createElement('span');
-        title.textContent = String(index).padStart(2, '0') + '  ' + stepLabels[step];
-        summary.append(title);
+        const heading = document.createElement('span');
+        heading.textContent = title;
+        summary.append(heading);
         const note = document.createElement('small');
         summary.append(note);
         const body = document.createElement('div');
         body.className = 'composer-body';
-        if (step !== 'category') {
-            const heading = document.createElement('h3');
-            heading.className = 'composer-heading';
-            heading.textContent = { description: 'Описание и изображения', terms: 'Цена и условия', contacts: 'Контакты' }[step];
-            body.append(heading);
-        }
         details.append(summary, body);
         details.open = true;
-        summary.addEventListener('click', event => {
-            event.preventDefault();
-            openStep(step);
+        summary.addEventListener('click', event => { event.preventDefault(); openStep(key); });
+        sections.set(key, details);
+        return { key, title, details, body };
+    }
+    const categorySection = makeSection('category', 'Категория');
+    const categoryCard = document.querySelector('.selection-card');
+    categoryCard.before(categorySection.details);
+    categorySection.body.append(categoryCard);
+
+    const channelParts = {
+        channel: makeSection('channel', 'Канал и парсинг'),
+        description: makeSection('description', 'Описание'),
+        terms: makeSection('terms', 'Цена'),
+        contacts: makeSection('contacts', 'Контакты и подтверждение')
+    };
+    channelParts.channel.body.append(channelForm.querySelector('.header-form-listing'));
+    channelParts.description.body.append(channelForm.querySelector('.body-form-listing'));
+    channelParts.contacts.body.append(channelForm.querySelector('.footer-form-listing'));
+    channelParts.terms.body.append(document.getElementById('price').closest('.form-row'));
+    Object.values(channelParts).forEach(part => channelForm.append(part.details));
+
+    const serviceParts = { details: makeSection('details', 'Детали услуги'), publish: makeSection('publish', 'Цена и контакты') };
+    let serviceTarget = serviceParts.details.body;
+    [...serviceForm.childNodes].forEach(node => {
+        if (node.nodeType === Node.ELEMENT_NODE && (node.matches('label[for="simple-price"], #simple-price, .contacts-section, #simple-allow-comments, #simple-submit-button'))) serviceTarget = serviceParts.publish.body;
+        serviceTarget.append(node);
+    });
+    Object.values(serviceParts).forEach(part => serviceForm.append(part.details));
+
+    const workflows = {
+        1: [categorySection, channelParts.channel, channelParts.description, channelParts.terms, channelParts.contacts],
+        2: [categorySection, serviceParts.details, serviceParts.publish]
+    };
+    function renderWorkflow(type) {
+        currentWorkflow = workflows[type];
+        document.querySelectorAll('[data-generated-step-control]').forEach(button => button.remove());
+        stepList.replaceChildren();
+        currentWorkflow.forEach((step, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.dataset.step = step.key;
+            button.innerHTML = '<span>' + String(index + 1).padStart(2, '0') + '</span>';
+            const text = document.createElement('strong');
+            text.append(document.createTextNode(step.title));
+            const hint = document.createElement('small');
+            hint.textContent = ({ category: 'Выберите предложение', channel: 'Ссылка и данные YouTube', description: 'Расскажите о канале', terms: 'Стоимость объявления', contacts: 'Способ связи и владение', details: 'Название, описание, обложка', publish: 'Стоимость и способ связи' })[step.key];
+            text.append(hint);
+            button.append(text);
+            button.addEventListener('click', () => openStep(step.key));
+            stepList.append(button);
         });
-        return { details, body };
+        buildStepControls();
+        document.querySelectorAll('.composer-section').forEach(section => section.classList.remove('is-current'));
+        openStep('category', false);
+        updateProgress();
     }
     function setActiveStep(step) {
-        document.querySelectorAll('[data-step]').forEach(button => {
+        currentSection = step;
+        currentWorkflow.forEach(item => item.details.classList.toggle('is-current', item.key === step));
+        document.getElementById('channel-parsed-card').hidden = currentType !== 1 || step !== 'channel';
+        stepList.querySelectorAll('[data-step]').forEach(button => {
             if (button.dataset.step === step) button.setAttribute('aria-current', 'step');
             else button.removeAttribute('aria-current');
         });
+        saveDraftSoon();
     }
-    function activeForm() { return document.getElementById(type === 2 ? 'simple-listing-form' : 'listing-form'); }
     function openStep(step, scroll = true) {
         if (step !== 'category' && !window.selectedProduct) {
             status.textContent = 'Сначала выберите категорию объявления.';
             step = 'category';
         }
-        const section = step === 'category' ? document.querySelector('[data-section="category"]') : activeForm().querySelector('[data-section="' + step + '"]');
-        if (!section) return;
-        document.querySelectorAll('.composer-section').forEach(item => {
-            item.open = true;
-            item.classList.toggle('is-current', item === section);
-        });
+        if (!currentWorkflow.some(item => item.key === step)) return;
         setActiveStep(step);
         if (scroll) {
-            const target = step === 'category' ? section.querySelector('.selection-card') : section.querySelector('.composer-body')?.firstElementChild;
+            const section = sections.get(step);
+            const target = section?.querySelector('.composer-body')?.firstElementChild || section;
             target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
-    const categoryCard = document.querySelector('.selection-card');
-    const categorySection = makeSection('category', 1);
-    categoryCard.before(categorySection.details);
-    categorySection.body.append(categoryCard);
-    categorySection.details.open = true;
-    forms.forEach(form => {
-        const parts = {description:makeSection('description',2),terms:makeSection('terms',3),contacts:makeSection('contacts',4)};
-        if (form.id === 'simple-listing-form') {
-            let destination = parts.description.body;
-            [...form.childNodes].forEach(node => {
-                if (node.nodeType === 1 && node.matches('label[for="simple-price"]')) destination = parts.terms.body;
-                if (node.nodeType === 1 && node.matches('label[for="simple-cover"]')) destination = parts.description.body;
-                if (node.nodeType === 1 && node.matches('.contacts-section')) destination = parts.contacts.body;
-                destination.append(node);
-            });
-        } else {
-            parts.description.body.append(form.querySelector('.header-form-listing'), form.querySelector('.body-form-listing'));
-            parts.contacts.body.append(form.querySelector('.footer-form-listing'));
-            // Reattach fields before resolving them by document ID.
-            for (const part of Object.values(parts)) form.append(part.details);
-            const priceRow = document.getElementById('price').closest('.form-row');
-            parts.terms.body.append(priceRow);
-        }
-        for (const part of Object.values(parts)) form.append(part.details);
-        for (const step of ['description','terms']) {
-            const button = document.createElement('button');
-            button.type = 'button'; button.className = 'composer-next';
-            button.textContent = step === 'description' ? 'Далее: цена и условия →' : 'Далее: контакты →';
-            button.addEventListener('click', () => {
-                const fields = [...parts[step].body.querySelectorAll('input,select,textarea')];
-                const invalid = fields.find(field => !field.checkValidity());
-                if (invalid) { invalid.reportValidity(); return; }
-                openStep(step === 'description' ? 'terms' : 'contacts');
-            });
-            parts[step].body.append(button);
-        }
-        form.addEventListener('invalid', event => {
-            const details = event.target.closest('.composer-section');
-            if (details) openStep(details.dataset.section, false);
-        }, true);
-    });
-    document.querySelectorAll('[data-step]').forEach(button => button.addEventListener('click', () => openStep(button.dataset.step)));
-    document.querySelectorAll('[data-offer-type]').forEach(button => {
-        button.classList.toggle('selected', Number(button.dataset.offerType) === type);
-        button.setAttribute('aria-pressed', String(Number(button.dataset.offerType) === type));
-    });
-    function updateProgress() {
-        if (!document.querySelector('[data-section="category"]')) return;
+    function validStep(step) {
         const form = activeForm();
-        const valid = selector => [...form.querySelectorAll(selector)].every(field => field.value.trim() && field.checkValidity());
-        const complete = {
-            category: !!window.selectedProduct,
-            description: type === 2 ? valid('#simple-title,#simple-description') && !!document.getElementById('simple-cover').files.length :
-                !!document.getElementById('link').value && valid('#description,#theme') && !!(window.plglParsedChannel || document.getElementById('profile-avatar-input').files.length),
-            terms: valid(type === 2 ? '#simple-price' : '#price'),
-            contacts: [...form.querySelectorAll('[name^="contacts["]')].some(field => field.value.trim()) && (type === 2 || document.getElementById('flex_switch').checked)
-        };
-        const count = Object.values(complete).filter(Boolean).length;
-        document.getElementById('composer-progress').textContent = 'Заполнено ' + count + ' из 4 разделов';
-        document.querySelectorAll('[data-step]').forEach(button => button.classList.toggle('complete', complete[button.dataset.step]));
-        document.querySelector('[data-section="category"] summary small').textContent = window.selectedProduct?.description || 'Выберите предложение';
-        for (const step of ['description','terms','contacts']) {
-            const note = form.querySelector('[data-section="' + step + '"] summary small');
-            if (note) note.textContent = complete[step] ? 'Заполнено ✓' : 'Заполните раздел';
+        const parsed = channelParsedForCurrentLink();
+        const contactFields = [...form.querySelectorAll('[name^="contacts["]')];
+        const hasContact = contactFields.some(field => field.value.trim());
+        if (step === 'category') return Boolean(window.selectedProduct);
+        if (currentType === 2) {
+            if (step === 'details') return ['#simple-title', '#simple-description'].every(selector => form.querySelector(selector).checkValidity()) && Boolean(form.querySelector('#simple-cover').files.length);
+            if (step === 'publish') return form.querySelector('#simple-price').checkValidity() && Number(form.querySelector('#simple-price').value) > 0 && hasContact;
+        } else {
+            if (step === 'channel') {
+                const identityReady = parsed || (valueOf(form, '#profile-name').length >= 3 && valueOf(form, '#profile-subscribers') !== '' && form.querySelector('#profile-avatar-input').files.length > 0);
+                return form.querySelector('#link').checkValidity() && form.querySelector('#theme').checkValidity() && Boolean(identityReady);
+            }
+            if (step === 'description') return form.querySelector('#description').checkValidity();
+            if (step === 'terms') return form.querySelector('#price').checkValidity() && Number(form.querySelector('#price').value) > 0;
+            if (step === 'contacts') return hasContact && form.querySelector('#flex_switch').checked;
         }
+        return false;
     }
-    // Parser results belong to a particular URL and platform; discard stale responses.
-    let parserTimer, parserRequest;
-    const link = document.getElementById('link');
-    const parserStatus = document.createElement('p');
-    parserStatus.className = 'parser-status';
-    parserStatus.setAttribute('role', 'status');
-    link.parentElement.after(parserStatus);
+    function showStepError(step) {
+        const form = activeForm();
+        const field = currentType === 1 && step === 'channel'
+            ? (!form.querySelector('#link').checkValidity() ? form.querySelector('#link') : !form.querySelector('#theme').checkValidity() ? form.querySelector('#theme') : null)
+            : step === 'details' ? form.querySelector('#simple-title')
+                : step === 'description' ? form.querySelector('#description')
+                    : step === 'terms' ? form.querySelector('#price')
+                        : step === 'publish' ? form.querySelector('#simple-price') : null;
+        if (field && !field.checkValidity()) field.reportValidity();
+        else if (currentType === 1 && step === 'channel' && !channelParsedForCurrentLink()) window.PlglNotifications?.show('Не удалось распознать канал. Проверьте ссылку или заполните название, подписчиков и загрузите аватар вручную.', 'error');
+        else if (step === 'contacts' || step === 'publish') window.PlglNotifications?.show('Добавьте хотя бы один контакт для связи.' + (currentType === 1 ? ' Также подтвердите владение каналом.' : ''), 'error');
+        else window.PlglNotifications?.show('Заполните обязательные поля этого этапа.', 'error');
+    }
+    function buildStepControls() {
+        currentWorkflow.forEach((step, index) => {
+            const body = step.body;
+            if (index > 0) {
+                const back = document.createElement('button');
+                back.type = 'button';
+                back.className = 'composer-next composer-prev';
+                back.dataset.generatedStepControl = 'true';
+                back.textContent = '← Назад';
+                back.addEventListener('click', () => openStep(currentWorkflow[index - 1].key));
+                body.append(back);
+            }
+            if (index < currentWorkflow.length - 1) {
+                const next = document.createElement('button');
+                next.type = 'button';
+                next.className = 'composer-next';
+                next.dataset.generatedStepControl = 'true';
+                next.textContent = 'Продолжить →';
+                next.addEventListener('click', async () => {
+                    if (currentType === 1 && step.key === 'channel' && !channelParsedForCurrentLink() && link.value.trim()) {
+                        clearTimeout(parserTimer);
+                        await parseChannel();
+                    }
+                    if (!validStep(step.key)) return showStepError(step.key);
+                    openStep(currentWorkflow[index + 1].key);
+                });
+                body.append(next);
+            }
+        });
+    }
+
+    function stepComplete(step) {
+        if (step.key === 'category') return Boolean(window.selectedProduct);
+        return validStep(step.key);
+    }
+    function updateProgress() {
+        if (!currentWorkflow.length || !document.querySelector('[data-section="category"]')) return;
+        const complete = currentWorkflow.filter(stepComplete).length;
+        const progress = document.getElementById('composer-progress');
+        progress.textContent = 'Заполнено ' + complete + ' из ' + currentWorkflow.length + ' этапов' + (progress.dataset.saved === 'true' ? ' · Черновик сохранён' : '');
+        currentWorkflow.forEach(step => {
+            const button = stepList.querySelector('[data-step="' + step.key + '"]');
+            button?.classList.toggle('complete', stepComplete(step));
+        });
+        categorySection.details.querySelector('summary small').textContent = window.selectedProduct?.description || 'Выберите предложение';
+    }
+
+    async function selectCategory(advance = true) {
+        const platform = platforms.find(item => item.id === platformSelect.value);
+        const product = platform?.products?.find(item => item.id === categorySelect.value && Number(item.formType) === currentType);
+        window.selectedPlatformId = platform?.id;
+        window.selectedProduct = product || null;
+        channelRoot.style.display = product && currentType === 1 ? 'block' : 'none';
+        serviceRoot.style.display = product && currentType === 2 ? 'block' : 'none';
+        status.hidden = Boolean(product);
+        status.textContent = product ? 'Категория выбрана. Продолжите заполнение по этапам.' : 'Выберите доступную категорию.';
+        updatePreview();
+        saveDraftSoon();
+        if (product && advance) openStep(currentType === 1 ? 'channel' : 'details', false);
+    }
+    async function selectPlatform(advance = true) {
+        const platform = platforms.find(item => item.id === platformSelect.value);
+        const products = (platform?.products || []).filter(item => Number(item.formType) === currentType);
+        categorySelect.replaceChildren(option('Выберите категорию', ''));
+        products.forEach(item => categorySelect.add(option(item.description || item.name, item.id)));
+        categorySelect.disabled = !products.length;
+        const preferred = currentType === 1 ? 'channel-buy' : 'design';
+        categorySelect.value = products.find(item => item.id === preferred)?.id || products[0]?.id || '';
+        resetParsedChannel();
+        await selectCategory(advance);
+        if (!products.length) status.textContent = 'Для этого типа объявления пока нет категорий YouTube.';
+        document.getElementById('display-name').textContent = '';
+        document.getElementById('display-subscribers').textContent = '';
+        document.getElementById('profile-edit-block').style.display = 'block';
+        document.getElementById('profile-view-block').style.display = 'none';
+    }
+
+    async function switchType(type) {
+        if (type === currentType) return;
+        await persistNow();
+        suppressDraftSave = true;
+        currentType = type;
+        localStorage.setItem('plgl-sell-type', String(type));
+        document.querySelectorAll('[data-offer-type]').forEach(button => {
+            const selected = Number(button.dataset.offerType) === type;
+            button.classList.toggle('selected', selected);
+            button.setAttribute('aria-pressed', String(selected));
+        });
+        renderWorkflow(type);
+        await selectPlatform(false);
+        const saved = await restoreDraft(type);
+        suppressDraftSave = false;
+        if (!saved) openStep('category', false);
+        updatePreview();
+    }
+
     function resetParsedChannel() {
         clearTimeout(parserTimer);
         parserRequest?.abort();
@@ -279,60 +407,162 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('display-avatar').removeAttribute('src');
         document.getElementById('profile-view-block').style.display = 'none';
         document.getElementById('profile-edit-block').style.display = 'block';
-        parserStatus.textContent = '';
+        const parserStatus = document.querySelector('.parser-status');
+        if (parserStatus) parserStatus.textContent = '';
         updatePreview();
     }
+    const link = document.getElementById('link');
+    const parserStatus = document.createElement('p');
+    parserStatus.className = 'parser-status';
+    parserStatus.setAttribute('role', 'status');
+    link.parentElement.after(parserStatus);
     async function parseChannel() {
-        const url = link.value.trim(), platform = window.selectedPlatformId;
-        if (!url || !['youtube','telegram','vkontakte'].includes(platform)) return;
-        parserRequest = new AbortController();
-        parserStatus.textContent = 'Получаем название, аватар и подписчиков…';
+        const url = link.value.trim();
+        if (currentType !== 1 || !url) return;
+        parserRequest?.abort();
+        const requestController = new AbortController();
+        parserRequest = requestController;
+        parserStatus.textContent = 'Получаем название, аватар и число подписчиков…';
         try {
-            const response = await fetch('/market/avatar?platform=' + encodeURIComponent(platform) + '&url=' + encodeURIComponent(url), {signal:parserRequest.signal});
+            const response = await fetch('/market/avatar?platform=youtube&url=' + encodeURIComponent(url), { signal: requestController.signal });
             const data = await response.json();
-            if (url !== link.value.trim() || platform !== window.selectedPlatformId) return;
-            if (!response.ok || !data.title || data.subscribers == null || !data.avatar) throw new Error(data.error || 'Данные получены не полностью.');
-            const subscribers = String(data.subscribers).replace(/[^0-9]/g,'');
-            if (!subscribers) throw new Error('Не удалось определить число подписчиков.');
-            window.plglParsedChannel = {link:url,platform,title:data.title,avatar:data.avatar,subscribers};
+            if (url !== link.value.trim() || currentType !== 1) return;
+            if (!response.ok || !data.title || data.subscribers == null || !data.avatar) throw new Error(data.error || 'Не удалось получить данные канала.');
+            const subscribers = String(data.subscribers).replace(/[^0-9]/g, '');
+            if (!subscribers) throw new Error('YouTube не вернул число подписчиков.');
+            window.plglParsedChannel = { link: url, platform: 'youtube', title: data.title, avatar: data.avatar, subscribers };
             document.getElementById('display-name').textContent = data.title;
-            document.getElementById('display-subscribers').textContent = subscribers + ' подписчиков';
+            document.getElementById('display-subscribers').textContent = Number(subscribers).toLocaleString('ru-RU') + ' подписчиков';
             document.getElementById('display-avatar').src = data.avatar;
             document.getElementById('profile-edit-block').style.display = 'none';
             document.getElementById('profile-view-block').style.display = 'flex';
-            parserStatus.textContent = 'Данные канала загружены. Перед размещением подтвердите владение кодом.';
+            parserStatus.textContent = 'Данные и аватар канала загружены автоматически.';
             updatePreview();
+            saveDraftSoon();
         } catch (error) {
             if (error.name === 'AbortError') return;
-            parserStatus.textContent = 'Не удалось получить данные автоматически. Заполните название, подписчиков и загрузите аватар вручную.';
+            parserStatus.textContent = 'Не удалось распознать ссылку. Проверьте её или заполните данные канала вручную.';
             updatePreview();
         }
     }
     link.addEventListener('input', () => {
-        resetParsedChannel(); updatePreview();
+        resetParsedChannel();
         parserTimer = setTimeout(parseChannel, 500);
+        saveDraftSoon();
     });
-    platformSelect.addEventListener('change', () => { if (type === 1) parserTimer = setTimeout(parseChannel, 500); });
-    document.addEventListener('plgl:parsed-reset', resetParsedChannel);
+    forms.forEach(form => {
+        form.addEventListener('input', () => { updatePreview(); saveDraftSoon(); });
+        form.addEventListener('change', () => { updatePreview(); saveDraftSoon(); });
+        let busy = false;
+        form.addEventListener('submit', event => {
+            if (busy) { event.preventDefault(); event.stopImmediatePropagation(); return; }
+        }, true);
+        const button = form.querySelector('button[type="submit"]');
+        const original = button?.textContent || 'Разместить объявление';
+        form.addEventListener('plgl:busy', event => {
+            busy = event.detail;
+            if (button) { button.disabled = busy; button.textContent = busy ? 'Размещаем…' : original; }
+        });
+    });
+    document.querySelectorAll('[data-offer-type]').forEach(button => button.addEventListener('click', () => switchType(Number(button.dataset.offerType))));
+    platformSelect.addEventListener('change', () => selectPlatform());
+    categorySelect.addEventListener('change', () => selectCategory());
+    retry.addEventListener('click', loadCatalog);
 
-    new MutationObserver(updatePreview).observe(document.getElementById('display-name'), {childList:true});
+    async function persistNow() {
+        clearTimeout(saveTimer);
+        saveTimer = null;
+        if (!restoringDraft && !suppressDraftSave && draftDb) {
+            const form = activeForm();
+            const values = {}, files = {};
+            for (const field of form.elements) {
+                if (!field.name) continue;
+                if (field.type === 'file') {
+                    if (field.files?.[0]) files[field.name] = { blob: field.files[0], name: field.files[0].name, type: field.files[0].type };
+                } else if (field.type === 'checkbox') values[field.name] = field.checked;
+                else if (field.type !== 'radio') values[field.name] = field.value;
+            }
+            await writeDraft(currentType, { type: currentType, category: categorySelect.value, step: currentSection, values, files, parsedChannel: channelParsedForCurrentLink() }).catch(() => {});
+        }
+    }
+    async function clearCurrentDraft() {
+        if (draftDb) await deleteDraft(currentType).catch(() => {});
+        document.getElementById('composer-progress').dataset.saved = 'false';
+        localStorage.removeItem('plgl-sell-type');
+        updateProgress();
+    }
+    window.plglClearSellDraft = clearCurrentDraft;
+
+    async function loadCatalog() {
+        retry.hidden = true;
+        status.hidden = false;
+        status.textContent = 'Загружаем категории YouTube…';
+        try {
+            const response = await fetch('/market/platforms');
+            if (!response.ok) throw new Error('Не удалось загрузить категории.');
+            const catalog = await response.json();
+            platforms = Array.isArray(catalog) ? catalog.filter(platform => platform.id === 'youtube') : [];
+            if (!platforms.length) throw new Error('Категории YouTube временно недоступны.');
+            platformSelect.replaceChildren(option('YouTube', 'youtube'));
+            platformSelect.value = 'youtube';
+            platformSelect.disabled = false;
+            suppressDraftSave = true;
+            await selectPlatform(false);
+            const draft = await restoreDraft(currentType);
+            suppressDraftSave = false;
+            if (!draft) openStep('category', false);
+        } catch (error) {
+            status.textContent = error.message + ' Попробуйте ещё раз.';
+            retry.hidden = false;
+        }
+    }
+
+    // Keep labels visible after placeholder text disappears.
+    document.querySelectorAll('main input:not([type=hidden]):not([type=checkbox]):not([type=radio]), main textarea, main select').forEach((field, index) => {
+        if (!field.id) field.id = 'sell-field-' + index;
+        if (field.closest('label') || document.querySelector('label[for="' + field.id + '"]')) return;
+        const label = document.createElement('label');
+        label.htmlFor = field.id;
+        label.textContent = field.placeholder?.split(', например:')[0] || 'Значение';
+        field.before(label);
+    });
+    renderWorkflow(currentType);
+
+    // Profile menu is a button + an independent popup, so clicking it never races its link.
+    const profileToggle = document.getElementById('profile-menu-toggle');
+    const profileMenu = document.getElementById('profile-menu');
+    const closeProfileMenu = () => { profileMenu.hidden = true; profileToggle.setAttribute('aria-expanded', 'false'); };
+    profileToggle.addEventListener('click', event => {
+        event.stopPropagation();
+        profileMenu.hidden = !profileMenu.hidden;
+        profileToggle.setAttribute('aria-expanded', String(!profileMenu.hidden));
+    });
+    document.addEventListener('click', event => { if (!profileMenu.contains(event.target) && !profileToggle.contains(event.target)) closeProfileMenu(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeProfileMenu(); });
+    document.getElementById('sell-logout').addEventListener('click', async () => {
+        try { await fetch('/account/logout', { method: 'POST' }); } catch {}
+        ['jwt', 'user'].forEach(key => { localStorage.removeItem(key); sessionStorage.removeItem(key); });
+        location.assign('/pages/user-auth/login.html');
+    });
     try {
         const { user } = await window.PlglAuth.session;
-        if (!user) return;
-        const headerName = document.querySelector('.header-user-name');
-        if (headerName) headerName.textContent = user.nickname || user.name || 'Профиль';
-        // Read contacts from the account API, not from a potentially stale storage copy.
-        const response = await fetch('/account/get/data');
-        if (response.ok) {
-            const { user: own } = await response.json();
-            const contacts = own?.contacts || {};
-            forms.forEach(form => {
-                for (const [name, value] of Object.entries({telegram:contacts.telegram,whatsapp:contacts.whatsapp,'e-mail':contacts.email || contacts['e-mail'] || own?.email})) {
-                    const field = form.querySelector('[name="contacts[' + name + ']"]');
-                    if (field && !field.value && typeof value === 'string') field.value = value;
-                }
-            });
+        if (user) {
+            document.querySelector('.header-user-name').textContent = user.nickname || user.name || 'Профиль';
+            if (user.avatar && !user.avatar.startsWith('../')) document.querySelector('.header-avatar').src = user.avatar;
+            document.querySelector('.header-avatar').addEventListener('error', event => { event.currentTarget.src = '/assets/images/pl-gl-default-avatar.svg'; }, { once: true });
+            const response = await fetch('/account/get/data');
+            if (response.ok) {
+                const { user: own } = await response.json();
+                const contacts = own?.contacts || {};
+                forms.forEach(form => {
+                    for (const [name, value] of Object.entries({ telegram: contacts.telegram, whatsapp: contacts.whatsapp, 'e-mail': contacts.email || contacts['e-mail'] || own?.email })) {
+                        const field = form.querySelector('[name="contacts[' + name + ']"]');
+                        if (field && !field.value && typeof value === 'string') field.value = value;
+                    }
+                });
+            }
         }
-    } catch { window.PlglNotifications?.show('Не удалось подставить контакты. Заполните их вручную.', 'error'); }
-    await load();
+    } catch { window.PlglNotifications?.show('Не удалось загрузить профильные данные.', 'error'); }
+    draftDb = await openDraftDb().catch(() => null);
+    await loadCatalog();
 });

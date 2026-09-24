@@ -6,29 +6,24 @@
 <title>Разместить объявление — PL-GL</title>
 <script src="/scripts/common/app.js?v=4"></script>
 <link rel="icon" href="/assets/images/pl-gl-logo.svg" type="image/svg+xml">
+<link rel="shortcut icon" href="/assets/images/pl-gl-logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/images/favicon-180x180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/styles/market/sell-plgl.css?v=1">
-<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=11">
+<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=13">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="sell-page">
 <header class="pl-header"><nav class="pl-header-inner" aria-label="Основная навигация">
-<a class="brand" href="/pages/index.html" aria-label="PL-GL"><span class="brand-mark" aria-hidden="true"></span><strong>PL-GL</strong></a>
-<a class="catalog-link" href="/pages/index.html">Каталог</a>
+<a class="brand" href="/pages/index.html" aria-label="PL-GL — Главная"><img src="/assets/images/pl-gl-logo.svg" alt="PL-GL"></a>
+<a class="catalog-link" href="/pages/index.html">Главная</a>
 <span class="header-spacer"></span><span class="plgl-notification-slot" aria-label="Уведомления"><button class="plgl-notification-toggle" type="button" aria-label="Уведомления" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><span class="plgl-notification-count" hidden></span></button></span>
-<a class="profile-link" href="/account" aria-label="Личный кабинет"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span class="header-user-name">Профиль</span><span class="profile-chevron">⌄</span></a>
+<div class="profile-menu"><button class="profile-link" id="profile-menu-toggle" type="button" aria-label="Меню профиля" aria-expanded="false" aria-controls="profile-menu"><img class="header-avatar" src="/assets/images/pl-gl-default-avatar.svg" alt=""><span class="header-user-name">Профиль</span><span class="profile-chevron" aria-hidden="true">⌄</span></button><div class="profile-dropdown" id="profile-menu" hidden><a href="/account#profile">Личный кабинет</a><a href="/account#settings">Настройки профиля</a><a href="/account#favorites" class="select-favorites">Избранное</a><a href="#" class="settings-link">Безопасность аккаунта</a><button type="button" id="sell-logout">Выйти</button></div></div>
 </nav></header>
 <div class="sell-shell">
 <div class="sell-layout">
-<nav class="composer-steps" aria-label="Этапы размещения">
-<p class="eyebrow">ВАШЕ ОБЪЯВЛЕНИЕ</p>
-<button type="button" data-step="category" aria-current="step"><span>01</span><strong>Категория<small>Что вы предлагаете</small></strong></button>
-<button type="button" data-step="description"><span>02</span><strong>Описание<small>Детали и изображения</small></strong></button>
-<button type="button" data-step="terms"><span>03</span><strong>Цена и условия<small>Стоимость и особенности</small></strong></button>
-<button type="button" data-step="contacts"><span>04</span><strong>Контакты<small>Связь и размещение</small></strong></button>
-<p id="composer-progress" aria-live="polite">Выберите категорию</p>
-</nav><main class="listing-editor">
+<nav class="composer-steps" aria-label="Этапы размещения"><p class="eyebrow">ВАШЕ ОБЪЯВЛЕНИЕ</p><div id="composer-step-list"></div><p id="composer-progress" aria-live="polite">Выберите категорию</p></nav><main class="listing-editor">
 <section class="sell-intro"><h1>Разместить объявление</h1><p>Предложите свои услуги или канал на YouTube</p></section>
 <section class="selection-card" aria-labelledby="selection-title"><p class="eyebrow">01 / ВАШЕ ПРЕДЛОЖЕНИЕ</p><h2 id="selection-title">Что вы хотите разместить?</h2>
 <div class="offer-types"><button type="button" class="offer-type selected" data-offer-type="2" aria-pressed="true"><span class="offer-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3 18l3 3 5.3-5.3a5 5 0 0 0 6.4-6.4L14.5 13 11 9.5z"/></svg></span><span>Услуга</span><small>Монтаж, дизайн, продвижение и другие задачи для YouTube</small></button><button type="button" class="offer-type" data-offer-type="1" aria-pressed="false"><span class="offer-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5c0-1.4 1.2-2.5 2.6-2.5h10.8C18.8 5 20 6.1 20 7.5v9c0 1.4-1.2 2.5-2.6 2.5H6.6C5.2 19 4 17.9 4 16.5z"/><path d="m10 9 5 3-5 3z"/></svg></span><span>Канал</span><small>Канал с аудиторией, статистикой и подтверждением владения</small></button></div>
@@ -309,9 +304,10 @@
 <section id="channel-example" class="channel-example"><h3>Пример заполнения для канала</h3><p>Выберите «Канал» и вставьте ссылку — данные канала загрузятся автоматически.</p><div class="channel-example-card"><div class="example-avatar">▶</div><div><strong>YouTube-канал</strong><span>Аватар и подписчики определятся автоматически</span></div><span class="youtube-mark">▶</span></div><div class="example-link">Вставьте ссылку на YouTube-канал</div></section>
 </aside>
 </div></div>
-<footer class="sell-footer"><span>PL-GL · Биржа цифровых предложений</span><nav aria-label="Документы"><a href="/pages/lending/policy.html">Конфиденциальность</a><a href="/pages/lending/termsOfService.html">Условия использования</a><a href="/pages/lending/contacts.html">Контакты</a></nav></footer>
+<footer class="pl-footer sell-footer"><div class="footer-brand">▷ PL-GL</div><p>© 2025 PL-GL | Все права защищены</p><nav aria-label="Документы"><a href="/pages/lending/policy.html">Политика конфиденциальности</a><a href="/pages/lending/termsOfService.html">Условия использования</a><a href="/pages/lending/contacts.html">Контакты</a></nav></footer>
 <script src="/scripts/market/v3/form1.js?v=sell-2"></script>
-<script src="/scripts/market/v3/form2.js?v=sell-2"></script>
-<script src="/scripts/market/v3/sellMedia.js?v=sell-4"></script>
-<script src="/scripts/market/sell-plgl.js?v=12"></script>
+<script src="/scripts/market/v3/form2.js?v=sell-3"></script>
+<script src="/scripts/market/v3/sellMedia.js?v=sell-5"></script>
+<script src="/scripts/market/sell-plgl.js?v=13"></script>
+<script type="module" src="/scripts/settingsModal/main.js?v=security-2"></script>
 </body></html>

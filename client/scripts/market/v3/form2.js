@@ -166,6 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         allowOutsideClick: false,
                         allowEscapeKey: false
                     });
+                    await window.plglClearSellDraft?.();
                     form.reset();
                     location.reload();
                 }

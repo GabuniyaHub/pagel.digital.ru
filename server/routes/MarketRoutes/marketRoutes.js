@@ -747,12 +747,27 @@ router.post('/verify-ownership', checkBlockStatusWithoutToken, async (req, res) 
 // Download only trusted parser image hosts, never arbitrary user URLs or redirects.
 router.get('/avatar-image', verifyToken, async (req, res) => {
   try {
-    const url = new URL(req.query.url);
-    const allowed = ['yt3.ggpht.com', 'yt3.googleusercontent.com', 'yt4.ggpht.com', 'i.ytimg.com'];
-    if (url.protocol !== 'https:' || url.username || url.password || url.port || !allowed.includes(url.hostname)) {
+    let url = new URL(req.query.url);
+    const isTrustedHost = hostname => hostname === 'i.ytimg.com' || hostname.endsWith('.googleusercontent.com') || hostname.endsWith('.ggpht.com');
+    if (url.protocol !== 'https:' || url.username || url.password || url.port || !isTrustedHost(url.hostname)) {
       return res.status(400).json({ error: 'Загрузите изображение канала вручную.' });
     }
-    const image = await axios.get(url.href, { responseType: 'arraybuffer', timeout: 7000, maxRedirects: 0, maxContentLength: 5 * 1024 * 1024 });
+    let image;
+    for (let redirect = 0; redirect <= 3; redirect++) {
+      image = await axios.get(url.href, {
+        responseType: 'arraybuffer', timeout: 7000, maxRedirects: 0, maxContentLength: 5 * 1024 * 1024,
+        validateStatus: () => true
+      });
+      if (image.status >= 300 && image.status < 400 && image.headers.location && redirect < 3) {
+        url = new URL(image.headers.location, url);
+        if (url.protocol !== 'https:' || url.username || url.password || url.port || !isTrustedHost(url.hostname)) {
+          return res.status(400).json({ error: 'Источник аватара не разрешён.' });
+        }
+        continue;
+      }
+      break;
+    }
+    if (image.status !== 200) return res.status(502).json({ error: 'Не удалось загрузить аватар YouTube.' });
     const mime = String(image.headers['content-type'] || '').split(';')[0];
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(mime)) return res.sendStatus(415);
     res.set('Content-Type', mime).set('Cache-Control', 'private, max-age=300').send(Buffer.from(image.data));
