@@ -105,8 +105,7 @@ router.get('/platforms', (req, res) => {
 
 // API-роут для создания объявления (JSON)
 router.post('/create-listings', verifyToken, upload.fields([
-  { name: 'avatar', maxCount: 2 },
-  { name: 'screenshots', maxCount: 12 }
+  { name: 'avatar', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const {
@@ -115,18 +114,10 @@ router.post('/create-listings', verifyToken, upload.fields([
       link,
       theme,
       price,
-      income,
-      expense,
       description,
-      income_sources,
-      expense_sources,
-      promotion,
-      support_needs,
       show_link,
       category_name,
       category_description,
-      monetization,
-      content_type,
       allow_comments,
       platform_id,
       form_type,
@@ -164,7 +155,15 @@ router.post('/create-listings', verifyToken, upload.fields([
 
     // console.log(req.files);
 
-    if ( !name || !subscribers || !link || !theme || !description || !userId || !category_name || !platform_id || !content_type || !form_type || !contacts) {
+    const normalizedPrice = Number(price);
+    const normalizedSubscribers = Number(String(subscribers ?? '').replace(/[^0-9]/g, ''));
+    const normalizedFormType = Number(form_type);
+    if (!name || !link || !theme || !description || !userId || !category_name || !platform_id || !contacts ||
+        !/^\d+(\.\d{1,2})?$/.test(String(price)) || !Number.isFinite(normalizedPrice) || normalizedPrice <= 0 ||
+        String(subscribers ?? '').trim() === '' ||
+        !Number.isInteger(normalizedSubscribers) || normalizedSubscribers < 0 || normalizedFormType !== 1 ||
+        String(description).trim().length < 10 || String(description).length > 500 ||
+        !/^https?:\/\/.+/i.test(link)) {
       return res.status(400).json({ error: 'Отсутствуют обязательные поля' });
     }
 
@@ -188,28 +187,7 @@ router.post('/create-listings', verifyToken, upload.fields([
       categoryId = insertCategory.rows[0].id;
     }
 
-    // 2. Обработка скриншотов
-    // const screenshots = req.files ? req.files.map(file => file.filename) : [];
-
-    const screenshots = [];
-
-    if (req.files && req.files.screenshots) {
-      req.files.screenshots.forEach(file => {
-        screenshots.push(file.filename);
-      });
-    }
-
-
-    if (screenshots.length > 0) {
-      console.log("Скриншоты найдены, начинаем обработку:");
-      screenshots.forEach((file, index) => {
-        console.log(`Screenshot #${index + 1}:`, file);
-      });
-    } else {
-      console.log("Скриншоты не найдены.");
-    }
-
-
+    // Avatar is the channel artwork (parsed image or a user-provided fallback).
     const avatarFile = req.files && req.files.avatar ? req.files.avatar[0] : null;
     const avatarFilename = avatarFile ? avatarFile.filename : null;
 
@@ -220,7 +198,6 @@ router.post('/create-listings', verifyToken, upload.fields([
       return value === '1' || value === 'true' || value === 'on' || value === true;
     }
 
-    const monetizationBool = toBoolean(monetization);
     const allowCommentsBool = toBoolean(allow_comments);
     const showLinkBool = toBoolean(show_link);
     const flexSwitchBool = toBoolean(req.body.flex_switch); // если тоже используется
@@ -237,7 +214,7 @@ router.post('/create-listings', verifyToken, upload.fields([
       return Number.isInteger(n) ? n : null;
     };
 
-    const parsedSubscribers = toIntegerOrNull(subscribers);
+    const parsedSubscribers = toIntegerOrNull(normalizedSubscribers);
 
 
     let formattedName = null;
@@ -255,11 +232,6 @@ router.post('/create-listings', verifyToken, upload.fields([
 
 
     //4. Парсим контакты из JSON строки
-
-    // console.log('Raw contacts:', contacts);
-    // console.log('Type of contacts:', typeof contacts);
-
-    // Замените текущий блок парсинга контактов на этот:
 
     let parsedContacts = {};
 
@@ -294,6 +266,9 @@ router.post('/create-listings', verifyToken, upload.fields([
       console.warn('Неверный формат контактов');
       return res.status(400).json({ message: 'Неверный формат контактов' });
     }
+    if (!Object.values(parsedContacts).some(value => typeof value === 'string' && value.trim())) {
+      return res.status(400).json({ message: 'Укажите хотя бы один способ связи.' });
+    }
     
 
     // Получаем максимальную позицию
@@ -308,39 +283,26 @@ router.post('/create-listings', verifyToken, upload.fields([
     // 5. Сохраняем listing
     const insertListing = await client.query(
       `INSERT INTO listings (
-                link, theme, price, income, expense,
-                description, income_sources, expense_sources,
-                promotion, support_needs, allow_comments, show_link, screenshots,
-                category_id, user_id, monetization, content_type, form_type, contacts, position, name, subscribers, cover
+                link, theme, price, description, allow_comments, show_link,
+                flex_switch, category_id, user_id, form_type, contacts, position,
+                name, subscribers, cover
             ) VALUES (
-                $1, $2, $3, $4, $5,
-                $6, $7, $8, $9, $10,
-                $11, $12, $13, $14, 
-                $15, $16, $17, $18, $19, $20, $21, $22, $23
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
             ) RETURNING *`,
       [
         link,
         theme,
-        price || null,
-        income || null,
-        expense || null,
         description,
-        income_sources,
-        expense_sources,
-        promotion,
-        support_needs,
         allowCommentsBool,
         showLinkBool,
-        screenshots,
+        flexSwitchBool,
         categoryId,
         userId,
-        monetizationBool,
-        content_type,
-        form_type ? Number(form_type) : null,
+        normalizedFormType,
         parsedContacts, 
         nextPosition,
         formattedName,
-        parsedSubscribers || 0,
+        parsedSubscribers,
         cover
       ]
     );
@@ -421,8 +383,11 @@ router.post('/simple-listing', verifyToken, checkBlockStatusWithoutToken, upload
   if (typeof description !== 'string' || description.length < 10 || description.length > 1000) {
     return res.status(400).json({ message: 'Описание должно содержать от 10 до 1000 символов.' });
   }
-  if (!/^\d+(\.\d{1,2})?$/.test(price) || Number(price) < 0) {
+  if (!/^\d+(\.\d{1,2})?$/.test(price) || Number(price) <= 0) {
     return res.status(400).json({ message: 'Цена должна быть положительным числом.' });
+  }
+  if (Number(form_type) !== 2) {
+    return res.status(400).json({ message: 'Некорректный тип объявления.' });
   }
 
   // Парсим контакты из JSON строки
@@ -445,6 +410,10 @@ router.post('/simple-listing', verifyToken, checkBlockStatusWithoutToken, upload
   } catch (e) {
     console.warn('Ошибка парсинга контактов', e);
     return res.status(400).json({ message: 'Неверный формат контактов' });
+  }
+  if (!parsedContacts || typeof parsedContacts !== 'object' ||
+      !Object.values(parsedContacts).some(value => typeof value === 'string' && value.trim())) {
+    return res.status(400).json({ message: 'Укажите хотя бы один способ связи.' });
   }
 
   // 1. Проверяем существование пользователя

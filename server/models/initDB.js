@@ -58,41 +58,56 @@ async function createTables() {
         );    
         `);
 
-        // Создание таблицы listings
+        // Основные поля нужны новым объявлениям. Аналитические колонки ниже
+        // оставлены для совместимости с уже опубликованными объявлениями.
         await client.query(`
             CREATE TABLE IF NOT EXISTS listings (
                 id SERIAL PRIMARY KEY,
-                name TEXT,
+                name TEXT NOT NULL,
                 link TEXT UNIQUE,
                 theme TEXT,
-                price NUMERIC CHECK (price > 0),
-                income NUMERIC,
-                expense NUMERIC,
+                price NUMERIC NOT NULL CHECK (price > 0),
                 description TEXT NOT NULL,
-                income_sources TEXT,
-                expense_sources TEXT,
-                promotion TEXT,
-                support_needs TEXT,
-                allow_comments BOOLEAN DEFAULT FALSE,
-                show_link BOOLEAN DEFAULT FALSE,
-                flex_switch BOOLEAN DEFAULT FALSE,
-                screenshots TEXT[],
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                cover TEXT,
+                contacts JSONB NOT NULL DEFAULT '{}'::jsonb,
+                allow_comments BOOLEAN NOT NULL DEFAULT FALSE,
+                show_link BOOLEAN NOT NULL DEFAULT FALSE,
+                flex_switch BOOLEAN NOT NULL DEFAULT FALSE,
+                subscribers INTEGER NOT NULL DEFAULT 0 CHECK (subscribers >= 0),
+                form_type INTEGER NOT NULL CHECK (form_type IN (1, 2)),
                 user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
                 category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
-                monetization BOOLEAN DEFAULT FALSE,
-                form_type INTEGER NOT NULL, 
-                content_type TEXT DEFAULT 'copy' CHECK (content_type IN ('unique', 'rewrite', 'copy', 'mixed')),
-                cover TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 views INTEGER DEFAULT 0,
                 up_date TIMESTAMP DEFAULT NULL,
                 position INTEGER DEFAULT 0,
                 is_pinned BOOLEAN DEFAULT FALSE,
                 pin_expiration_date TIMESTAMP DEFAULT NULL,
-                contacts JSONB DEFAULT '{}'::jsonb,
-                subscribers INTEGER DEFAULT 0,
-                is_blocked BOOLEAN DEFAULT false
+                is_blocked BOOLEAN DEFAULT false,
+
+                -- Legacy listing details retained so existing records and edit pages keep working.
+                income NUMERIC,
+                expense NUMERIC,
+                income_sources TEXT,
+                expense_sources TEXT,
+                promotion TEXT,
+                support_needs TEXT,
+                screenshots TEXT[],
+                monetization BOOLEAN DEFAULT FALSE,
+                content_type TEXT DEFAULT 'copy' CHECK (content_type IN ('unique', 'rewrite', 'copy', 'mixed'))
             );
+        `);
+
+        // Safe compatibility migration: align defaults for existing databases without
+        // dropping legacy fields or rewriting users' existing listing data.
+        await client.query(`
+            ALTER TABLE listings
+                ALTER COLUMN contacts SET DEFAULT '{}'::jsonb,
+                ALTER COLUMN allow_comments SET DEFAULT FALSE,
+                ALTER COLUMN show_link SET DEFAULT FALSE,
+                ALTER COLUMN flex_switch SET DEFAULT FALSE,
+                ALTER COLUMN subscribers SET DEFAULT 0,
+                ALTER COLUMN screenshots SET DEFAULT '{}'::text[];
         `);
 
         //Создание таблицы admins

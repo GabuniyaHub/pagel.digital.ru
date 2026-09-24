@@ -216,9 +216,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const formData = new FormData(form);
 
             const price = document.getElementById('price');
-            const income = document.getElementById('income');
-            const expense = document.getElementById('expense');
-
             function limitDigitsStrict(field, label = 'Значение') {
                 const max = 99999999.999;
                 let value = parseFloat(field.value);
@@ -241,11 +238,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return false;
                 }
 
-                if (value < 0) { // Добавим проверку на отрицательные значения, так как min="0" не блокирует ввод отрицательных
+                if (value <= 0) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Ошибка',
-                        text: `${label} не может быть отрицательным.`
+                        text: `${label} должно быть больше нуля.`
                     });
                     return false;
                 }
@@ -267,13 +264,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return true;
             }
 
-            // Использование
             const isPriceOk = limitDigitsStrict(price);
-            const isIncomeOk = limitDigitsStrict(income);
-            const isExpenseOk = limitDigitsStrict(expense);
 
-
-            if (!isPriceOk || !isIncomeOk || !isExpenseOk) {
+            if (!isPriceOk) {
                 return; // уже показали ошибку внутри limitDigitsStrict
             }
 
@@ -288,53 +281,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Сжимаем скриншоты
-            function resizeImage(file, maxWidth = 1920, maxHeight = 1080) {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    const reader = new FileReader();
-
-                    reader.onload = (e) => {
-                    img.src = e.target.result;
-                    };
-
-                    img.onload = () => {
-                    let { width, height } = img;
-
-                    // Вычисляем пропорциональные размеры, не превышающие maxWidth / maxHeight
-                    const widthRatio = maxWidth / width;
-                    const heightRatio = maxHeight / height;
-                    const ratio = Math.min(widthRatio, heightRatio, 1); // Не увеличиваем изображение
-
-                    const newWidth = Math.round(width * ratio);
-                    const newHeight = Math.round(height * ratio);
-
-                    const canvas = document.createElement('canvas');
-                    canvas.width = newWidth;
-                    canvas.height = newHeight;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-                    canvas.toBlob((blob) => {
-                        resolve(blob);
-                    }, file.type, 1.0); // тип и качество (0.0–1.0)
-                    };
-
-                    reader.readAsDataURL(file);
-                });
-            }
-
-
-            // console.log("window.filesArray:", window.filesArray)
-            if (window.filesArray) {
-                for (let i = 0; i < window.filesArray.length; i++) {
-                    const file = window.filesArray[i];
-                    const resizedBlob = await resizeImage(file, 1920, 1080); // Размер по твоему выбору
-                    const resizedFile = new File([resizedBlob], file.name, { type: file.type });
-                    formData.append('screenshots', resizedFile);
-                }
-            }
             // добавим category_name и platform_id вручную
             formData.append('category_name', window.selectedProduct.name);
             formData.append('category_description', window.selectedProduct.description || '');

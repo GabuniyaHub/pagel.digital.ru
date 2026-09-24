@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (field.closest('label') || document.querySelector('label[for="' + field.id + '"]')) return;
         const label = document.createElement('label');
         label.htmlFor = field.id;
-        label.textContent = field.placeholder?.split(', например:')[0] || ({avatar:'Изображение канала',subscribers:'Количество подписчиков',income:'Доход, $ в месяц',expense:'Расход, $ в месяц',groupTheme:'Тематика канала'})[field.name] || 'Значение';
+        label.textContent = field.placeholder?.split(', например:')[0] || ({avatar:'Изображение канала',subscribers:'Количество подписчиков',groupTheme:'Тематика канала'})[field.name] || 'Значение';
         field.before(label);
     });
     forms.forEach(form => {
@@ -219,13 +219,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             for (const part of Object.values(parts)) form.append(part.details);
             const priceRow = document.getElementById('price').closest('.form-row');
             parts.terms.body.append(priceRow);
-            for (const selector of ['.income-expense-row','.monetization-block']) parts.terms.body.append(form.querySelector(selector) || parts.description.body.querySelector(selector));
-            for (const id of ['income_sources','expense_sources','promotion','support_needs']) {
-                const field = document.getElementById(id);
-                const label = parts.description.body.querySelector('label[for="' + id + '"]');
-                if (label) parts.terms.body.append(label);
-                parts.terms.body.append(field);
-            }
         }
         for (const part of Object.values(parts)) form.append(part.details);
         for (const step of ['description','terms']) {
@@ -258,7 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             category: !!window.selectedProduct,
             description: type === 2 ? valid('#simple-title,#simple-description') && !!document.getElementById('simple-cover').files.length :
                 !!document.getElementById('link').value && valid('#description,#theme') && !!(window.plglParsedChannel || document.getElementById('profile-avatar-input').files.length),
-            terms: valid(type === 2 ? '#simple-price' : '#price,#income,#expense,#income_sources,#expense_sources,#promotion,#support_needs'),
+            terms: valid(type === 2 ? '#simple-price' : '#price'),
             contacts: [...form.querySelectorAll('[name^="contacts["]')].some(field => field.value.trim()) && (type === 2 || document.getElementById('flex_switch').checked)
         };
         const count = Object.values(complete).filter(Boolean).length;

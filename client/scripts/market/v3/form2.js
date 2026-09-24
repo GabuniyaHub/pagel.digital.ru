@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (description.length < 10 || description.length > 1000) {
             return Swal.fire('Ошибка', 'Описание должно содержать от 10 до 1000 символов.', 'error');
         }
-        if (!/^\d+(\.\d{1,2})?$/.test(price) || Number(price) < 0) {
+        if (!/^\d+(\.\d{1,2})?$/.test(price) || Number(price) <= 0) {
             return Swal.fire('Ошибка', 'Цена должна быть положительным числом.', 'error');
         }
         if (coverInput.files.length === 0) {
