@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Разместить объявление — PL-GL</title>
 <script src="/scripts/common/app.js?v=5"></script>
-<link rel="icon" href="/assets/images/pl-gl-logo.svg" type="image/svg+xml">
-<link rel="shortcut icon" href="/assets/images/pl-gl-logo.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/images/favicon-180x180.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/assets/images/pl-gl-logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon-180x180.png">
+<link rel="icon" href="/assets/images/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/styles/market/sell-plgl.css?v=1">
-<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=14">
+<link rel="stylesheet" href="/assets/styles/market/sell-plgl.css?v=2">
+<link rel="stylesheet" href="/assets/styles/market/sell-composer.css?v=16">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="sell-page">
@@ -55,15 +57,17 @@
                     <div class="header-form-listing">
 
                         <div class="form-row">
+                            <label class="channel-link-label" for="link">Оригинальная ссылка на YouTube-канал</label>
                             <input type="url" id="link" name="link"
-                                placeholder="Вставьте ссылку на YouTube-канал"
-                                required pattern="https?://.+"
-                                title="Введите корректную ссылку, начинающуюся с http:// или https://">
+                                placeholder="https://www.youtube.com/channel/UC…"
+                                required pattern="https://(www\.)?youtube\.com/channel/[A-Za-z0-9_-]+/?([?#].*)?"
+                                title="Укажите исходную ссылку YouTube вида youtube.com/channel/ID">
                             <label class="form-checkbox">
                                 <input type="checkbox" id="show_link" name="show_link" checked>
-                                <span>Показать ссылку</span>
+                                <span>Показать ссылку на ваш канал другим пользователям</span>
                             </label>
                         </div>
+                        <p class="channel-link-help">Нужна ссылка с ID канала, а не короткая ссылка вида <code>@имя</code>. В YouTube откройте <strong>Настройки → Расширенные настройки</strong>, скопируйте ID канала и добавьте его после <code>https://www.youtube.com/channel/</code>. <a href="https://support.google.com/youtube/answer/3250431?hl=ru" target="_blank" rel="noopener noreferrer">Как найти ID канала</a>.</p>
 
 
                         <div class="profile-form-row" id="profile-edit-block">
@@ -148,7 +152,7 @@
                                 step="0.01" required title="Введите только число, например: 100 или 99.99">
                             <label class="form-checkbox">
                                 <input type="checkbox" id="allow_comments" name="allow_comments" checked>
-                                <span>Разрешить комментарии</span>
+                                <span>Разрешить комментарии к вашему объявлению</span>
                             </label>
                         </div>
                     </div>
@@ -286,7 +290,7 @@
 
                     <label class="form-checkbox">
                         <input type="checkbox" id="simple-allow-comments" name="allow_comments" checked>
-                        <span>Разрешить комментарии</span>
+                        <span>Разрешить комментарии к вашему объявлению</span>
                     </label>
 
 
@@ -308,6 +312,6 @@
 <script src="/scripts/market/v3/form1.js?v=sell-2"></script>
 <script src="/scripts/market/v3/form2.js?v=sell-3"></script>
 <script src="/scripts/market/v3/sellMedia.js?v=sell-5"></script>
-<script src="/scripts/market/sell-plgl.js?v=14"></script>
+<script src="/scripts/market/sell-plgl.js?v=16"></script>
 <script type="module" src="/scripts/settingsModal/main.js?v=security-2"></script>
 </body></html>

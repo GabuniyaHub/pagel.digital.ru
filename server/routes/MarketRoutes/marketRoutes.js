@@ -13,6 +13,39 @@ const optionalAuth = require('../../middleware/MarketMiddleware/optionalAuth');
 const { title } = require('process');
 const { subscribe } = require('diagnostics_channel');
 
+// The listing form uses stable platform slugs (for example, "youtube"),
+// while categories and listings reference the numeric platforms.id key.
+async function resolvePlatformId(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return null;
+
+  if (/^\d+$/.test(raw)) {
+    const byId = await client.query('SELECT id FROM platforms WHERE id = $1', [Number(raw)]);
+    return byId.rows[0]?.id ?? null;
+  }
+
+  const configured = platforms.find(platform =>
+    platform.id.toLowerCase() === raw.toLowerCase() ||
+    platform.name.toLowerCase() === raw.toLowerCase()
+  );
+  const slug = configured?.id || raw.toLowerCase();
+  const bySlug = await client.query(
+    'SELECT id FROM platforms WHERE LOWER(slug) = LOWER($1) OR LOWER(name) = LOWER($2) LIMIT 1',
+    [slug, configured?.name || raw]
+  );
+  if (bySlug.rows[0]) return bySlug.rows[0].id;
+  if (!configured) return null;
+
+  const inserted = await client.query(
+    `INSERT INTO platforms (name, slug, icon, description)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name
+     RETURNING id`,
+    [configured.name, configured.id, configured.icon || null, configured.description || null]
+  );
+  return inserted.rows[0]?.id ?? null;
+}
+
 // Главная страница со списком всех платформ
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../../client/pages/index.html'));
@@ -167,13 +200,18 @@ router.post('/create-listings', verifyToken, upload.fields([
       return res.status(400).json({ error: 'Отсутствуют обязательные поля' });
     }
 
+    const databasePlatformId = await resolvePlatformId(platform_id);
+    if (!databasePlatformId) {
+      return res.status(400).json({ error: 'Выбранная платформа не найдена.' });
+    }
+
     console.log('Полученные данные сабов:', subscribers)
 
 
     // 1. Сохраняем (или находим) категорию
     let categoryResult = await client.query(
-      'SELECT id FROM categories WHERE name = $1',
-      [category_name]
+      'SELECT id FROM categories WHERE name = $1 AND platform_id = $2',
+      [category_name, databasePlatformId]
     );
 
     let categoryId;
@@ -182,7 +220,7 @@ router.post('/create-listings', verifyToken, upload.fields([
     } else {
       const insertCategory = await client.query(
         'INSERT INTO categories (name, description, platform_id) VALUES ($1, $2, $3) RETURNING id',
-        [category_name, category_description, platform_id || '']
+        [category_name, category_description, databasePlatformId]
       );
       categoryId = insertCategory.rows[0].id;
     }
@@ -364,17 +402,13 @@ router.post('/simple-listing', verifyToken, checkBlockStatusWithoutToken, upload
     return res.status(400).json({ message: 'Обложка обязательна для загрузки.' });
   }
 
-  // Если platform_id не число, ищем по slug
-  if (typeof platform_id === 'string' && isNaN(Number(platform_id))) {
-    const platformRes = await client.query(
-      'SELECT id FROM platforms WHERE slug = $1',
-      [platform_id]
-    );
-    if (platformRes.rows.length === 0) {
-      return res.status(400).json({ message: 'Платформа не найдена' });
-    }
-    platform_id = platformRes.rows[0].id;
+  try {
+    platform_id = await resolvePlatformId(platform_id);
+  } catch (error) {
+    console.error('Не удалось определить платформу объявления:', error);
+    return res.status(500).json({ message: 'Не удалось подготовить платформу для объявления.' });
   }
+  if (!platform_id) return res.status(400).json({ message: 'Выбранная платформа не найдена.' });
 
   // Серверная валидация
   if (typeof name !== 'string' || name.length < 5 || name.length > 100) {

@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const channelParts = {
         channel: makeSection('channel', 'Канал и парсинг'),
         description: makeSection('description', 'Описание'),
-        terms: makeSection('terms', 'Цена'),
+        terms: makeSection('terms', 'Цена и условия'),
         contacts: makeSection('contacts', 'Контакты и подтверждение')
     };
     channelParts.channel.body.append(channelForm.querySelector('.header-form-listing'));
@@ -212,7 +212,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // script and may not contain the channel price field. Keep initialization
     // alive so the category chooser and remaining stages still work.
     const channelPriceRow = channelForm.querySelector('#price, [name="price"]')?.closest('.form-row');
-    if (channelPriceRow) channelParts.terms.body.append(channelPriceRow);
+    if (channelPriceRow) {
+        channelPriceRow.classList.add('channel-price-row');
+        channelParts.terms.body.append(channelPriceRow);
+    }
     Object.values(channelParts).forEach(part => channelForm.append(part.details));
 
     const serviceParts = { details: makeSection('details', 'Детали услуги'), publish: makeSection('publish', 'Цена и контакты') };
@@ -239,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const text = document.createElement('strong');
             text.append(document.createTextNode(step.title));
             const hint = document.createElement('small');
-            hint.textContent = ({ category: 'Выберите предложение', channel: 'Ссылка и данные YouTube', description: 'Расскажите о канале', terms: 'Стоимость объявления', contacts: 'Способ связи и владение', details: 'Название, описание, обложка', publish: 'Стоимость и способ связи' })[step.key];
+            hint.textContent = ({ category: 'Выберите предложение', channel: 'Ссылка и данные YouTube', description: 'Расскажите о канале', terms: 'Цена и комментарии к объявлению', contacts: 'Способ связи и владение', details: 'Название, описание, обложка', publish: 'Стоимость и способ связи' })[step.key];
             text.append(hint);
             button.append(text);
             button.addEventListener('click', () => openStep(step.key));
@@ -420,6 +423,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updatePreview();
     }
     const link = document.getElementById('link');
+    const canonicalYoutubeChannelUrl = /^https:\/\/(www\.)?youtube\.com\/channel\/[A-Za-z0-9_-]+\/?(?:[?#].*)?$/i;
     const parserStatus = document.createElement('p');
     parserStatus.className = 'parser-status';
     parserStatus.setAttribute('role', 'status');
@@ -427,6 +431,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function parseChannel() {
         const url = link.value.trim();
         if (currentType !== 1 || !url) return;
+        if (!canonicalYoutubeChannelUrl.test(url)) {
+            parserStatus.textContent = 'Для автоматического определения данных вставьте исходную ссылку youtube.com/channel/ID из настроек канала.';
+            updatePreview();
+            return;
+        }
         parserRequest?.abort();
         const requestController = new AbortController();
         parserRequest = requestController;
