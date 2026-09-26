@@ -1,4 +1,5 @@
 :root{--ink:#1e2833;--muted:#748297;--blue:#3b4d61;--blue-light:#65758e;--line:#e1e7ef;--paper:#fff;--surface:#f5f7fa;--radius:16px}
+.card-seller .seller-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none;background:#edf2f7}
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);font:14px/1.5 Inter,Arial,sans-serif;min-height:100svh;display:flex;flex-direction:column}
 [hidden]{display:none!important}

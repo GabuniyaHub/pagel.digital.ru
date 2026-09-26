@@ -1,31 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const toggle = document.getElementById('profile-menu-toggle');
-    const menu = document.getElementById('profile-menu');
-    function closeMenu(focus = false) {
-        menu.hidden = true;
-        toggle.setAttribute('aria-expanded', 'false');
-        if (focus) toggle.focus();
-    }
-    toggle.addEventListener('click', () => {
-        menu.hidden = !menu.hidden;
-        toggle.setAttribute('aria-expanded', String(!menu.hidden));
-    });
-    document.addEventListener('click', event => { if (!event.target.closest('.pl-profile')) closeMenu(); });
-    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) closeMenu(true); });
-    document.getElementById('catalog-logout').addEventListener('click', async () => {
-        try { await fetch('/account/logout', { method: 'POST' }); } catch {}
-        ['jwt', 'user'].forEach(key => { localStorage.removeItem(key); sessionStorage.removeItem(key); });
-        location.assign('/pages/user-auth/login.html');
-    });
-    function recoverImage(image) {
-        if (image instanceof HTMLImageElement && image.dataset.fallback) {
-            const fallback = image.dataset.fallback;
-            delete image.dataset.fallback;
-            image.src = fallback;
-        }
-    }
-    document.addEventListener('error', event => recoverImage(event.target), true);
-    document.querySelectorAll('img[data-fallback]').forEach(image => { if (image.complete && !image.naturalWidth) recoverImage(image); });
     const form = document.getElementById('catalog-filters');
     const error = document.getElementById('filter-error');
     form.addEventListener('invalid', () => { document.querySelector('.catalog-filters').open = true; }, true);
@@ -71,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const existing = new Set([...grid.querySelectorAll('[data-id]')].map(card => card.dataset.id));
             const cards = [...fragment.querySelectorAll('.market-card')].filter(card => !existing.has(card.dataset.id));
             grid.append(...cards);
+            window.PlglMedia.hydrate(grid);
             document.getElementById('catalog-pagination').replaceWith(next);
             next.querySelector('.previous-page')?.remove();
             if (cards.length) {
@@ -84,12 +58,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             more.removeAttribute('aria-disabled');
         } finally { loading = false; }
     });
-    try {
-        if (!await window.PlglAuth.require()) return;
-        const { user } = await window.PlglAuth.session;
-        document.getElementById('header-user-name').textContent = user.nickname || 'Профиль';
-        const avatar = document.getElementById('header-avatar');
-        avatar.dataset.fallback = '/assets/images/pl-gl-default-avatar.svg';
-        if (user.avatar && !user.avatar.startsWith('../')) avatar.src = user.avatar;
-    } catch { window.PlglNotifications?.show('Не удалось загрузить профиль. Обновите страницу.', 'error'); }
 });

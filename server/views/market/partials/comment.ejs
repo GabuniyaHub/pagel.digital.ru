@@ -1,0 +1,8 @@
+<article class="listing-comment <%= comment.parent_id ? 'is-reply' : '' %>" id="comment-<%= comment.id %>" data-comment-id="<%= comment.id %>">
+  <% if (comment.user_id) { %><a href="/account/public/<%= comment.user_id %>" tabindex="-1" aria-hidden="true"><% } %><img src="<%= media.avatarUrl(comment.author_avatar) %>" data-fallback="<%= media.fallbackAvatar %>" alt="" class="comment-avatar" loading="lazy"><% if (comment.user_id) { %></a><% } %>
+  <div class="comment-body"><div class="comment-byline"><% if (comment.user_id) { %><a href="/account/public/<%= comment.user_id %>"><%= comment.author_name || 'Пользователь' %></a><% } else { %><strong>Удалённый пользователь</strong><% } %><% if (String(comment.user_id) === String(listing.user_id)) { %><span class="author-badge">Автор объявления</span><% } %><time datetime="<%= new Date(comment.created_at).toISOString() %>"><%= date(comment.created_at) %></time></div>
+    <% if (comment.replyingTo) { %><a class="reply-context" href="#comment-<%= comment.parent_id %>">↳ Ответ для <%= comment.replyingTo %></a><% } %>
+    <p><%= comment.message %></p>
+    <% if (listing.allow_comments) { %><button class="text-button reply-button" type="button" data-reply-id="<%= comment.id %>" data-reply-name="<%= comment.author_name || 'Пользователь' %>">Ответить</button><% } %>
+  </div>
+</article>

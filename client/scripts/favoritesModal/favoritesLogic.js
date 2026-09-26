@@ -17,7 +17,8 @@ export function initFavoritesLogic({ overlay, listContainer, closeBtn, getFavori
             const item = document.createElement('article');
             item.className = 'favorite-item';
             const img = document.createElement('img');
-            img.src = fav.cover ? '/market/uploads/' + fav.cover : '/assets/images/pl-gl-default-avatar.svg';
+            img.src = window.PlglMedia.coverUrl(fav.cover, window.PlglMedia.avatarUrl(fav.seller_avatar));
+            if (Number(fav.form_type) === 1) img.dataset.channelId = fav.listing_id;
             img.alt = '';
             img.addEventListener('error', () => { img.src = '/assets/images/pl-gl-default-avatar.svg'; }, { once: true });
             const detail = document.createElement('div');
@@ -25,7 +26,13 @@ export function initFavoritesLogic({ overlay, listContainer, closeBtn, getFavori
             const title = document.createElement('strong');
             title.textContent = fav.name || 'Объявление';
             const meta = document.createElement('p');
-            meta.textContent = [fav.platform_name, fav.subscribers != null ? fav.subscribers + ' подписчиков' : ''].filter(Boolean).join(' · ');
+            meta.textContent = fav.platform_name || 'YouTube';
+            if (Number(fav.form_type) === 1) {
+                const count = document.createElement('span');
+                count.dataset.subscribersId = fav.listing_id;
+                count.textContent = Number(fav.subscribers || 0).toLocaleString('ru-RU');
+                meta.append(' · ', count, ' подписчиков');
+            }
             const price = document.createElement('strong');
             price.textContent = fav.price != null ? fav.price + ' $' : 'Цена не указана';
             detail.append(title, meta, price);
@@ -41,6 +48,7 @@ export function initFavoritesLogic({ overlay, listContainer, closeBtn, getFavori
                 remove.disabled = true;
                 try {
                     await removeFavorite(fav.listing_id);
+                    document.dispatchEvent(new CustomEvent('plgl-favorite-removed', { detail: fav.listing_id }));
                     favorites = favorites.filter(item => String(item.listing_id) !== String(fav.listing_id));
                     render();
                     closeBtn.focus();
@@ -56,6 +64,7 @@ export function initFavoritesLogic({ overlay, listContainer, closeBtn, getFavori
             item.append(img, detail, actions);
             listContainer.append(item);
         });
+        window.PlglMedia.hydrate(listContainer);
     };
     async function load() {
         const current = ++generation;
@@ -79,7 +88,8 @@ export function initFavoritesLogic({ overlay, listContainer, closeBtn, getFavori
         overlay.hidden = true;
         generation++;
         document.body.style.overflow = previousOverflow;
-        opener?.focus();
+        const focusTarget = opener?.getClientRects().length ? opener : document.getElementById('profile-menu-toggle');
+        focusTarget?.focus();
     };
     document.addEventListener('click', event => {
         const trigger = event.target.closest('.select-favorites');

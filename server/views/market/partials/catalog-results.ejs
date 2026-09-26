@@ -8,13 +8,13 @@ const fallback = '/assets/images/youtube-catalog/' + (artwork[category.id] || '0
   <% product.listings.forEach(listing => {
     const channel = Number(listing.form_type) === 1;
     const detailUrl = '/market/' + encodeURIComponent(platform.id) + '/' + encodeURIComponent(product.name) + '/items/' + listing.id;
-    const cover = listing.cover ? '/market/uploads/' + encodeURIComponent(String(listing.cover).split(/[\\/]/).pop()) : fallback;
+    const cover = media.coverUrl(listing.cover, fallback);
     const theme = themes[Number(listing.theme) - 1] || 'YouTube-канал';
   %>
     <article class="market-card <%= channel ? 'market-card-channel' : 'market-card-service' %>" data-id="<%= listing.id %>">
       <a class="card-image-link" href="<%= detailUrl %>" tabindex="-1" aria-hidden="true">
         <div class="card-art <%= channel && listing.cover ? 'card-art-avatar' : '' %>">
-          <img src="<%= cover %>" alt="" loading="lazy" decoding="async" data-fallback="<%= fallback %>">
+          <img src="<%= cover %>" alt="" loading="lazy" decoding="async" data-fallback="<%= fallback %>" <% if (channel) { %>data-channel-id="<%= listing.id %>"<% } %>>
           <% if (listing.is_pinned_active) { %><span class="card-badge">Закреплено</span><% } %>
           <% if (channel) { %><span class="card-platform"><svg viewBox="0 0 24 16" width="20" height="14" aria-hidden="true"><rect width="24" height="16" rx="5" fill="#f01926"/><path d="m10 4 7 4-7 4" fill="#fff"/></svg> YouTube</span><% } %>
         </div>
@@ -24,9 +24,9 @@ const fallback = '/assets/images/youtube-catalog/' + (artwork[category.id] || '0
         <h2><a href="<%= detailUrl %>"><%= listing.name || 'Объявление YouTube' %></a></h2>
         <p class="card-description"><%= listing.description || 'Подробности предложения — на странице объявления.' %></p>
         <% if (channel) { %>
-          <dl class="card-metrics"><div><dt>Подписчики</dt><dd><%= formatNumber(listing.subscribers) %></dd></div><% if (Number(listing.income) > 0) { %><div><dt>Доход / мес.</dt><dd><%= formatPrice(listing.income) %> $</dd></div><% } else { %><div><dt>Просмотры объявления</dt><dd><%= formatNumber(listing.views) %></dd></div><% } %></dl>
+          <dl class="card-metrics"><div><dt>Подписчики</dt><dd data-subscribers-id="<%= listing.id %>"><%= formatNumber(listing.subscribers) %></dd></div><% if (Number(listing.income) > 0) { %><div><dt>Доход / мес.</dt><dd><%= formatPrice(listing.income) %> $</dd></div><% } else { %><div><dt>Просмотры объявления</dt><dd><%= formatNumber(listing.views) %></dd></div><% } %></dl>
         <% } %>
-        <div class="card-seller"><a href="/account/public/<%= listing.user_id %>"><span class="seller-initial" aria-hidden="true"><%= (listing.seller_name || 'П').slice(0, 1).toUpperCase() %></span><span><%= listing.seller_name || 'Продавец' %></span></a><% if (listing.verified) { %><span class="seller-verified" title="Профиль продавца подтверждён">✓ Проверен</span><% } %></div>
+        <div class="card-seller"><a href="/account/public/<%= listing.user_id %>"><img class="seller-avatar" src="<%= media.avatarUrl(listing.seller_avatar) %>" data-fallback="<%= media.fallbackAvatar %>" alt="" loading="lazy"><span><%= listing.seller_name || 'Продавец' %></span></a><% if (listing.verified) { %><span class="seller-verified" title="Профиль продавца подтверждён">✓ Проверен</span><% } %></div>
         <div class="card-bottom"><div><span class="card-price-caption"><%= channel ? 'Стоимость канала' : 'Стоимость услуги' %></span><strong class="card-price"><%= formatPrice(listing.price) %> <span>$</span></strong></div><a class="card-open" href="<%= detailUrl %>" aria-label="Подробнее: <%= listing.name || 'Объявление' %>">Подробнее <span aria-hidden="true">↗</span></a></div>
       </div>
     </article>

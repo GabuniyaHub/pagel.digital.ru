@@ -149,9 +149,14 @@ async function createTables() {
                 listing_id INTEGER REFERENCES listings(id) ON DELETE CASCADE,
                 user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
                 message TEXT NOT NULL,
+                parent_id INTEGER REFERENCES comments_listings(id) ON DELETE SET NULL,
                 created_at TIMESTAMP DEFAULT NOW()
             );
         `);
+
+        // Existing installations gain replies without changing stored comments.
+        await client.query(`ALTER TABLE comments_listings ADD COLUMN IF NOT EXISTS parent_id INTEGER REFERENCES comments_listings(id) ON DELETE SET NULL`);
+        await client.query(`CREATE INDEX IF NOT EXISTS comments_listings_thread_idx ON comments_listings(listing_id, parent_id, created_at)`);
 
         await client.query(`
             CREATE TABLE IF NOT EXISTS deals (

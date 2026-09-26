@@ -812,7 +812,7 @@ router.get('/avatar-image', verifyToken, async (req, res) => {
 });
 
 // API-роут для получения avatar/subs из url
-router.get('/avatar', async (req, res) => {
+const parseAvatar = async (req, res) => {
   const { url, platform } = req.query;
 
   if (!url) {
@@ -1191,6 +1191,36 @@ router.get('/avatar', async (req, res) => {
 //   }
 
   return res.status(400).json({ error: 'Платформа не поддерживается. Технический сбой, обратитесь в техническую поддержку.' });
+};
+router.get('/avatar', parseAvatar);
+
+// Resolve by listing ID so hidden channel links need not enter page markup.
+const channelMediaCache = new Map();
+router.get('/listings/:listingId/media', verifyToken, checkBlockStatusWithoutToken, async (req, res) => {
+  try {
+    const result = await client.query(`SELECT l.link, l.form_type, l.subscribers, p.slug
+      FROM listings l JOIN categories c ON c.id=l.category_id JOIN platforms p ON p.id=c.platform_id
+      JOIN users u ON u.id=l.user_id
+      WHERE l.id=$1 AND COALESCE(l.is_blocked,false)=false AND COALESCE(u.is_blocked,false)=false`, [req.params.listingId]);
+    const listing = result.rows[0];
+    if (!listing || Number(listing.form_type) !== 1 || listing.slug !== 'youtube' || !listing.link) return res.sendStatus(404);
+    const key = listing.link;
+    let cached = channelMediaCache.get(key);
+    if (!cached || cached.expires < Date.now()) {
+      if (channelMediaCache.size >= 500) channelMediaCache.delete(channelMediaCache.keys().next().value);
+      const promise = new Promise((resolve, reject) => {
+        const response = { code: 200, status(code) { this.code = code; return this; }, json(data) {
+          if (this.code >= 400 || !data.avatar) reject(new Error('Channel unavailable'));
+          else resolve({ avatar: '/market/avatar-image?url=' + encodeURIComponent(data.avatar), subscribers: data.subscribers });
+        } };
+        Promise.resolve(parseAvatar({ query: { url: key, platform: 'youtube' } }, response)).catch(reject);
+      });
+      cached = { promise, expires: Date.now() + 5 * 60 * 1000 };
+      channelMediaCache.set(key, cached);
+      promise.catch(() => { cached.expires = Date.now() + 30000; });
+    }
+    res.set('Cache-Control', 'private, max-age=60').json(await cached.promise);
+  } catch { res.status(502).json({ error: 'Данные YouTube временно недоступны.' }); }
 });
 
 // API-роут для получения избранных твоаров
@@ -1202,8 +1232,10 @@ router.get('/get/favorites', verifyToken, checkBlockStatusWithoutToken, async (r
     const result = await client.query(`
       SELECT 
         f.id AS favorite_id,
+        u.avatar AS seller_avatar,
         l.id AS listing_id,
         l.name,
+        l.form_type,
         l.cover,
         l.price,
         l.link,
@@ -1219,6 +1251,7 @@ router.get('/get/favorites', verifyToken, checkBlockStatusWithoutToken, async (r
         f.created_at
       FROM favorites f
       JOIN listings l ON f.listing_id = l.id
+      JOIN users u ON u.id = l.user_id
       JOIN categories c ON l.category_id = c.id
       JOIN platforms p ON c.platform_id = p.id
       WHERE f.user_id = $1
@@ -1320,7 +1353,8 @@ router.post('/add/favorites', verifyToken, checkBlockStatusWithoutToken, async (
 
 // API-роут "оставить комментарий"
 router.post('/add/comments', verifyToken, checkBlockStatusWithoutToken, async (req, res) => {
-  const { listingId, message } = req.body;
+  const { listingId, parentId = null } = req.body;
+  const message = typeof req.body.message === 'string' ? req.body.message.trim() : '';
   const userId = req.user.id;
 
   if (!message || !listingId) {
@@ -1332,6 +1366,15 @@ router.post('/add/comments', verifyToken, checkBlockStatusWithoutToken, async (r
   }
 
   try {
+    const target = await client.query(`SELECT l.allow_comments FROM listings l JOIN users u ON u.id=l.user_id
+      WHERE l.id=$1 AND COALESCE(l.is_blocked,false)=false AND COALESCE(u.is_blocked,false)=false`, [listingId]);
+    if (!target.rows[0]) return res.status(404).json({ error: 'Объявление не найдено.' });
+    if (!target.rows[0].allow_comments) return res.status(403).json({ error: 'Автор отключил комментарии.' });
+    if (parentId !== null) {
+      if (!/^\d+$/.test(String(parentId))) return res.status(400).json({ error: 'Некорректный комментарий для ответа.' });
+      const parent = await client.query('SELECT id FROM comments_listings WHERE id=$1 AND listing_id=$2', [parentId, listingId]);
+      if (!parent.rows[0]) return res.status(400).json({ error: 'Комментарий для ответа не найден в этом объявлении.' });
+    }
     // Получаем количество комментариев за последнюю минуту
     const rateQuery = `
       SELECT COUNT(*) 
@@ -1361,11 +1404,11 @@ router.post('/add/comments', verifyToken, checkBlockStatusWithoutToken, async (r
 
     // сохраняем комментарий 
     const insertQuery = `
-      INSERT INTO comments_listings (listing_id, user_id, message)
-      VALUES ($1, $2, $3)
-      RETURNING id, message, created_at
+      INSERT INTO comments_listings (listing_id, user_id, message, parent_id)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, message, created_at, parent_id
     `;
-    const result = await client.query(insertQuery, [listingId, userId, message]);
+    const result = await client.query(insertQuery, [listingId, userId, message, parentId]);
 
     // Notification failures must not turn an already saved comment into an error.
     try {
@@ -1518,6 +1561,7 @@ async function renderCatalogPage(req, res, platformName, catalogName) {
       title: isChannel && platformName === 'youtube' ? 'YouTube-каналы' : category.description || category.name,
       categories: platform.products,
       themes: channelThemes,
+      media: require('../../../client/scripts/common/media'),
       filters: state.filters, errors: state.errors,
       totalCount, hasMore, page: state.page,
       shown: Math.min(state.page * state.pageSize, totalCount),
@@ -1628,221 +1672,54 @@ router.delete('/listings/:listingId/delete', verifyToken, checkBlockStatusWithou
 });
 
 // API-роут для редактирования листинга
-router.put('/listings/:listingId/edit', upload.fields([{ name: 'screenshots', maxCount: 12 }, { name: 'cover', maxCount: 2 } ]), checkBlockStatusWithoutToken, verifyToken, async (req, res) => {
-  // Исправлено: используем req.params.listingId, а не req.params.id
-  // upload.fields([{ name: 'screenshots', maxCount: 12 }, { name: 'cover', maxCount: 1 } ]),
-  const listingId = req.params.listingId;
-  const userId = req.user.id;
-
-  // console.log('FILES:', req.files);
-  // console.log('BODY:', req.body);
-
-  // console.log('скриншоты:', req.files.screenshots, 'обложка:' ,  req.files.cover);
-  
-  // let screenshots = req.files ? req.files.screenshots.map(file => file.filename) : [];
-  let screenshots = [];
-  if (req.files && Array.isArray(req.files.screenshots)) {
-    screenshots = req.files.screenshots.map(file => file.filename);
-  }
-
-  // const cover = (req.files && req.files.cover && req.files.cover[0]) ? req.files.cover[0].filename : null;
-  const newCover = (req.files && req.files.cover && req.files.cover[0]) ? req.files.cover[0].filename : null;
-  const currentListing = await client.query('SELECT cover FROM listings WHERE id = $1', [listingId]);
-  const oldCover = currentListing.rows.length > 0 ? currentListing.rows[0].cover : null;
-
-  const finalCoverName = newCover || oldCover;
-
-  // Получаем данные из формы
-  let {
-    name,
-    description,
-    price,
-    category_id,
-    form_type,
-    theme,
-    contacts,
-    link,
-    income,
-    expense,
-    income_sources,
-    expense_sources,
-    promotion,
-    support_needs,
-    allow_comments,
-    show_link,
-    flex_switch,
-    // screenshots,
-    monetization,
-    content_type,
-    // cover,
-    up_date,
-    position,
-    is_pinned,
-    pin_expiration_date
-  } = req.body;
-
-  // Преобразование чекбоксов и булевых значений
-  function toBoolean(val) {
-    return val === '1' || val === 'true' || val === 'on' || val === true;
-  }
-
-  const allowCommentsBool = toBoolean(allow_comments);
-  const showLinkBool = toBoolean(show_link);
-  const monetizationBool = toBoolean(monetization);
-  const flexSwitchBool = toBoolean(flex_switch);
-  const isPinnedBool = toBoolean(is_pinned);
-
-  // Преобразование contacts (если приходит строка — парсим, если объект — используем как есть)
-  let parsedContacts = {};
-
-    if (contacts && typeof contacts === 'object') {
-      // Если есть двойная сериализация в поле ""
-      // if (contacts[""]) {
-      //   try {
-      //     parsedContacts = JSON.parse(contacts[""]);
-      //   } catch (e) {
-      //     console.warn('Ошибка парсинга вложенных контактов', e);
-      //   }
-      // }
-
-      // Мержим с основными полями (приоритет у явных полей)
-      parsedContacts = {
-        ...parsedContacts,
-        telegram: contacts.telegram || parsedContacts.telegram,
-        vk: contacts.vk || parsedContacts.vk,
-        instagram: contacts.instagram || parsedContacts.instagram,
-        whatsapp: contacts.whatsapp || parsedContacts.whatsapp,
-        email: contacts['e-mail'] || contacts.email || parsedContacts.email
-      };
-
-      // Очищаем null/undefined значения
-      Object.keys(parsedContacts).forEach(key => {
-        if (parsedContacts[key] == null || parsedContacts[key] === '') {
-          delete parsedContacts[key];
-        }
-      });
-      
-    } else {
-      console.warn('Неверный формат контактов');
-      return res.status(400).json({ message: 'Неверный формат контактов' });
-    }
-
-  // Преобразование screenshots (если есть файлы, используем их, иначе парсим из строки)
-  // 2. Обработка скриншотов
-
-    // Добавляем существующие скриншоты из формы (если есть)
-    if (req.body.existingScreenshots) {
-      try {
-        const existing = JSON.parse(req.body.existingScreenshots);
-        if (Array.isArray(existing)) {
-          screenshots = screenshots.concat(existing);
-        }
-      } catch (e) {
-        console.warn('Ошибка парсинга existingScreenshots:', e);
-      }
-    }
-
-    if (screenshots.length > 0) {
-      console.log("Скриншоты найдены, начинаем обработку:");
-      screenshots.forEach((file, index) => {
-        console.log(`Screenshot #${index + 1}:`, file);
-      });
-    } else {
-      console.log("Скриншоты не найдены.");
-    }
-
-    if (screenshots.length > 12) {
-      return res.status(400).json({ message: 'Максимальное количество скриншотов - 12' });
-    }
-
-  // Преобразование числовых и других типов
-  price = price !== undefined ? Number(price) : null;
-  income = income !== undefined ? Number(income) : null;
-  expense = expense !== undefined ? Number(expense) : null;
-  form_type = form_type !== undefined ? Number(form_type) : null;
-  position = position !== undefined ? Number(position) : 0;
-  views = req.body.views !== undefined ? Number(req.body.views) : undefined;
-
-  
-
-
-  // Проверка владельца
+router.put('/listings/:listingId/edit', verifyToken, checkBlockStatusWithoutToken, upload.fields([{ name: 'screenshots', maxCount: 12 }, { name: 'cover', maxCount: 1 }]), async (req, res) => {
   try {
-    const result = await client.query(
-      'SELECT user_id FROM listings WHERE id = $1',
-      [listingId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Объявление не найдено' });
+    const result = await client.query('SELECT * FROM listings WHERE id=$1', [req.params.listingId]);
+    const old = result.rows[0];
+    if (!old) return res.status(404).json({ message: 'Объявление не найдено.' });
+    if (String(old.user_id) !== String(req.user.id)) return res.status(403).json({ message: 'Нет доступа к редактированию.' });
+    const body = req.body;
+    const bool = value => ['1', 'true', 'on', true].includes(value);
+    const values = {};
+    const strings = ['name', 'description', 'theme', 'income_sources', 'expense_sources', 'promotion', 'support_needs', 'content_type'];
+    for (const key of strings) if (typeof body[key] === 'string') values[key] = body[key].trim();
+    if (values.name !== undefined && (!values.name || values.name.length > 100)) return res.status(400).json({ message: 'Название: от 1 до 100 символов.' });
+    if (values.description !== undefined && (!values.description || values.description.length > 5000)) return res.status(400).json({ message: 'Добавьте описание до 5000 символов.' });
+    if (values.content_type && !['unique', 'rewrite', 'copy', 'mixed'].includes(values.content_type)) return res.status(400).json({ message: 'Некорректный тип контента.' });
+    for (const key of ['price', 'income', 'expense']) {
+      if (body[key] === undefined) continue;
+      const value = Number(body[key]);
+      if (!Number.isFinite(value) || value < 0 || (key === 'price' && value <= 0)) return res.status(400).json({ message: 'Проверьте стоимость, доход и расход.' });
+      values[key] = value;
     }
-
-    if (result.rows[0].user_id !== userId) {
-      return res.status(403).json({ message: 'Нет доступа к редактированию' });
+    for (const key of ['allow_comments', 'show_link', 'monetization']) if (body[key] !== undefined) values[key] = bool(body[key]);
+    if (body.contacts !== undefined) {
+      let contacts = body.contacts;
+      if (typeof contacts === 'string') { try { contacts = JSON.parse(contacts); } catch { return res.status(400).json({ message: 'Проверьте контакты.' }); } }
+      if (!contacts || typeof contacts !== 'object' || Array.isArray(contacts)) return res.status(400).json({ message: 'Проверьте контакты.' });
+      values.contacts = Object.fromEntries(['telegram', 'email', 'whatsapp'].map(key => [key, String(contacts[key] || '').trim().slice(0, 150)]).filter(([, value]) => value));
+      if (!Object.keys(values.contacts).length) return res.status(400).json({ message: 'Добавьте хотя бы один способ связи.' });
     }
-
-    await client.query(
-      `UPDATE listings SET
-        name = $1,
-        description = $2,
-        price = $3,
-        category_id = $4,
-        form_type = $5,
-        theme = $6,
-        contacts = $7,
-        link = $8,
-        income = $9,
-        expense = $10,
-        income_sources = $11,
-        expense_sources = $12,
-        promotion = $13,
-        support_needs = $14,
-        allow_comments = $15,
-        show_link = $16,
-        flex_switch = $17,
-        screenshots = $18,
-        monetization = $19,
-        content_type = $20,
-        cover = $21,
-        up_date = $22,
-        position = $23,
-        is_pinned = $24,
-        pin_expiration_date = $25
-      WHERE id = $26`,
-      [
-        name,
-        description,
-        price,
-        category_id,
-        form_type,
-        theme,
-        parsedContacts,
-        link,
-        income,
-        expense,
-        income_sources,
-        expense_sources,
-        promotion,
-        support_needs,
-        allowCommentsBool,
-        showLinkBool,
-        flexSwitchBool,
-        screenshots,
-        monetizationBool,
-        content_type,
-        finalCoverName,
-        up_date,
-        position,
-        isPinnedBool,
-        pin_expiration_date,
-        listingId
-      ]
-    );
-
-    res.status(200).json({ message: 'Объявление обновлено' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Ошибка при обновлении' });
+    const uploaded = (req.files?.screenshots || []).map(file => file.filename);
+    if (body.existingScreenshots !== undefined || uploaded.length) {
+      let existing = old.screenshots || [];
+      if (body.existingScreenshots !== undefined) {
+        try { existing = JSON.parse(body.existingScreenshots); } catch { return res.status(400).json({ message: 'Не удалось прочитать изображения.' }); }
+        if (!Array.isArray(existing) || existing.some(name => !(old.screenshots || []).includes(name))) return res.status(400).json({ message: 'Некорректный список изображений.' });
+      }
+      values.screenshots = [...new Set(existing), ...uploaded];
+      if (values.screenshots.length > 12) return res.status(400).json({ message: 'Допускается до 12 изображений.' });
+    }
+    if (req.files?.cover?.[0]) values.cover = req.files.cover[0].filename;
+    // Category, ownership, parser link and paid placement fields remain server-owned.
+    const fields = Object.keys(values);
+    if (!fields.length) return res.status(400).json({ message: 'Нет изменений для сохранения.' });
+    await client.query('UPDATE listings SET ' + fields.map((key, i) => key + '=$' + (i + 1)).join(', ') + ' WHERE id=$' + (fields.length + 1) + ' AND user_id=$' + (fields.length + 2),
+      [...Object.values(values), old.id, req.user.id]);
+    res.json({ message: 'Объявление обновлено.' });
+  } catch (error) {
+    console.error('Listing edit:', error);
+    res.status(500).json({ message: 'Не удалось сохранить изменения.' });
   }
 });
 
@@ -1878,8 +1755,10 @@ router.post('/listings/:listingId/up', verifyToken, checkBlockStatusWithoutToken
     const now = new Date();
 
     // Получаем текущую дату поднятия
-    const listingQuery = `SELECT up_date FROM listings WHERE id = $1`;
+    const listingQuery = `SELECT user_id, up_date FROM listings WHERE id = $1`;
     const listingResult = await client.query(listingQuery, [listingId]);
+    if (!listingResult.rows[0]) return res.status(404).json({ message: 'Объявление не найдено.' });
+    if (String(listingResult.rows[0].user_id) !== String(userId)) return res.status(403).json({ message: 'Нет доступа к этому объявлению.' });
     const lastUpDate = new Date(listingResult.rows[0]?.up_date);
 
     // Проверка: можно ли поднимать (раз в сутки)
@@ -1919,6 +1798,7 @@ router.post('/listings/:listingId/up', verifyToken, checkBlockStatusWithoutToken
     });
   } catch (err) {
     console.error('Ошибка поднятия:', err);
+    await client.query('ROLLBACK').catch(() => {});
     res.status(500).json({ message: 'Ошибка сервера' });
   }
 });
@@ -1962,6 +1842,7 @@ router.get('/:platformName/:catalogName/items/:listingId', optionalAuth, async (
         u.id AS user_id,
         u.nickname AS username,
         u.avatar AS avatar,
+        u.verified AS seller_verified,
         u.contacts AS user_contacts,
         l.contacts AS listing_contacts,
         l.views,
@@ -1975,6 +1856,7 @@ router.get('/:platformName/:catalogName/items/:listingId', optionalAuth, async (
       LEFT JOIN favorites f ON f.listing_id = l.id AND f.user_id = $4
       LEFT JOIN users u ON l.user_id = u.id
       WHERE l.id = $1 AND p.slug = $2 AND c.name = $3
+        AND COALESCE(l.is_blocked, false) = false AND COALESCE(u.is_blocked, false) = false
       ORDER BY 
         l.is_pinned DESC,
         l.pin_expiration_date DESC NULLS LAST,
@@ -2070,7 +1952,8 @@ router.get('/:platformName/:catalogName/items/:listingId', optionalAuth, async (
     // console.log("Listing.screenshots (after transformation):", listing.screenshots);
 
 
-    res.render('market/post', { listing, user: listing.user, currentUser: req.user || null, comments });
+    res.render('market/post', { listing, user: listing.user, currentUser: req.user || null, comments,
+      ...require('../../services/listingDetails').detailView(listing, comments) });
   } catch (err) {
     console.error('Ошибка при выполнении запроса:', err);
     return res.status(500).render('market/errors/500', { message: 'Ошибка сервера' });

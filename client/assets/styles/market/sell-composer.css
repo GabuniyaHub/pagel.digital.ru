@@ -1,4 +1,8 @@
 /* Sell composer — layout tuned to the approved PL-GL listing mockup. */
+/* Both controls share a baseline; labels and select margins must not lift the category. */
+.sell-page .selection-fields>label{margin-bottom:0!important}
+.sell-page .selection-fields #listing-category{margin-bottom:0;height:44px}
+.sell-page .selection-fields .platform-chip{height:44px}
 :root{--sell-ink:#182537;--sell-muted:#71839c;--sell-line:#dce4ee;--sell-bg:#f2f5f8;--sell-blue:#3b4d61;--sell-soft:#f7f9fc;--sell-red:#ed1c24}
 html{scroll-behavior:smooth}body.sell-page{background:var(--sell-bg);color:var(--sell-ink);font:14px/1.45 Inter,Arial,sans-serif}
 .pl-header{height:52px;background:#fff;border-color:#e2e8f0}.pl-header-inner{height:52px;max-width:1440px;padding:0 24px;gap:22px}.brand{display:flex;align-items:center;gap:9px;margin:0;padding-right:20px;border-right:1px solid #e2e8f0;color:#172438}.brand-mark{display:block;width:26px;height:30px;background:#ed1c24;clip-path:polygon(0 0,100% 50%,0 100%);border-radius:3px}.brand strong{font-size:22px;letter-spacing:-.04em}.catalog-link{font-size:15px;font-weight:500;color:var(--sell-ink)}.header-spacer{flex:1}.pl-header .plgl-notification-slot{margin:0}.plgl-notification-toggle{position:relative!important;width:40px!important;height:40px!important;border:0!important;background:transparent!important;color:var(--sell-ink)!important}.profile-link{width:auto;height:40px;padding:4px 8px;border:0;background:transparent;display:flex;align-items:center;gap:9px;color:var(--sell-ink);font-size:14px}.profile-link svg{width:34px;height:34px;padding:6px;border-radius:50%;background:#eef2f7;color:#526780}.profile-chevron{font-size:18px;color:var(--sell-muted);margin-left:5px}

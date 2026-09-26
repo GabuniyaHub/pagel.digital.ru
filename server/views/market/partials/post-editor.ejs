@@ -1,0 +1,20 @@
+<dialog id="edit-dialog" class="listing-dialog editor-dialog" aria-labelledby="edit-title">
+  <div class="dialog-heading"><div><p class="catalog-eyebrow">ВАШЕ ОБЪЯВЛЕНИЕ</p><h2 id="edit-title">Редактирование</h2></div><button type="button" class="dialog-close" data-close aria-label="Закрыть">×</button></div>
+  <form id="listing-edit-form">
+    <label>Название<input name="name" value="<%= listing.name %>" maxlength="100" required></label>
+    <label>Описание<textarea name="description" rows="6" maxlength="5000" required><%= listing.description %></textarea></label>
+    <label>Цена, $<input name="price" type="number" min="0.01" step="0.01" value="<%= listing.price %>" required></label>
+    <% if (channel) { %>
+      <label>Тематика<select name="theme"><% themes.forEach((label, i) => { %><option value="<%= i + 1 %>" <%= String(listing.theme) === String(i + 1) ? 'selected' : '' %>><%= label %></option><% }); %></select></label>
+      <label class="check-label"><input name="show_link" type="checkbox" <%= listing.show_link ? 'checked' : '' %>> Показывать ссылку на канал</label>
+      <div class="edit-row"><label>Доход / месяц, $<input name="income" type="number" min="0" step="0.01" value="<%= listing.income || 0 %>"></label><label>Расход / месяц, $<input name="expense" type="number" min="0" step="0.01" value="<%= listing.expense || 0 %>"></label></div>
+      <label>Тип контента<select name="content_type"><% Object.entries({unique:'Уникальный', rewrite:'Рерайт', copy:'Копии', mixed:'Смешанный'}).forEach(([value, label]) => { %><option value="<%= value %>" <%= listing.content_type === value ? 'selected' : '' %>><%= label %></option><% }); %></select></label>
+      <label class="check-label"><input name="monetization" type="checkbox" <%= listing.monetization ? 'checked' : '' %>> Монетизация включена</label>
+      <% [['income_sources','Источники дохода'],['expense_sources','Источники расходов'],['promotion','Продвижение'],['support_needs','Поддержка канала']].forEach(([key,label]) => { %><label><%= label %><textarea name="<%= key %>" rows="2" maxlength="5000"><%= listing[key] || '' %></textarea></label><% }); %>
+    <% } else { %><label>Новая обложка<input type="file" name="cover" accept="image/jpeg,image/png,image/webp"></label><% } %>
+    <fieldset><legend><%= channel ? 'Скриншоты статистики' : 'Примеры работ' %></legend><div class="edit-images"><% (listing.screenshots || []).forEach(file => { %><label><img src="<%= media.coverUrl(file) %>" alt="Прикреплённое изображение"><span><input type="checkbox" name="keepScreenshot" value="<%= file %>" checked> Оставить</span></label><% }); %></div><label>Добавить изображения (до 12 всего)<input type="file" name="screenshots" accept="image/jpeg,image/png,image/webp" multiple></label></fieldset>
+    <fieldset><legend>Контакты</legend><% [['telegram','Telegram'],['email','E-mail'],['whatsapp','WhatsApp']].forEach(([key,label]) => { %><label><%= label %><input name="contacts[<%= key %>]" type="<%= key === 'email' ? 'email' : 'text' %>" value="<%= listing.user?.contacts?.[key] || '' %>" maxlength="150"></label><% }); %></fieldset>
+    <label class="check-label"><input name="allow_comments" type="checkbox" <%= listing.allow_comments ? 'checked' : '' %>> Разрешить комментарии к объявлению</label>
+    <p id="edit-error" class="inline-error" role="alert" hidden></p><button type="submit" class="pl-button">Сохранить изменения</button>
+  </form>
+</dialog>
